@@ -285,3 +285,88 @@ jobs:
         with:
           name: transport-recovery-reference
           path: /tmp/transport-recovery.json
+
+
+  server-congestion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run popular-server congestion stress test
+        run: |
+          python scripts/simulate_server_congestion.py \
+            --trials 12 \
+            --output /tmp/server-congestion.json
+
+      - name: Check server-friendly invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/server-congestion.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          p = s["policies"]
+          naive = p["naive_completion"]
+          retry = p["retry_after_jitter"]
+          observe = p["singleflight_observe"]
+          friendly = p["server_friendly_stack"]
+          foreground = p["foreground_first"]
+
+          # The observed-design stack should push the sampled pressure knee
+          # later than naive completion-coupled retries.
+          assert (
+              friendly["operational_knee_first_sampled_rho"]
+              >= naive["operational_knee_first_sampled_rho"]
+          )
+
+          r90_naive = naive["by_rho"]["0.90"]
+          r90_friendly = friendly["by_rho"]["0.90"]
+
+          assert (
+              r90_friendly["retry_amplification_per_logical_recovery"]["mean"]
+              < r90_naive["retry_amplification_per_logical_recovery"]["mean"] * 0.35
+          )
+          assert (
+              r90_friendly["recovery_payload_mib"]["mean"]
+              < r90_naive["recovery_payload_mib"]["mean"] * 0.55
+          )
+
+          r100_naive = naive["by_rho"]["1.00"]
+          r100_friendly = friendly["by_rho"]["1.00"]
+
+          assert (
+              r100_friendly["recovery_rate"]["mean"]
+              > r100_naive["recovery_rate"]["mean"]
+          )
+
+          # Retry-After/jitter alone should reduce retry amplification.
+          assert (
+              retry["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
+              < naive["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
+          )
+
+          # Single-flight/observe should reduce it further.
+          assert (
+              observe["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
+              < retry["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
+          )
+
+          # Emergency foreground-first mode is allowed to defer recovery in
+          # genuine overload; it must not pretend to create capacity.
+          assert (
+              foreground["by_rho"]["1.05"]["recovery_rate"]["mean"]
+              <= friendly["by_rho"]["1.05"]["recovery_rate"]["mean"]
+          )
+
+          print("server congestion invariants: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-congestion-reference
+          path: /tmp/server-congestion.json
