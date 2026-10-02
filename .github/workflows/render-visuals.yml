@@ -1,0 +1,40 @@
+name: Render visual assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/render_network_animation.py"
+      - ".github/workflows/render-visuals.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install renderer dependency
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+
+      - name: Render README animation
+        run: python scripts/render_network_animation.py --output docs/assets/recovery-network.gif
+
+      - name: Commit generated asset
+        run: |
+          if git diff --quiet -- docs/assets/recovery-network.gif && git ls-files --error-unmatch docs/assets/recovery-network.gif >/dev/null 2>&1; then
+            echo "animation is unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/recovery-network.gif
+          git commit -m "Update generated recovery network animation [skip ci]"
+          git push
