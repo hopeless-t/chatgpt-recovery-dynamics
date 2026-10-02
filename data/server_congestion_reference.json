@@ -1,0 +1,128 @@
+{
+  "source": {
+    "workflow_run_id": 37073709180,
+    "trials_per_rho_policy": 12,
+    "simulation_seconds": 300,
+    "capacity_work_units_per_second": 100.0,
+    "logical_recovery_conversations": 80,
+    "note": "Abstract stress model only; not an estimate of OpenAI production traffic or capacity."
+  },
+  "operational_knee_first_sampled_rho": {
+    "naive_completion": 0.98,
+    "retry_after_jitter": 1.0,
+    "singleflight_observe": 1.0,
+    "server_friendly_stack": 1.0,
+    "foreground_first": 1.0
+  },
+  "selected_results": {
+    "rho_0.90": {
+      "naive_completion": {
+        "normal_success": 0.9997,
+        "recovery_rate": 1.0,
+        "retry_amplification": 18.54,
+        "recovery_payload_mib": 847.4,
+        "recovery_rejected": 1298.2,
+        "normal_p95_s": 2.0
+      },
+      "retry_after_jitter": {
+        "normal_success": 0.9995,
+        "recovery_rate": 1.0,
+        "retry_amplification": 6.24,
+        "recovery_payload_mib": 474.2,
+        "recovery_rejected": 395.9,
+        "normal_p95_s": 2.0
+      },
+      "singleflight_observe": {
+        "normal_success": 0.9997,
+        "recovery_rate": 1.0,
+        "retry_amplification": 4.16,
+        "recovery_payload_mib": 366.6,
+        "recovery_rejected": 92.8,
+        "normal_p95_s": 2.0
+      },
+      "server_friendly_stack": {
+        "normal_success": 0.9998,
+        "recovery_rate": 1.0,
+        "retry_amplification": 3.98,
+        "recovery_payload_mib": 366.6,
+        "recovery_rejected": 78.3,
+        "normal_p95_s": 1.0
+      }
+    },
+    "rho_0.98": {
+      "naive_completion": {
+        "normal_success": 0.9869,
+        "recovery_rate": 1.0,
+        "retry_amplification": 45.42,
+        "recovery_payload_mib": 772.7,
+        "recovery_rejected": 3464.5
+      },
+      "server_friendly_stack": {
+        "normal_success": 0.9921,
+        "recovery_rate": 1.0,
+        "retry_amplification": 6.04,
+        "recovery_payload_mib": 366.6,
+        "recovery_rejected": 243.3
+      }
+    },
+    "rho_1.00": {
+      "naive_completion": {
+        "normal_success": 0.9749,
+        "recovery_rate": 0.8896,
+        "retry_amplification": 62.91,
+        "recovery_payload_mib": 662.1,
+        "recovery_rejected": 4887.8
+      },
+      "server_friendly_stack": {
+        "normal_success": 0.9824,
+        "recovery_rate": 1.0,
+        "retry_amplification": 7.49,
+        "recovery_payload_mib": 366.6,
+        "recovery_rejected": 358.9
+      },
+      "foreground_first": {
+        "normal_success": 0.9826,
+        "recovery_rate": 0.9771,
+        "retry_amplification": 7.35,
+        "recovery_payload_mib": 366.6,
+        "recovery_rejected": 348.2
+      }
+    },
+    "rho_1.05": {
+      "naive_completion": {
+        "normal_success": 0.9426,
+        "recovery_rate": 0.3802,
+        "retry_amplification": 97.56,
+        "recovery_payload_mib": 257.3,
+        "recovery_rejected": 7748.7
+      },
+      "retry_after_jitter": {
+        "normal_success": 0.9371,
+        "recovery_rate": 0.9865,
+        "retry_amplification": 28.26,
+        "recovery_payload_mib": 416.6,
+        "recovery_rejected": 2169.9
+      },
+      "server_friendly_stack": {
+        "normal_success": 0.9388,
+        "recovery_rate": 0.9656,
+        "retry_amplification": 14.48,
+        "recovery_payload_mib": 354.7,
+        "recovery_rejected": 921.0
+      },
+      "foreground_first": {
+        "normal_success": 0.9415,
+        "recovery_rate": 0.7531,
+        "retry_amplification": 14.51,
+        "recovery_payload_mib": 355.1,
+        "recovery_rejected": 923.2
+      }
+    }
+  },
+  "interpretation": [
+    "Retry-After plus jitter strongly reduces amplification but does not remove duplicate snapshot work.",
+    "Single-flight plus cheap observation removes more offered recovery work before it reaches the server.",
+    "Bounded server admission/scheduling reduces avoidable recovery rejections further at high but sub-saturation load.",
+    "At sustained base rho >= 1, no retry policy creates missing capacity; graceful degradation/load shedding is required."
+  ]
+}
