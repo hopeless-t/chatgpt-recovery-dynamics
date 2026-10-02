@@ -24,7 +24,11 @@ python -m pip install reportlab pypdf
 python scripts/build_paper_pdf.py
 ~~~
 
-The GitHub Actions workflow validates the PDF with pypdf and renders pages with
-Poppler before committing the generated PDF.
+The GitHub Actions workflow validates the PDF with pypdf, renders every page with
+Poppler, and uploads the PDF plus rendered preview pages as a reviewable Actions
+artifact. It does **not** push generated PDF bytes to `main` automatically.
+
+After review, a selected PDF candidate can be committed on a separate branch and
+merged deliberately.
 
 The Markdown companion is PAPER.md.
