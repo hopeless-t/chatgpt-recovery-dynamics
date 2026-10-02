@@ -328,7 +328,72 @@ This is an engineering threshold, not a claim about a production SLO.
 
 ---
 
-## 7. Main qualitative result
+## 7. CI reference results
+
+The GitHub Actions reference run uses 12 common-world trials per rho/policy.
+
+At base rho = 0.90:
+
+| Policy | Retry amplification | Recovery payload | Recovery rejects | Foreground p95 |
+|---|---:|---:|---:|---:|
+| naive completion | **18.54x** | 847.4 MiB | 1298.2 | 2.0 s |
+| Retry-After + jitter | 6.24x | 474.2 MiB | 395.9 | 2.0 s |
+| single-flight + observe | 4.16x | **366.6 MiB** | 92.8 | 2.0 s |
+| server-friendly stack | **3.98x** | **366.6 MiB** | **78.3** | **1.0 s** |
+
+At base rho = 0.98:
+
+~~~text
+naive:
+  foreground success  = 0.9869
+  retry amplification = 45.42x
+  recovery rejects    = 3464.5
+
+server-friendly:
+  foreground success  = 0.9921
+  retry amplification = 6.04x
+  recovery rejects    = 243.3
+~~~
+
+At base rho = 1.00:
+
+~~~text
+naive recovery completion          = 0.8896
+server-friendly recovery completion = 1.0000
+
+naive retry amplification          = 62.91x
+server-friendly retry amplification = 7.49x
+~~~
+
+The sampled operational knee moves from:
+
+~~~text
+naive completion:       rho ~= 0.98
+provider-friendly paths: rho ~= 1.00
+~~~
+
+under the conservative threshold used by this simulator.
+
+This should not be read as a production capacity claim.
+
+It means that, in this abstract model, avoidable recovery traffic consumes
+enough spare capacity to move the failure knee earlier.
+
+At rho = 1.05 the base foreground demand itself exceeds nominal capacity. The
+simulator then shows the fundamental limit:
+
+~~~text
+no retry policy restores 100% foreground service
+~~~
+
+The correct response is graceful degradation / load shedding, not more retries.
+
+Reference JSON:
+[data/server_congestion_reference.json](../data/server_congestion_reference.json)
+
+---
+
+## 8. Main qualitative result
 
 The simulator is designed to test a simple proposition:
 
@@ -361,7 +426,7 @@ and defer reconstructible recovery.
 
 ---
 
-## 8. Why this is friendly to the provider
+## 9. Why this is friendly to the provider
 
 The proposed design minimizes avoidable provider work in several places:
 
@@ -393,7 +458,7 @@ server pressure is less likely to make its own recovery environment worse.
 
 ---
 
-## 9. Transport is secondary to congestion semantics
+## 10. Transport is secondary to congestion semantics
 
 HTTP/2 and HTTP/3 can improve transport behavior, multiplexing, and path
 survival.
@@ -420,7 +485,7 @@ not the reverse.
 
 ---
 
-## 10. Operational safety
+## 11. Operational safety
 
 This repository does **not** recommend load-testing ChatGPT or any production
 OpenAI endpoint.
