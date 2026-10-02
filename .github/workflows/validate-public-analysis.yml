@@ -116,3 +116,51 @@ jobs:
         with:
           name: monte-carlo-reference
           path: /tmp/monte-carlo.json
+
+
+  external-archaeology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Recompute external evidence archaeology
+        run: python scripts/analyze_external_evidence.py --output /tmp/external-summary.json
+
+      - name: Check archaeological invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/external-summary.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          assert s["archive_total"] == 15
+          assert s["default_inference_subset"] == 13
+          assert s["negative_controls"] == 1
+          assert s["possible_local_overlap_excluded"] == 1
+          assert s["archaeology_span_days"] == 1301
+
+          core = s["core_2026"]
+          assert core["reports"] == 12
+          assert core["distinct_dates"] == 12
+          assert core["span_days"] == 185
+
+          co = s["cooccurrence_default_subset"]
+          assert co["unable_load_and_too_many_requests"] == 4
+          assert co["too_many_requests_and_local_trigger_association"] == 5
+          assert co["state_dissociation_signature"] == 7
+          assert co["transport_recovery_signature"] == 2
+
+          clean = s["incident_unconfounded_sensitivity_subset"]
+          assert clean["n"] == 10
+          assert clean["unable_load_and_too_many_requests"] == 3
+          assert clean["too_many_requests_and_local_trigger_association"] == 4
+          assert clean["state_dissociation_signature"] == 6
+          assert clean["transport_recovery_signature"] == 1
+
+          print("external archaeology invariants: PASS")
+          PY
