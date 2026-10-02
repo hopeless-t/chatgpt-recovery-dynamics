@@ -1,0 +1,107 @@
+{
+  "source": {
+    "workflow_run_id": 37075626121,
+    "head_sha": "c6107d53606a45ed8731c36ec16f0eda3b960945",
+    "permutation_trials_per_epoch": 5000,
+    "note": "Public-trace deep validation only; no production traffic generated."
+  },
+  "pairing_sensitivity": {
+    "stable_plateau_ms": [10, 20, 50, 100],
+    "plateau_result": {
+      "pairs": 108,
+      "accessible": 48,
+      "blocked": 60,
+      "mixed": 0,
+      "max_pair_skew_ms": 9.0
+    },
+    "5ms_result_pairs": 103,
+    "250ms_result_pairs": 109
+  },
+  "epoch_gap_sensitivity": {
+    "stable_plateau_s": [20, 30, 45, 60, 90, 120, 300, 600],
+    "plateau_transition_counts": {
+      "A->A": 38,
+      "A->B": 10,
+      "B->A": 8,
+      "B->B": 50
+    },
+    "plateau_p_B_given_B": 0.8620689655172413,
+    "900s_p_B_given_B": 0.847457627118644
+  },
+  "timing_residual_dynamics": {
+    "base_cycle_law": {
+      "intercept_s": 5.616397589315329,
+      "service_coefficient": 0.9565569848514331,
+      "residual_sse": 6.27856850579873
+    },
+    "best_bic_residual_model": {
+      "order": 1,
+      "phi": 0.5238241412568796,
+      "sse": 4.556431389033732,
+      "bic": -319.58101562957097
+    },
+    "independent_residual_bic": -290.2606127742734,
+    "delta_bic_ar1_minus_independent": -29.32040285529758,
+    "sse_reduction_fraction": 0.274288178137178,
+    "post_completion_wait_ar1_phi": 0.6761851336324642
+  },
+  "cross_epoch_cycle_law": {
+    "fit_epoch1": {
+      "intercept_s": 5.666104445496096,
+      "service_coefficient": 0.945804264130739
+    },
+    "epoch1_to_epoch2_rmse_s": 0.25925265603339265,
+    "fit_epoch2": {
+      "intercept_s": 5.559516495269707,
+      "service_coefficient": 0.9749476094403029
+    },
+    "epoch2_to_epoch1_rmse_s": 0.2511705826487845
+  },
+  "change_points": [
+    {
+      "epoch": 1,
+      "first_blocked_index": 32,
+      "best_service_change_point_index": 32,
+      "mean_before_s": 5.56966528125,
+      "mean_after_s": 1.0248239705882352,
+      "sse_reduction_fraction": 0.6583797418929942,
+      "permutation_p_max_reduction_ge_observed": 0.0001999600079984003
+    },
+    {
+      "epoch": 2,
+      "first_blocked_index": 8,
+      "best_service_change_point_index": 8,
+      "mean_before_s": 5.475230125,
+      "mean_after_s": 0.9468545294117648,
+      "sse_reduction_fraction": 0.5872231719186061,
+      "permutation_p_max_reduction_ge_observed": 0.0001999600079984003
+    }
+  ],
+  "history_free_markov_posterior_predictive": {
+    "model": "p_AB ~ Beta(10.5, 38.5)",
+    "event": "all 8 Accessible reentry observations are followed by Blocked",
+    "probability": 2.3088337606223552e-05
+  },
+  "epoch_morphology": {
+    "post_first_blocked_length_each": 34,
+    "blocked_each": 30,
+    "accessible_each": 4,
+    "exact_symbol_matches": 30,
+    "match_fraction": 0.8823529411764706,
+    "a_positions_epoch1": [4, 12, 22, 31],
+    "a_positions_epoch2": [3, 13, 22, 31],
+    "a_position_overlap": 2,
+    "random_4_of_34_overlap_ge_2_probability": 0.05888821804381577,
+    "guardrail": "Suggestive morphology only; not conclusive replication."
+  },
+  "trace_preserving_replay": {
+    "recovery_tail_observations": 68,
+    "transient_accessible_observations": 8,
+    "actual_success_snapshot_payload_mib": 36.59375,
+    "probe_size_assumption_kib": 4.0,
+    "probe_only_payload_mib": 0.265625,
+    "stable_2A_full_materializations": 0,
+    "accounting_payload_reduction_fraction": 0.9927412467976089,
+    "guardrail": "Observed-state replay only. This is not a causal estimate because suppressing requests could change the trajectory."
+  }
+}
