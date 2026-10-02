@@ -533,3 +533,18 @@ CI上の5,000試行referenceでは、10秒anchorは:
 公開データには、private session material、header、本文、会話ID、user/account/project ID、exact URL、query、絶対時刻を含めていません。
 
 詳細は [docs/privacy.md](docs/privacy.md) を参照してください。
+
+
+## パケニャ広報部
+
+Pagesに、意図的に地方ローカルテレビCM感を再現した
+
+**「パケニャの会話復旧相談室」**
+
+を追加しました。
+
+https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/
+
+> **あわてず・ふやさず・パケニャ！**
+
+もちろんCM表現もマスコットも証拠ではありません。
