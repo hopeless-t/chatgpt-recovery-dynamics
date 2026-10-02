@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the repository and version used."
+title: "ChatGPT Conversation Recovery Dynamics"
+type: software
+authors:
+  - family-names: "hopeless-t"
+version: "0.1.0"
+date-released: 2026-10-03
+repository-code: "https://github.com/hopeless-t/chatgpt-recovery-dynamics"
+url: "https://hopeless-t.github.io/chatgpt-recovery-dynamics/"
+license: "MIT"
+keywords:
+  - conversation recovery
+  - retry amplification
+  - congestion control
+  - client-side reliability
+  - change point
+  - AR(1)
+abstract: >-
+  A sanitized client-side case study of ChatGPT conversation recovery dynamics,
+  with reproducible timing analysis, history-aware state modeling, local
+  congestion simulations, provider-friendly recovery design, and a bilingual
+  local-only Recovery Helper.
