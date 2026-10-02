@@ -45,6 +45,40 @@ SNS投稿はこの因果式の証明には使いません。代わりに、
 - [Monte Carlo](docs/monte-carlo.md)
 - [SNS考古学](docs/external-evidence.md)
 
+## 利用者向け Recovery Helper
+
+会話読み込み失敗、429、空白画面、WebSocket / recovery系エラーで
+困っている利用者向けに、**日本語 / English 両対応のlocal-only
+Recovery Helper**を追加しました。
+
+~~~text
+docs/recovery-helper/index.html
+~~~
+
+仕様:
+
+- ChatGPT / OpenAI APIへ自動アクセスしない
+- fetch / WebSocket / EventSource / sendBeaconなし
+- Cookie / localStorage / sessionStorageなし
+- analytics / telemetryなし
+- 外部JavaScript・画像・fontなし
+- OpenAI公式案内と、この研究由来の提案を明確に区別
+- Support向けメモをブラウザ内だけで生成
+- UI・切り分け手順・Support memoまで日英切替
+
+つまり、**困っている利用者が切り分けるために、さらにretry trafficを
+増やす診断ツールにはしない**設計です。
+
+GitHub Pages用に `/docs` からそのまま公開できる形にしてあります。
+
+詳細:
+- [Recovery Helper](docs/recovery-helper/README.md)
+
+GitHub Pagesがまだ有効でない場合だけ、
+`Settings -> Pages -> main /docs` の一回の設定が必要です。
+現在接続しているGitHub toolからはPages有効化設定そのものは変更できないため、
+site本体はdeployment-readyまで仕上げています。
+
 ## OpenAI / provider-friendly設計
 
 このrepoの目的を、単なる原因推定ではなく次の形に固定しています。
