@@ -314,6 +314,108 @@ and 87.853 s respectively, with successful snapshots in between. That ordering
 is compatible with M2 but is insufficient to reject M1. A 404 may also be a
 normal response for a state that cannot or need not be resumed.
 
+## H6 — external archaeological constraint set
+
+The repository also preserves public Reddit / Hacker News reports as a separate
+weak-evidence plane.
+
+These reports are not used to estimate production incidence or to fit the HAR
+timing model. Instead, they act as **historical constraint cases**.
+
+The current curated archive contains:
+
+- 15 public-report artifacts;
+- 13 reports in the default weak-evidence subset;
+- 12 distinct 2026 report dates spanning 185 days;
+- a 1,301-day archaeology span including the oldest retained HN artifact.
+
+Within the default subset:
+
+~~~text
+Too Many Requests                                  9
+Unable to load conversation                        5
+temporary recovery                                 5
+state-dissociation signature                       7
+transport-recovery signature                       2
+Unable-to-load AND Too-Many-Requests              4
+Too-Many-Requests AND local trigger association   5
+~~~
+
+After removing three reports that overlap or sit adjacent to confirmed official
+incident windows, the remaining 10-report sensitivity subset still contains:
+
+~~~text
+Unable-to-load AND Too-Many-Requests              3
+Too-Many-Requests AND local trigger association   4
+state-dissociation signature                       6
+transport-recovery signature                       1
+~~~
+
+This does not prove a common root cause.
+
+It does provide falsification pressure against overly simple models.
+
+### Constraint C1 — pure canonical data loss is insufficient
+
+Public reports exist where:
+
+- history/sidebar disappears while a retained direct conversation remains
+  accessible;
+- one client cannot retrieve an old conversation while another client can;
+- refresh/wait/restart temporarily restores access.
+
+Those observations are difficult to represent as irreversible canonical data
+loss alone.
+
+### Constraint C2 — one global WORKING/BROKEN state is insufficient
+
+Cross-client disagreement and mixed recovery outcomes are compatible with the
+DCS state vector and inconsistent with treating the whole product as one
+synchronous binary state.
+
+### Constraint C3 — rate-pressure coupling remains plausible
+
+Several reports associate Too Many Requests with:
+
+- multiple open tabs;
+- archive/delete/rename/organize actions;
+- suspected conversation-list/sidebar refresh behavior.
+
+These are uncontrolled self-reports. They do not identify a rate limiter or
+prove that list/recovery traffic caused 429. They are nevertheless compatible
+with a constrained request-budget model and motivate controlled replication.
+
+### Constraint C4 — transport/recovery deserves its own state
+
+Public technical reports include:
+
+- stream recovery polling timeout;
+- conversation/resume 404;
+- stream_status continuing to report streaming;
+- WebSocket/client state desynchronization.
+
+These observations are compatible with R_t / O_t being dissociable from
+canonical conversation availability.
+
+### Negative control
+
+The archive intentionally keeps a 2024 Hacker News case where the visible
+"Unable to load conversation" string arose from use of a non-share/private URL.
+
+Therefore:
+
+~~~text
+error-string match != mechanism match
+~~~
+
+The external corpus should be matched on **symptom morphology and
+co-occurrence**, not on one UI string.
+
+No Bayes factor is reported for the social corpus because its sampling process,
+independence and reporting probabilities are unknown.
+
+See [external evidence archaeology](external-evidence.md).
+
 ## Recovery implication
 
 If completion-coupled fast failure is the main cadence amplifier, the key
