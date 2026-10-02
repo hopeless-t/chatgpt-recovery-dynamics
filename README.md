@@ -136,6 +136,41 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
 - [Responsible testing](RESPONSIBLE_TESTING.md)
+- [Bilingual Recovery Helper](docs/recovery-helper/README.md)
+
+## Recovery Helper for affected users
+
+The repository now includes a **bilingual Japanese/English, local-only
+Recovery Helper** for people who are actively affected by conversation-loading,
+429, blank-screen, WebSocket, or recovery-related failures.
+
+~~~text
+docs/recovery-helper/index.html
+~~~
+
+Design contract:
+
+- no automatic ChatGPT/OpenAI API requests;
+- no fetch/WebSocket/EventSource/sendBeacon;
+- no cookies or browser storage;
+- no analytics/telemetry;
+- no external JavaScript, images, or fonts;
+- official OpenAI guidance and research-derived suggestions are visibly
+  separated;
+- support-request notes are generated locally in the browser;
+- language switching is available for the full UI, troubleshooting plan, and
+  support memo.
+
+The Helper is intentionally designed to avoid turning troubleshooting into
+additional retry traffic.
+
+It is GitHub-Pages-ready from `/docs`. See
+[Recovery Helper documentation](docs/recovery-helper/README.md).
+
+> The static site is committed and deployment-ready. If Pages has not already
+> been enabled, the repository owner must perform the one-time GitHub Pages
+> source setting (`main /docs`); the connected repository tool used here does
+> not expose that account setting.
 
 ## Provider-friendly design objective
 
@@ -736,6 +771,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - docs/provider-friendly-checklist.md — compact operator/design review checklist
 - docs/deep-validation.md — residual dynamics, sensitivity and change-point audit
 - docs/evidence-ledger.md — observed / supported / compatible / unknown separation
+- docs/recovery-helper/index.html — bilingual local-only user troubleshooting service
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
