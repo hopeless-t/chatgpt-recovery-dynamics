@@ -417,3 +417,63 @@ python3 scripts/deep_validate_trace.py \
 The GitHub Actions workflow checks the stable sensitivity plateau, AR(1)
 selection, cross-epoch prediction, both change points, history-free posterior
 predictive probability, epoch morphology, and fixed-trace accounting.
+
+
+## 11. State-controlled memory and cross-epoch generalization
+
+Two additional adversarial checks test whether the AR-like timing memory is
+merely an omitted A/B-state artifact, and whether the history-aware H/E/B model
+generalizes across active epochs.
+
+### Residual memory after state and epoch controls
+
+Adding current Blocked state and epoch as timing covariates does not remove the
+AR-like residual dependence:
+
+~~~text
+service + Blocked + epoch:
+  residual AR(1) phi ~= 0.514
+  Delta BIC from adding AR(1) ~= -27.8
+~~~
+
+Including the provisional-reentry indicator also leaves strong residual memory.
+
+Within consecutive same-state observations, the base timing residual remains
+positively correlated:
+
+~~~text
+Accessible-only consecutive pairs: phi ~= 0.738
+Blocked-only consecutive pairs:    phi ~= 0.664
+~~~
+
+Therefore the timing-memory result is difficult to explain solely as an
+unmodeled A/B switch.
+
+It still does not identify the physical source of the memory.
+
+### Cross-epoch transition prediction
+
+Train the transition model on one active epoch and score the other using
+Jeffreys-posterior predictive probabilities.
+
+~~~text
+train epoch 1 -> test epoch 2:
+  H/E/B log loss ~= 0.378
+  A/B   log loss ~= 0.544
+
+train epoch 2 -> test epoch 1:
+  H/E/B log loss ~= 0.300
+  A/B   log loss ~= 0.508
+~~~
+
+The history-aware model therefore predicts the held-out active epoch better in
+both directions.
+
+This is still replication within one user/session capture, not population
+validation.
+
+Reproduce:
+
+~~~bash
+python3 scripts/validate_model_generalization.py
+~~~
