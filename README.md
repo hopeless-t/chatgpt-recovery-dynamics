@@ -13,6 +13,8 @@ a falsifiable mathematical model, and a client-side recovery proposal.
 | Pairing | 108 paired observations: 48 Accessible / 60 Blocked / 0 mixed | **Observed + reproducible** |
 | Fast-fail timing | blocked snapshot median 325.6 ms vs accessible 5099.2 ms | **Observed** |
 | Cycle law | `Delta ~= 5.616 + 0.957 S`, `R^2 = 0.99136` | **Recomputed / CI-checked** |
+| Residual memory | AR(1) `phi ~= 0.524`; **Delta BIC ~= -29.3** vs independent residuals | **Deep validation** |
+| Change point | best latency boundary equals first Blocked observation in **both epochs** | **Permutation-checked** |
 | State persistence | `P(B_next | B) = 0.8621` after censoring the inactive epoch gap | **Observed + Wilson interval** |
 | A->B biopsy | first A after B rebounded **8/8**; other A->B only **2/40** | **Observed; Fisher p ~= 1.19e-7** |
 | History model | H/E/B history-aware model vs A/B first-order: **Delta BIC ~= -28.6** | **Model competition** |
@@ -121,6 +123,7 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 
 - [Mathematical model](docs/model.md)
 - [Independent validation / model audit](docs/validation.md)
+- [Deep trace validation](docs/deep-validation.md)
 - [Recovery design proposal](docs/recovery-design.md)
 - [Robust Monte Carlo stress test](docs/monte-carlo.md)
 - [A -> B transition biopsy](docs/transition-biopsy.md)
@@ -195,6 +198,45 @@ The deeper conclusion is more general:
 See [provider-friendly congestion control](docs/server-friendly-congestion-control.md),
 [provider-friendly checklist](docs/provider-friendly-checklist.md), and
 [server congestion reference](data/server_congestion_reference.json).
+
+## Deep validation: what is still left after R² = 0.991
+
+The timing law explains almost all start-to-start variance, but its residuals
+are **not** white noise.
+
+~~~text
+Delta_n = 5.6164 + 0.9566 S_n + u_n
+
+u_n ~= 0.524 u_(n-1) + epsilon_n
+~~~
+
+Adding AR(1) residual memory improves BIC by about **29.3 points** and reduces
+residual SSE by about **27.4%**.
+
+The post-completion wait itself has stronger lag-1 persistence:
+
+~~~text
+phi_W ~= 0.676
+~~~
+
+The same trace also passes several robustness checks:
+
+- 108/48/60/0 pairing is unchanged for **10–100 ms** pairing windows;
+- the transition matrix is unchanged for **20–600 s** epoch-gap thresholds;
+- fitting the cycle law on one active epoch predicts the other with about
+  **0.25–0.26 s RMSE**;
+- the independently fitted service-time change point equals the first Blocked
+  observation in **both epochs**;
+- a history-free A/B model assigns only about **2.31e-5** posterior-predictive
+  probability to the observed 8/8 reentry rebounds.
+
+A fixed-trace accounting experiment also shows why full snapshots are a costly
+health probe: the eight transient successful recovery snapshots represent
+**36.59 MiB**, while 68 conceptual 4 KiB probes would be **0.266 MiB** on the
+same observed state sequence. That is accounting only, not a causal production
+estimate.
+
+See [deep trace validation](docs/deep-validation.md).
 
 ## Main finding
 
@@ -680,6 +722,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/transition_biopsy_reference.json — A->B biopsy/model reference
 - data/transport_recovery_reference.json — transport-path simulation reference
 - data/server_congestion_reference.json — popular-server congestion reference summary
+- data/deep_validation_reference.json — sensitivity / residual / change-point reference
 - docs/model.md — revised DCS / feedback model
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
@@ -690,6 +733,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - docs/transport-recovery-redesign.md — protocol/path redesign and simulation
 - docs/server-friendly-congestion-control.md — provider-friendly overload/admission design
 - docs/provider-friendly-checklist.md — compact operator/design review checklist
+- docs/deep-validation.md — residual dynamics, sensitivity and change-point audit
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
@@ -700,6 +744,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - scripts/compete_transition_models.py — small-sample transition model competition
 - scripts/simulate_transport_recovery_paths.py — protocol/path stress simulation
 - scripts/simulate_server_congestion.py — popular-server pressure-knee simulator
+- scripts/deep_validate_trace.py — sensitivity, residual, change-point and replay audit
 
 ## Scope and limitations
 
