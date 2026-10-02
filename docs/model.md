@@ -593,6 +593,146 @@ machine, not sources of canonical truth.
 
 See [transport and recovery-path redesign](transport-recovery-redesign.md).
 
+## H10 — server-side congestion and retry amplification
+
+The earlier pressure model can be embedded in a conventional server-capacity
+model.
+
+Let:
+
+~~~text
+lambda_0(t) = exogenous foreground arrival rate
+lambda_r(t) = recovery/retry arrival rate
+C(t)        = available service capacity
+~~~
+
+For heterogeneous request cost, define offered work:
+
+~~~text
+A(t) = sum_i c_i
+~~~
+
+where c_i is the abstract cost from H8.
+
+Base utilization before recovery traffic is:
+
+~~~text
+rho_0(t) = foreground_work(t) / C(t)
+~~~
+
+and effective utilization is:
+
+~~~text
+rho_eff(t) =
+    (foreground_work(t) + recovery_work(t))
+    / C(t)
+~~~
+
+Retry amplification therefore consumes the same headroom needed for useful
+foreground work.
+
+A bounded work queue evolves approximately as:
+
+~~~text
+Q_(t+1) =
+    max(
+        0,
+        Q_t + A_t - C_t
+    )
+~~~
+
+and admission can be represented as:
+
+~~~text
+accept_i =
+    1[ Q_t + c_i <= Q_max ]
+~~~
+
+possibly refined by priority/class/fairness.
+
+This yields an important limit:
+
+~~~text
+rho_0 >= 1
+=> retry control cannot create missing capacity
+~~~
+
+At that point the control problem changes from "recover everything quickly" to
+"preserve the highest-value useful work while shedding/degrading reconstructible
+work safely."
+
+### Provider-friendly objective
+
+A server-friendly recovery controller can be written as a multi-objective cost:
+
+~~~text
+J_provider =
+    w_F * foreground_failures
+  + w_L * foreground_latency
+  + w_R * retry_amplification
+  + w_Q * queued_work
+  + w_B * recovery_bytes
+  + w_D * duplicate_work
+  + w_T * recovery_time
+~~~
+
+The weights are deployment-specific and are not identified here.
+
+The important structural result is that client-side duplicate suppression
+reduces several terms simultaneously before server scheduling begins.
+
+### Pressure-knee simulation
+
+A local stress simulator varies base rho from 0.70 to 1.10 while injecting the
+same logical recovery workload.
+
+The CI reference found:
+
+~~~text
+sampled operational knee
+  naive completion-coupled recovery: rho ~= 0.98
+  provider-friendly paths:          rho ~= 1.00
+~~~
+
+using the conservative threshold:
+
+~~~text
+foreground success >= 0.99
+AND
+recovery completion >= 0.99
+~~~
+
+At rho = 0.90:
+
+~~~text
+retry amplification:
+  naive                   18.54x
+  Retry-After + jitter     6.24x
+  single-flight + observe  4.16x
+  server-friendly stack    3.98x
+~~~
+
+At rho = 1.00:
+
+~~~text
+recovery completion:
+  naive                   0.8896
+  server-friendly stack   1.0000
+
+retry amplification:
+  naive                   62.91x
+  server-friendly stack    7.49x
+~~~
+
+These are abstract simulation results, not production estimates.
+
+Their role is to demonstrate a mechanism:
+
+> avoidable retry/recovery work can consume enough residual capacity to move an
+> overload knee earlier.
+
+See [server-friendly congestion control](server-friendly-congestion-control.md).
+
 ## Recovery implication
 
 If completion-coupled fast failure is the main cadence amplifier, the key
