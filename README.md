@@ -11,6 +11,7 @@ a falsifiable mathematical model, and a client-side recovery proposal.
 - [Mathematical model](docs/model.md)
 - [Independent validation / model audit](docs/validation.md)
 - [Recovery design proposal](docs/recovery-design.md)
+- [Robust Monte Carlo stress test](docs/monte-carlo.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
 
@@ -315,6 +316,46 @@ The proposal also includes:
 
 See [docs/recovery-design.md](docs/recovery-design.md).
 
+## Robust Monte Carlo stress test
+
+Because the production causal mechanism is not identified, the recovery policy
+is also stress-tested against **three deliberately different models**:
+
+1. an attempt-driven embedded Markov model, where waiting cannot make recovery
+   progress;
+2. a latent wall-clock clearing model, where polling only changes detection
+   delay;
+3. a hypothetical pressure-feedback model, where attempts consume a decaying
+   pressure budget.
+
+A 30,000-resample bootstrap puts the Accessible median cycle at approximately:
+
+~~~text
+95% bootstrap interval: 10.002 s .. 10.987 s
+median:                 10.272 s
+~~~
+
+This makes a **~10 s start-to-start anchor** a data-derived conservative
+controller rather than an arbitrary constant.
+
+In the CI reference run (5,000 trials per policy/model), the 10 s anchor:
+
+- preserves 99.96% recovery in the deliberately adverse attempt-driven model;
+- reduces mean blocked probes from 6.85 to 4.32 in the latent wall-clock model,
+  with p95 detection delay increasing from 5.79 s to 9.53 s;
+- raises recovery rate from 52.68% to 69.10% in the hypothetical
+  pressure-feedback stress model.
+
+Stronger exponential backoff performs much better under pressure feedback, but
+can perform much worse if the causal model is wrong. The robust core is
+therefore:
+
+> **first prevent fast failure from increasing start-to-start attempt rate;
+> escalate backoff only with stronger evidence.**
+
+See [docs/monte-carlo.md](docs/monte-carlo.md) and
+[data/monte_carlo_reference.json](data/monte_carlo_reference.json).
+
 ## Reproduce from public data
 
 The public event stream can be re-analyzed without a raw HAR:
@@ -360,13 +401,16 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/session_b_events.jsonl — sanitized relative event stream
 - data/paired_observations.csv — 108 paired observations
 - data/summary.json — quantitative summary
+- data/monte_carlo_reference.json — CI Monte Carlo reference output
 - docs/model.md — revised DCS / feedback model
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
+- docs/monte-carlo.md — robust policy stress test under causal-model uncertainty
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
 - scripts/analyze_public_data.py — public JSONL -> reproduced statistics
+- scripts/monte_carlo_recovery.py — bootstrap + three-model policy stress test
 
 ## Scope and limitations
 
