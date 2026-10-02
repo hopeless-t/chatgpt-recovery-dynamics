@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<title>ChatGPT Recovery Helper</title>
+<style>
+:root{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#172033}
+main{max-width:980px;margin:auto;padding:28px 18px 60px}
+.hero,.card{background:#fff;border:1px solid #dfe5ef;border-radius:18px;padding:22px;box-shadow:0 6px 24px rgba(20,32,55,.06)}
+.hero{margin-bottom:16px}.card{margin:14px 0}
+h1,h2{line-height:1.2}h1{font-size:clamp(2rem,5vw,3.2rem);margin:.2rem 0 .6rem}h2{font-size:1.25rem;margin-top:0}
+.muted{color:#5f6b7d}.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+label{display:block;font-weight:650;margin:.7rem 0 .35rem}
+select,input[type=text],textarea{width:100%;padding:10px 12px;border:1px solid #b7c3d4;border-radius:10px;background:#fff;color:inherit;font:inherit}
+textarea{min-height:125px;resize:vertical}
+button,.button{font:inherit;border:1px solid #9aa9be;border-radius:11px;padding:9px 13px;background:#f9fbff;color:inherit;cursor:pointer;text-decoration:none;display:inline-block}
+button:hover,.button:hover{background:#eef4ff}.primary{background:#17233f;color:#fff;border-color:#17233f}.primary:hover{background:#263a66}
+.badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:.78rem;font-weight:700;margin-right:5px}
+.official{background:#e6f7ed;color:#176438}.research{background:#fff1c7;color:#755400}.privacy{background:#fbe9ee;color:#8b2440}.local{background:#e9efff;color:#294d9c}
+.callout{border-left:4px solid #5475c5;padding-left:14px}.warn{border-left-color:#c38a00}
+.checks label{font-weight:400;display:flex;gap:9px;align-items:flex-start;margin:.5rem 0}.checks input{width:auto;margin-top:.35rem}
+.steps{padding-left:1.3rem}.steps li{margin:.7rem 0}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.topbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}.lang.active{font-weight:800;outline:2px solid #6d86c6}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eef2f7;border-radius:12px;padding:14px}
+.small{font-size:.9rem}.hidden{display:none!important}
+footer{margin-top:24px;color:#667085;font-size:.9rem}
+@media(prefers-color-scheme:dark){
+ body{background:#0e131b;color:#e9eef7}.hero,.card{background:#161d29;border-color:#2c394b;box-shadow:none}
+ .muted,footer{color:#aab5c5}select,input[type=text],textarea{background:#101722;border-color:#435066;color:#edf3fb}
+ button,.button{background:#192231;border-color:#4b5a72}.primary{background:#dce6ff;color:#172033}
+ pre{background:#101722}.official{background:#143d29;color:#9ce4bb}.research{background:#483b12;color:#ffe08a}.privacy{background:#4a202c;color:#ffb6c7}.local{background:#1c315d;color:#bed0ff}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="topbar" aria-label="Language">
+  <button class="lang" id="langJa" type="button">日本語</button>
+  <button class="lang" id="langEn" type="button">English</button>
+</div>
+
+<section class="hero">
+  <span class="badge local" data-i18n="badgeLocal"></span>
+  <span class="badge privacy" data-i18n="badgeTelemetry"></span>
+  <span class="badge official" data-i18n="badgeOfficialFirst"></span>
+  <h1 data-i18n="title"></h1>
+  <p data-i18n-html="intro"></p>
+  <p class="muted" data-i18n="privacyIntro"></p>
+</section>
+
+<section class="card callout warn">
+  <h2 data-i18n="firstTitle"></h2>
+  <p><span class="badge official" data-i18n="officialLabel"></span> <span data-i18n="firstOfficial"></span></p>
+  <p><span class="badge research" data-i18n="researchLabel"></span> <span data-i18n-html="firstResearch"></span></p>
+  <div class="actions">
+    <a class="button primary" href="https://status.openai.com/" target="_blank" rel="noopener noreferrer" data-i18n="statusLink"></a>
+    <a id="officialTroubleshoot" class="button" target="_blank" rel="noopener noreferrer" data-i18n="troubleLink"></a>
+    <a id="officialSupport" class="button" target="_blank" rel="noopener noreferrer" data-i18n="supportLink"></a>
+  </div>
+</section>
+
+<section class="card">
+  <h2 data-i18n="symptomTitle"></h2>
+  <div class="grid">
+    <div>
+      <label for="symptom" data-i18n="symptomLabel"></label>
+      <select id="symptom"></select>
+    </div>
+    <div>
+      <label for="platform" data-i18n="platformLabel"></label>
+      <select id="platform"></select>
+    </div>
+    <div>
+      <label for="when" data-i18n="whenLabel"></label>
+      <input id="when" type="text">
+    </div>
+    <div>
+      <label for="browser" data-i18n="browserLabel"></label>
+      <input id="browser" type="text">
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2 data-i18n="observedTitle"></h2>
+  <div class="checks">
+    <label><input id="multiTabs" type="checkbox"><span data-i18n="checkTabs"></span></label>
+    <label><input id="vpn" type="checkbox"><span data-i18n="checkVpn"></span></label>
+    <label><input id="extensions" type="checkbox"><span data-i18n="checkExtensions"></span></label>
+    <label><input id="otherClient" type="checkbox"><span data-i18n="checkOtherClient"></span></label>
+    <label><input id="temporary" type="checkbox"><span data-i18n="checkTemporary"></span></label>
+    <label><input id="statusIncident" type="checkbox"><span data-i18n="checkIncident"></span></label>
+    <label><input id="longChat" type="checkbox"><span data-i18n="checkLong"></span></label>
+  </div>
+  <label for="errorText" data-i18n="errorLabel"></label>
+  <textarea id="errorText"></textarea>
+</section>
+
+<section class="card">
+  <h2 data-i18n="planTitle"></h2>
+  <button id="build" class="primary" type="button" data-i18n="buildButton"></button>
+  <div id="plan" class="hidden">
+    <ol id="steps" class="steps"></ol>
+    <p id="interpretation" class="callout"></p>
+  </div>
+</section>
+
+<section class="card">
+  <h2 data-i18n="memoTitle"></h2>
+  <p class="muted" data-i18n="memoIntro"></p>
+  <div class="grid">
+    <div>
+      <label for="conversation" data-i18n="conversationLabel"></label>
+      <input id="conversation" type="text">
+    </div>
+    <div>
+      <label for="requestId" data-i18n="requestLabel"></label>
+      <input id="requestId" type="text">
+    </div>
+  </div>
+  <label for="extra" data-i18n="extraLabel"></label>
+  <textarea id="extra"></textarea>
+  <div class="actions">
+    <button id="memo" type="button" data-i18n="memoButton"></button>
+    <button id="copy" type="button" data-i18n="copyButton"></button>
+  </div>
+  <pre id="memoOut"></pre>
+</section>
+
+<section class="card callout">
+  <h2 data-i18n="doesNotTitle"></h2>
+  <ul id="doesNot"></ul>
+</section>
+
+<footer>
+  <p data-i18n="footerUnofficial"></p>
+  <p><a href="../../RESPONSIBLE_TESTING.md" data-i18n="responsibleLink"></a> · <a href="../../README.md" data-i18n="repoLink"></a></p>
+</footer>
+</main>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+
+const I18N = {
+ja: {
+  badgeLocal:"100% ローカル", badgeTelemetry:"テレメトリなし", badgeOfficialFirst:"公式案内を優先",
+  title:"ChatGPT Recovery Helper / 復旧ヘルパー",
+  intro:"会話が読めない、429、空白画面、WebSocket / recovery系エラーなどで困っている利用者向けの、<strong>余計な負荷を増やしにくい切り分けガイド</strong>です。",
+  privacyIntro:"入力内容はこのページ内だけで処理されます。自動API呼び出し、自動reload、Cookie、localStorage、外部JavaScript、telemetryを使いません。公式リンクを押した場合だけ、そのリンク先へ移動します。",
+  firstTitle:"最初に：連打しない",
+  officialLabel:"OpenAI公式", researchLabel:"この研究からの提案",
+  firstOfficial:"OpenAI Statusを確認し、公式のChatGPTトラブルシューティング手順を優先してください。",
+  firstResearch:"読み込み失敗中に複数タブで更新を連打すると、切り分けを難しくし、不要なretry trafficを増やす可能性があります。<strong>一つのタブ・一つの操作ずつ</strong>試してください。",
+  statusLink:"OpenAI Status", troubleLink:"公式トラブルシューティング", supportLink:"OpenAI Support案内",
+  symptomTitle:"1. 症状を選ぶ", symptomLabel:"主な症状", platformLabel:"利用環境",
+  whenLabel:"発生日時（おおよそ）", browserLabel:"Browser / app version（任意）",
+  whenPlaceholder:"例: 2026-10-03 08:15 JST", browserPlaceholder:"例: Chrome 154 / iOS app",
+  observedTitle:"2. 観測されたことだけ選ぶ",
+  checkTabs:"同じ会話を複数タブ・複数ウィンドウで開いていた",
+  checkVpn:"VPN / proxy / secure DNS / filtering を使用している",
+  checkExtensions:"広告・script・privacy系のブラウザ拡張を使用している",
+  checkOtherClient:"別の端末・別clientでは同じ会話が読めた",
+  checkTemporary:"refresh / 待機 / 再起動で一時的に戻った",
+  checkIncident:"OpenAI Statusに該当しそうなincidentが表示されている",
+  checkLong:"非常に長い会話・多数のやり取りがある",
+  errorLabel:"表示されたエラー文字列（任意・秘密情報は入れない）",
+  errorPlaceholder:"例: Unable to load conversation / Too Many Requests / stream recovery polling timed out",
+  planTitle:"3. Recovery plan", buildButton:"安全な切り分け手順を生成",
+  memoTitle:"4. OpenAI Support向けメモをローカル生成",
+  memoIntro:"OpenAI公式Helpは、問題が続く場合に環境情報や発生時刻、会話URL/ID、console error、必要に応じてHARなどの診断情報をSupportへ提供するよう案内しています。HARには機密情報が含まれ得るため、公開GitHubやSNSには載せないでください。",
+  conversationLabel:"Conversation URL / ID（任意）", requestLabel:"Request / Ray ID（任意）",
+  extraLabel:"補足（任意）", extraPlaceholder:"例: 別clientでは読める、何分待つと戻る、など",
+  memoButton:"Support memoを生成", copyButton:"メモをコピー", memoEmpty:"ここにSupport用メモが生成されます。",
+  doesNotTitle:"このHelperがしないこと",
+  footerUnofficial:"Community research tool — OpenAI公式製品ではありません。公式案内が常に優先されます。研究由来の提案は明示的に区別しています。",
+  responsibleLink:"Responsible testing", repoLink:"Repository README",
+  symptoms:[
+    ["load","Unable to load conversation / 会話を読み込めない"],
+    ["429","Too Many Requests / 429"],
+    ["blank","空白・黒画面・履歴は見えるが本文が出ない"],
+    ["spinner","Thinking / Generating / Working が終わらない"],
+    ["ws","WebSocket / network error"],
+    ["recovery","stream recovery timeout / resume 404 など"],
+    ["client","ブラウザでは失敗するが別端末・アプリでは読める"],
+    ["other","その他"]
+  ],
+  platforms:["Web browser","Desktop app","iOS app","Android app","複数環境で発生","不明"],
+  doesNot:[
+    "ChatGPTへ自動アクセスしない",
+    "429を意図的に発生させない",
+    "rate limitを回避しない",
+    "conversation本文やCookieを読む・保存・送信しない",
+    "production root causeを断定しない",
+    "最初の一回成功を必ず完全復旧だとは扱わない"
+  ],
+  steps:{
+    status:"OpenAI Statusを確認し、Conversations / ChatGPTにincidentがあれば、まず公式案内に従う。",
+    incident:"公式incidentが出ている間は、同じ会話への更新連打や複数clientからの反復アクセスを避ける。",
+    tabs:"同じ会話を開いている余分なタブ・ウィンドウを閉じ、一つのclientだけで試す。",
+    refresh:"一度だけhard refresh / app restartを試す。改善しなければ同じ操作を連打しない。",
+    incognito:"private/incognito windowまたは別browserで再現するか確認する。",
+    extensions:"script/privacy/ad-block系拡張を無効にしたprivate/incognito windowで再現するか確認する。",
+    vpn:"VPN / proxy / secure DNS / filteringを一時的に外し、信頼できる別networkで確認する。",
+    transport:"別browser・別device・別networkでも同じtransport/recovery系エラーになるか比較する。",
+    otherClient:"別clientで同じconversationが読める場合、canonical data lossと決めつけず、client/accessibility差としてSupportへ記録する。",
+    rate:"429後は短時間の連続reloadを避ける。Retry-After等の待機指示が見える場合はそれを優先する。",
+    long:"作業継続が目的なら、新しいchatで同じ問題が出るか確認する。元conversationは削除せず保持する。",
+    temporary:"一時的に1回読めても、その直後に再び失敗するかを記録する。短時間に何度も確認しない。",
+    support:"複数browser/device/networkでも継続する場合、発生時刻・環境・conversation URL/ID・request ID・console error等を揃えてSupportへ連絡する。"
+  },
+  interpretations:{
+    dissociation:"研究上の読み方: client差や一時復旧がある場合、「会話そのものが消えた」と即断せず、accessibility / recovery状態の不一致も候補として記録します。root causeの断定はしません。",
+    transport:"研究上の読み方: retry・transport・recoveryの異常は互いに影響し得ますが、このHelperは因果関係を断定しません。目的は追加負荷を抑えながら切り分けることです。",
+    generic:"研究上の読み方: 表示エラー文字列だけでは原因を一意に決められません。別client・別network・時間経過での再現性を記録するとSupportに有用です。"
+  },
+  copied:"コピーしました", copyFail:"コピーできませんでした。手動で選択してください。"
+},
+en: {
+  badgeLocal:"100% local", badgeTelemetry:"no telemetry", badgeOfficialFirst:"official guidance first",
+  title:"ChatGPT Recovery Helper",
+  intro:"A <strong>low-amplification troubleshooting guide</strong> for people who cannot load a conversation, see 429s, blank screens, WebSocket errors, or recovery-related failures.",
+  privacyIntro:"Everything you enter is processed only in this page. It performs no automatic API requests or reloads, uses no cookies, localStorage, external JavaScript, or telemetry. Network navigation occurs only when you click an official link.",
+  firstTitle:"First: do not hammer refresh",
+  officialLabel:"OpenAI official", researchLabel:"Research-derived",
+  firstOfficial:"Check OpenAI Status and follow the official ChatGPT troubleshooting steps first.",
+  firstResearch:"Repeated refreshes across multiple tabs during a load failure can make diagnosis harder and may add avoidable retry traffic. Try <strong>one tab and one action at a time</strong>.",
+  statusLink:"OpenAI Status", troubleLink:"Official troubleshooting", supportLink:"Contacting OpenAI Support",
+  symptomTitle:"1. Choose the symptom", symptomLabel:"Primary symptom", platformLabel:"Environment",
+  whenLabel:"Approximate time", browserLabel:"Browser / app version (optional)",
+  whenPlaceholder:"Example: 2026-10-03 08:15 JST", browserPlaceholder:"Example: Chrome 154 / iOS app",
+  observedTitle:"2. Select only what you observed",
+  checkTabs:"The same conversation was open in multiple tabs/windows",
+  checkVpn:"A VPN / proxy / secure DNS / filtering service was enabled",
+  checkExtensions:"Ad-blocking, script-blocking, or privacy extensions were enabled",
+  checkOtherClient:"The same conversation was readable in another device/client",
+  checkTemporary:"Refresh, waiting, or restarting temporarily restored access",
+  checkIncident:"OpenAI Status showed a possibly relevant incident",
+  checkLong:"The conversation is very long / has many turns",
+  errorLabel:"Visible error text (optional — do not enter secrets)",
+  errorPlaceholder:"Example: Unable to load conversation / Too Many Requests / stream recovery polling timed out",
+  planTitle:"3. Recovery plan", buildButton:"Build a low-amplification troubleshooting plan",
+  memoTitle:"4. Build a local memo for OpenAI Support",
+  memoIntro:"OpenAI Help recommends providing relevant environment details and timing, and when needed conversation URL/ID, console errors, and a HAR file. HAR files can contain sensitive information, so do not post an authenticated HAR publicly on GitHub or social media.",
+  conversationLabel:"Conversation URL / ID (optional)", requestLabel:"Request / Ray ID (optional)",
+  extraLabel:"Additional notes (optional)", extraPlaceholder:"Example: readable on another client; recovers after waiting; etc.",
+  memoButton:"Generate support memo", copyButton:"Copy memo", memoEmpty:"Your support memo will appear here.",
+  doesNotTitle:"What this Helper does not do",
+  footerUnofficial:"Community research tool — not an official OpenAI product. Official guidance always takes precedence. Research-derived suggestions are explicitly labeled.",
+  responsibleLink:"Responsible testing", repoLink:"Repository README",
+  symptoms:[
+    ["load","Unable to load conversation"],
+    ["429","Too Many Requests / 429"],
+    ["blank","Blank/black screen or sidebar visible but conversation missing"],
+    ["spinner","Thinking / Generating / Working never completes"],
+    ["ws","WebSocket / network error"],
+    ["recovery","stream recovery timeout / resume 404 or similar"],
+    ["client","Fails in one client but works in another"],
+    ["other","Other"]
+  ],
+  platforms:["Web browser","Desktop app","iOS app","Android app","Multiple environments","Unknown"],
+  doesNot:[
+    "Automatically access ChatGPT",
+    "Intentionally generate 429 errors",
+    "Bypass rate limits",
+    "Read, store, or transmit conversation content or cookies",
+    "Claim a production root cause",
+    "Treat one successful observation as proof of stable recovery"
+  ],
+  steps:{
+    status:"Check OpenAI Status. If ChatGPT / Conversations has an incident, follow the official incident guidance first.",
+    incident:"While an official incident is active, avoid rapid reloads or repeated access to the same conversation from multiple clients.",
+    tabs:"Close extra tabs/windows for the same conversation and troubleshoot from one client.",
+    refresh:"Try one hard refresh / app restart. If it does not help, do not repeatedly hammer the same action.",
+    incognito:"Test once in an incognito/private window or another browser.",
+    extensions:"Test in an incognito/private window with script/privacy/ad-blocking extensions disabled.",
+    vpn:"Temporarily disable VPN/proxy/secure DNS/filtering and test once on another trusted network.",
+    transport:"Compare one other browser/device/network to see whether the transport/recovery error reproduces.",
+    otherClient:"If another client can read the same conversation, record that difference for Support rather than assuming canonical conversation loss.",
+    rate:"After a 429, avoid rapid reload loops. If a Retry-After or other server-directed wait is visible, honor it.",
+    long:"If you only need to keep working, test whether a new chat works. Do not delete the original conversation as a troubleshooting step.",
+    temporary:"If access returns once and then fails again, record the rebound. Avoid frequent confirmation polling.",
+    support:"If the issue persists across browsers/devices/networks, collect the time, environment, conversation URL/ID, request ID, console errors, and other details requested by Support."
+  },
+  interpretations:{
+    dissociation:"Research interpretation: if another client works or recovery is temporary, do not immediately conclude that the canonical conversation was deleted. Record a possible accessibility/recovery-state mismatch without asserting a root cause.",
+    transport:"Research interpretation: retry, transport, and recovery anomalies can interact, but this Helper does not claim a causal chain. Its purpose is to reduce extra load while isolating the symptom.",
+    generic:"Research interpretation: an error string alone is not a unique mechanism signature. Cross-client, cross-network, and time-based reproducibility are useful observations for Support."
+  },
+  copied:"Copied", copyFail:"Could not copy automatically. Please select the memo manually."
+}
+};
+
+const symptomKey = () => $("symptom").value;
+let lang = (navigator.language || "").toLowerCase().startsWith("ja") ? "ja" : "en";
+
+function t(){ return I18N[lang]; }
+
+function setSelect(select, options, selected){
+  select.textContent="";
+  options.forEach(item=>{
+    const pair=Array.isArray(item)?item:[item,item];
+    const opt=document.createElement("option");
+    opt.value=pair[0]; opt.textContent=pair[1];
+    select.appendChild(opt);
+  });
+  if(selected && [...select.options].some(o=>o.value===selected)) select.value=selected;
+}
+
+function applyLanguage(next){
+  const oldSymptom=$("symptom").value;
+  const oldPlatform=$("platform").selectedIndex;
+  lang=next;
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key=el.getAttribute("data-i18n");
+    if(Object.prototype.hasOwnProperty.call(t(),key)) el.textContent=t()[key];
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{
+    const key=el.getAttribute("data-i18n-html");
+    if(Object.prototype.hasOwnProperty.call(t(),key)) el.innerHTML=t()[key];
+  });
+  setSelect($("symptom"),t().symptoms,oldSymptom);
+  setSelect($("platform"),t().platforms);
+  if(oldPlatform>=0 && oldPlatform<$("platform").options.length) $("platform").selectedIndex=oldPlatform;
+  $("when").placeholder=t().whenPlaceholder;
+  $("browser").placeholder=t().browserPlaceholder;
+  $("errorText").placeholder=t().errorPlaceholder;
+  $("extra").placeholder=t().extraPlaceholder;
+  if(!$("memoOut").dataset.generated) $("memoOut").textContent=t().memoEmpty;
+  $("officialTroubleshoot").href=lang==="ja"
+    ?"https://help.openai.com/ja-jp/articles/7996703-troubleshooting-chatgpt-error-messages"
+    :"https://help.openai.com/en/articles/7996703-troubleshooting-chatgpt-error-messages";
+  $("officialSupport").href=lang==="ja"
+    ?"https://help.openai.com/ja-jp/articles/6614161-%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%81%E3%83%BC%E3%83%A0%E3%81%B8%E3%81%AE%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E6%96%B9%E6%B3%95"
+    :"https://help.openai.com/en/articles/6614161-how-can-i-contact-support";
+  $("doesNot").textContent="";
+  t().doesNot.forEach(x=>{const li=document.createElement("li");li.textContent=x;$("doesNot").appendChild(li);});
+  $("langJa").classList.toggle("active",lang==="ja");
+  $("langEn").classList.toggle("active",lang==="en");
+  if(!$("plan").classList.contains("hidden")) buildPlan();
+  if($("memoOut").dataset.generated) buildMemo();
+}
+
+function addStep(list,text,label){
+  const li=document.createElement("li");
+  const badge=document.createElement("span");
+  badge.className="badge "+(label==="official"?"official":"research");
+  badge.textContent=label==="official"?t().officialLabel:t().researchLabel;
+  li.appendChild(badge);
+  li.appendChild(document.createTextNode(" "+text));
+  list.appendChild(li);
+}
+
+function buildPlan(){
+  const steps=$("steps"); steps.textContent="";
+  const s=symptomKey();
+  addStep(steps,t().steps.status,"official");
+  if($("statusIncident").checked) addStep(steps,t().steps.incident,"research");
+  if($("multiTabs").checked) addStep(steps,t().steps.tabs,"research");
+  addStep(steps,t().steps.refresh,"official");
+  addStep(steps,$("extensions").checked?t().steps.extensions:t().steps.incognito,"official");
+  if($("vpn").checked) addStep(steps,t().steps.vpn,"official");
+  if(s==="ws"||s==="recovery") addStep(steps,t().steps.transport,"official");
+  if($("otherClient").checked||s==="client") addStep(steps,t().steps.otherClient,"research");
+  if(s==="429") addStep(steps,t().steps.rate,"research");
+  if($("longChat").checked||s==="spinner") addStep(steps,t().steps.long,"official");
+  if($("temporary").checked) addStep(steps,t().steps.temporary,"research");
+  addStep(steps,t().steps.support,"official");
+
+  if($("otherClient").checked||$("temporary").checked) $("interpretation").textContent=t().interpretations.dissociation;
+  else if(s==="429"||s==="recovery"||s==="ws") $("interpretation").textContent=t().interpretations.transport;
+  else $("interpretation").textContent=t().interpretations.generic;
+  $("plan").classList.remove("hidden");
+}
+
+function bool(id){return $(id).checked ? (lang==="ja"?"はい":"yes") : (lang==="ja"?"いいえ / 不明":"no / unknown");}
+
+function buildMemo(){
+  const symptomText=$("symptom").options[$("symptom").selectedIndex].textContent;
+  const platformText=$("platform").options[$("platform").selectedIndex].textContent;
+  let lines;
+  if(lang==="ja"){
+    lines=[
+      "ChatGPT conversation / recovery 問題報告",
+      "",
+      "発生日時: "+($("when").value||"(未入力)"),
+      "環境: "+platformText,
+      "Browser/app: "+($("browser").value||"(未入力)"),
+      "主な症状: "+symptomText,
+      "エラー文字列: "+($("errorText").value.trim()||"(未入力)"),
+      "Conversation URL/ID: "+($("conversation").value.trim()||"(未入力)"),
+      "Request/Ray ID: "+($("requestId").value.trim()||"(未入力)"),
+      "",
+      "観測条件:",
+      "- 複数タブ/ウィンドウ: "+bool("multiTabs"),
+      "- VPN/proxy/secure DNS: "+bool("vpn"),
+      "- browser extension/filtering: "+bool("extensions"),
+      "- 別clientで同じconversationが読める: "+bool("otherClient"),
+      "- refresh/待機/再起動で一時復旧: "+bool("temporary"),
+      "- 関連しそうなStatus incident: "+bool("statusIncident"),
+      "- 長いconversation: "+bool("longChat"),
+      "",
+      "補足:",
+      $("extra").value.trim()||"(なし)",
+      "",
+      "実施した切り分け:",
+      "- OpenAI Statusを確認",
+      "- 短時間の更新連打を避けた",
+      "- 該当する場合はprivate window / browser / device / networkを比較",
+      "",
+      "プライバシー: authenticated raw HARは公開GitHub/SNSに投稿していません。"
+    ];
+  }else{
+    lines=[
+      "ChatGPT conversation / recovery issue report",
+      "",
+      "Approx. time: "+($("when").value||"(not provided)"),
+      "Environment: "+platformText,
+      "Browser/app: "+($("browser").value||"(not provided)"),
+      "Primary symptom: "+symptomText,
+      "Error text: "+($("errorText").value.trim()||"(not provided)"),
+      "Conversation URL/ID: "+($("conversation").value.trim()||"(not provided)"),
+      "Request/Ray ID: "+($("requestId").value.trim()||"(not provided)"),
+      "",
+      "Observed conditions:",
+      "- multiple tabs/windows: "+bool("multiTabs"),
+      "- VPN/proxy/secure DNS: "+bool("vpn"),
+      "- browser extensions/filtering: "+bool("extensions"),
+      "- same conversation readable in another client: "+bool("otherClient"),
+      "- temporary recovery after refresh/wait/restart: "+bool("temporary"),
+      "- potentially relevant Status incident: "+bool("statusIncident"),
+      "- long conversation: "+bool("longChat"),
+      "",
+      "Additional notes:",
+      $("extra").value.trim()||"(none)",
+      "",
+      "Troubleshooting performed:",
+      "- checked OpenAI Status",
+      "- avoided rapid repeated retries",
+      "- compared private window / browser / device / network where applicable",
+      "",
+      "Privacy: no authenticated raw HAR was posted publicly to GitHub/social media."
+    ];
+  }
+  $("memoOut").textContent=lines.join("\n");
+  $("memoOut").dataset.generated="1";
+}
+
+$("build").addEventListener("click",buildPlan);
+$("memo").addEventListener("click",buildMemo);
+$("copy").addEventListener("click",async()=>{
+  try{
+    await navigator.clipboard.writeText($("memoOut").textContent);
+    $("copy").textContent=t().copied;
+    setTimeout(()=>{$("copy").textContent=t().copyButton;},1200);
+  }catch(_){
+    $("copy").textContent=t().copyFail;
+  }
+});
+$("langJa").addEventListener("click",()=>applyLanguage("ja"));
+$("langEn").addEventListener("click",()=>applyLanguage("en"));
+
+applyLanguage(lang);
+})();
+</script>
+</body>
+</html>
