@@ -20,3 +20,17 @@ Please contribute only sanitized, derived telemetry.
 4. Open a pull request with the sanitized derivative and analysis.
 
 Please distinguish observation from inference and avoid claiming an OpenAI internal root cause without server-side evidence.
+
+
+## Responsible testing
+
+Before contributing, read [RESPONSIBLE_TESTING.md](RESPONSIBLE_TESTING.md).
+
+Do not generate synthetic load, retry storms, deliberate 429s, or coordinated
+recovery traffic against production OpenAI services for the purpose of this
+repository.
+
+Prefer passive observation of naturally occurring failures and local
+simulation.
+
+Contributions that reduce duplicate/retry/provider work are especially welcome.
