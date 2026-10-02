@@ -32,26 +32,66 @@
     "accessible": 48,
     "blocked": 60,
     "mixed": 0,
+    "max_pair_skew_ms": 9.0,
     "median_next_observation_gap_s": {
       "accessible": 10.272,
       "blocked": 5.998
     },
+    "mean_active_epoch_gap_s": {
+      "accessible": 10.842854,
+      "blocked": 6.035638
+    },
     "median_latency_ms": {
       "accessible_stream_status": 3570.987,
-      "accessible_snapshot": 5099.194,
+      "accessible_snapshot": 5099.195,
       "blocked_stream_status": 340.994,
       "blocked_snapshot": 325.632
     },
-    "transition_counts": {
+    "sessionization": {
+      "gap_threshold_s": 60.0,
+      "excluded_cross_epoch_transition_count": 1,
+      "excluded_gap_s": 775.64
+    },
+    "transition_counts_active_epochs_only": {
       "accessible->accessible": 38,
       "accessible->blocked": 10,
       "blocked->blocked": 50,
-      "blocked->accessible": 9
+      "blocked->accessible": 8
     },
-    "p_blocked_given_blocked": 0.847458,
+    "p_blocked_given_accessible": 0.208333,
+    "p_blocked_given_blocked": 0.862069,
+    "wilson_95_p_blocked_given_accessible": [
+      0.117303,
+      0.342589
+    ],
+    "wilson_95_p_blocked_given_blocked": [
+      0.750741,
+      0.928415
+    ],
+    "blocked_fraction_by_observation_count": 0.555556,
+    "blocked_fraction_by_active_time": 0.402134,
     "blocked_run_count": 10,
+    "blocked_runs_right_censored": 2,
     "blocked_run_median_observations": 7.5,
-    "blocked_run_median_duration_s": 40.504
+    "blocked_run_median_duration_s": 40.5045
+  },
+  "cycle_time_model": {
+    "definition": "For within-epoch transitions, service_s = max(stream_latency, snapshot_latency); gap_s is start-to-start time to the next pair.",
+    "n": 106,
+    "ols": {
+      "gap_s_intercept": 5.616398,
+      "service_time_coefficient": 0.956557,
+      "r_squared": 0.991356
+    },
+    "robust_theil_sen": {
+      "gap_s_intercept": 5.70167,
+      "service_time_coefficient": 0.92198
+    },
+    "median_post_completion_wait_s": {
+      "accessible": 5.382538,
+      "blocked": 5.647243
+    },
+    "interpretation": "The cadence shift is largely explained by fast failure plus a roughly fixed post-completion wait; an explicitly more aggressive blocked-state retry policy is not required by the data."
   },
   "resume_observations": {
     "resume_404_count": 2,
@@ -59,17 +99,24 @@
       {
         "seconds_to_first_snapshot_429": 349.013,
         "successful_snapshots_before_429": 32,
-        "successful_snapshot_payload_mib_before_429": 146.331
+        "successful_snapshot_payload_mib_from_public_rounded_data": 146.375
       },
       {
         "seconds_to_first_snapshot_429": 87.853,
         "successful_snapshots_before_429": 8,
-        "successful_snapshot_payload_mib_before_429": 36.583
+        "successful_snapshot_payload_mib_from_public_rounded_data": 36.594
       }
     ],
     "later_resume_200_observed": true,
     "later_resume_200_latency_ms": 135837.783,
     "later_resume_200_payload_kib_rounded_4": 812
   },
-  "interpretation_guardrail": "These observations are compatible with a recovery-first positive-feedback hypothesis, but they do not establish OpenAI's internal root cause."
+  "numerical_validation": {
+    "design_matrix_condition_number": 5.617,
+    "normal_matrix_condition_number": 31.551,
+    "high_precision_check": "80-digit arithmetic agrees with binary64 at all displayed OLS coefficient digits.",
+    "ozaki_scheme_needed": false,
+    "reason": "Measurement/model uncertainty dominates floating-point roundoff for this small, well-conditioned fit."
+  },
+  "interpretation_guardrail": "The observations strongly support completion-coupled cadence amplification and state persistence in this capture. A feedback path from increased attempt rate to 429 pressure remains a falsifiable causal hypothesis, not an identified OpenAI internal mechanism."
 }
