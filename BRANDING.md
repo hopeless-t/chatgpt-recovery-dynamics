@@ -73,3 +73,33 @@ Avoid:
 
 ## Tone
 Technically serious, visually unnecessary, epistemically conservative.
+
+
+## Local TV commercial mode
+
+An intentionally retro promotional mode is part of the visual identity.
+
+Reference implementation:
+
+- `docs/cm/index.html`
+
+Design target:
+
+> a local television commercial that only airs after 23:30 in one prefecture.
+
+Required properties:
+
+- overconfident primary colors;
+- slightly too many borders;
+- a mascot that appears to have been approved by a committee;
+- one unnecessary jingle;
+- a disclaimer that is more rigorous than the advertisement;
+- no degradation of the evidence boundary.
+
+Canonical slogan:
+
+> **Retry 0回増量中。※増やしていません**
+
+The local-TV mode is intentionally uncool.
+
+That is considered a feature.
