@@ -1,0 +1,61 @@
+name: Validate public analysis
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Compile scripts
+        run: python -m compileall -q scripts
+
+      - name: Recompute public analysis
+        run: python scripts/analyze_public_data.py > /tmp/public-analysis.json
+
+      - name: Check published invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/public-analysis.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          assert s["pairing"]["total"] == 108
+          assert s["pairing"]["accessible"] == 48
+          assert s["pairing"]["blocked"] == 60
+          assert s["pairing"]["mixed"] == 0
+
+          assert s["sessionization"]["excluded_cross_epoch_transition_count"] == 1
+          assert s["transition_counts_active_epochs_only"] == {
+              "accessible->accessible": 38,
+              "accessible->blocked": 10,
+              "blocked->accessible": 8,
+              "blocked->blocked": 50,
+          }
+
+          pbb = s["transition_probabilities"]["p_blocked_next_given_blocked"]
+          assert abs(pbb - 0.8620689655172413) < 1e-12
+
+          reg = s["cycle_time"]["service_time_regression"]
+          assert abs(reg["intercept_s"] - 5.616397589315325) < 1e-9
+          assert abs(reg["service_time_coefficient"] - 0.9565569848514345) < 1e-9
+          assert abs(reg["r2"] - 0.9913563468164521) < 1e-12
+
+          episodes = s["resume_observations"]["resume_404_episodes"]
+          assert episodes[0]["successful_snapshot_payload_mib_from_public_rounded_data"] == 146.375
+          assert episodes[1]["successful_snapshot_payload_mib_from_public_rounded_data"] == 36.594
+
+          print("public analysis invariants: PASS")
+          PY
