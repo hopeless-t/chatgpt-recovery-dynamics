@@ -4,6 +4,24 @@
 
 **OpenAI内部の根本原因を断定するものではありません。**
 
+<p align="center">
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/">
+    <img src="docs/assets/recovery-network.gif" alt="会話復旧ネットワークのアニメーション" width="100%" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/">Project Portal</a>
+  ·
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/">Animated Network</a>
+  ·
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/recovery-helper/">Recovery Helper</a>
+  ·
+  <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki">Wiki</a>
+</p>
+
+> **Visualization ≠ Evidence.** アニメーションは提案設計の説明図であり、OpenAI内部ネットワークの再現ではありません。
+
 ## 数理モデルとエビデンス概要
 
 | 層 | 結果 | 扱い |
@@ -74,10 +92,7 @@ GitHub Pages用に `/docs` からそのまま公開できる形にしてあり�
 詳細:
 - [Recovery Helper](docs/recovery-helper/README.md)
 
-GitHub Pagesがまだ有効でない場合だけ、
-`Settings -> Pages -> main /docs` の一回の設定が必要です。
-現在接続しているGitHub toolからはPages有効化設定そのものは変更できないため、
-site本体はdeployment-readyまで仕上げています。
+GitHub Pagesは `main /docs` で有効化済みです。Project PortalからAnimated Network、日英Recovery Helper、Wikiへ移動できます。
 
 ## OpenAI / provider-friendly設計
 
