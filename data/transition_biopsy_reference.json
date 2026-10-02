@@ -1,0 +1,39 @@
+{
+  "accessible_origin_transitions": 48,
+  "a_to_a": 38,
+  "a_to_b": 10,
+  "reentry_contingency": {
+    "reentry_n": 8,
+    "reentry_to_blocked": 8,
+    "non_reentry_n": 40,
+    "non_reentry_to_blocked": 2,
+    "p_next_blocked_reentry": 1.0,
+    "p_next_blocked_non_reentry": 0.05,
+    "wilson_95_reentry": [0.6755924351161198, 1.0],
+    "wilson_95_non_reentry": [0.013820667386148344, 0.16503877369140962],
+    "fisher_exact_one_sided": 1.1925300110910062e-7
+  },
+  "history_model_competition": {
+    "two_state_first_order": {
+      "log_likelihood": -47.832535530881984,
+      "parameters": 2,
+      "aic": 99.66507106176397,
+      "bic": 104.9919492499881
+    },
+    "history_aware_h_e_b": {
+      "log_likelihood": -31.209621740681236,
+      "parameters": 3,
+      "aic": 68.41924348136247,
+      "bic": 76.40956076369866
+    },
+    "delta_aic": -31.245827580401496,
+    "delta_bic": -28.58238848628943
+  },
+  "best_predictive_partition": {
+    "name": "M2_reentry_history",
+    "loo_logloss": 0.19865834717374617,
+    "loo_brier": 0.042343750000000006,
+    "log_bayes_factor_vs_constant": 15.069640996177073
+  },
+  "guardrail": "Strong within-capture evidence for recovery hysteresis; only eight reentry observations exist."
+}
