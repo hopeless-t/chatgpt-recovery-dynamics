@@ -290,6 +290,8 @@ def build_story(summary, biopsy, deep, congestion):
         ),
     ]
 
+    story.append(PageBreak())
+
     story += section_title("4. Cycle timing and latent residual memory", st)
     tm = deep["timing_residual_dynamics"]
     story += [
@@ -352,6 +354,8 @@ def build_story(summary, biopsy, deep, congestion):
         ),
     ]
 
+    story.append(PageBreak())
+
     story += section_title("7. Recovery architecture", st)
     story += [
         para(
@@ -406,6 +410,8 @@ def build_story(summary, biopsy, deep, congestion):
             st["Smallx"],
         ),
     ]
+
+    story.append(PageBreak())
 
     story += section_title("10. Limitations and falsification priorities", st)
     for item in [
