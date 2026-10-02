@@ -59,3 +59,60 @@ jobs:
 
           print("public analysis invariants: PASS")
           PY
+
+  monte-carlo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run robust Monte Carlo reference
+        run: |
+          python scripts/monte_carlo_recovery.py             --trials 5000             --bootstrap-trials 10000             --output /tmp/monte-carlo.json
+
+      - name: Check qualitative robustness invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/monte-carlo.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          base = s["policies"]["baseline"]
+          anchor = s["policies"]["anchor_10s"]
+          strong = s["policies"]["strong_backoff"]
+
+          # Start anchoring should reduce pressure-feedback failures in this
+          # deliberately broad stress model.
+          assert (
+              anchor["pressure_feedback"]["recovery_rate"]
+              > base["pressure_feedback"]["recovery_rate"]
+          )
+
+          # Strong backoff should show the intended model-risk tradeoff:
+          # it helps under pressure feedback but can hurt when recovery is
+          # attempt-driven.
+          assert (
+              strong["pressure_feedback"]["recovery_rate"]
+              > anchor["pressure_feedback"]["recovery_rate"]
+          )
+          assert (
+              strong["attempt_driven"]["recovery_rate"]
+              < anchor["attempt_driven"]["recovery_rate"]
+          )
+
+          ci = s["bootstrap"]["accessible_gap_median_s"]
+          assert 9.5 < ci["p2_5"] < 10.5
+          assert 10.0 < ci["p50"] < 10.6
+          assert 10.5 < ci["p97_5"] < 11.5
+
+          print("Monte Carlo qualitative invariants: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monte-carlo-reference
+          path: /tmp/monte-carlo.json
