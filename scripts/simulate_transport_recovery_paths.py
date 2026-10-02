@@ -468,8 +468,11 @@ def main():
         "paths": {},
     }
 
-    for path_index, (name, path) in enumerate(PATHS.items()):
-        base_seed = args.seed + path_index * 0x1000003D
+    # Common random numbers: every path is evaluated against the same
+    # parameter/random worlds. This reduces comparison variance and makes
+    # path-only differences easier to interpret.
+    for name, path in PATHS.items():
+        base_seed = args.seed
 
         attempt = [
             simulate_attempt_driven(
