@@ -14,8 +14,11 @@ a falsifiable mathematical model, and a client-side recovery proposal.
 | Fast-fail timing | blocked snapshot median 325.6 ms vs accessible 5099.2 ms | **Observed** |
 | Cycle law | `Delta ~= 5.616 + 0.957 S`, `R^2 = 0.99136` | **Recomputed / CI-checked** |
 | State persistence | `P(B_next | B) = 0.8621` after censoring the inactive epoch gap | **Observed + Wilson interval** |
+| A->B biopsy | first A after B rebounded **8/8**; other A->B only **2/40** | **Observed; Fisher p ~= 1.19e-7** |
+| History model | H/E/B history-aware model vs A/B first-order: **Delta BIC ~= -28.6** | **Model competition** |
 | Healthy-cycle bootstrap | Accessible median cycle 95% bootstrap interval: **10.002–10.987 s** | **30k bootstrap resamples** |
 | Robust controller | start-to-start anchor near 10 s | **Monte Carlo stress-tested, not production-proven** |
+| Transport redesign | request-pressure recovery: **20.36% -> 68.18%** with anchor+single-flight; observe-first cuts mean payload to **4.62 MiB** | **5k-trial stress simulation** |
 | Public-report archaeology | 15 archived Reddit/HN artifacts; 13 in default weak-evidence subset | **Historical weak evidence** |
 | 2026 recurrence | 12 retained report dates spanning **185 days** | **Archive recurrence, not prevalence** |
 | Long archaeology span | oldest-to-newest retained report span: **1,301 days** | **Historical continuity only** |
@@ -77,9 +80,30 @@ next_start >= previous_start + T_normal
 with `T_normal ~= 10 s` for this capture, derived from the bootstrap interval
 of the Accessible cycle.
 
+The transition biopsy adds a history-aware recovery state:
+
+~~~text
+B / Blocked --success--> E / Recovering
+E / Recovering --stable confirmation--> H / Healthy
+E / Recovering --failure--> B / Blocked
+~~~
+
+Observed within active epochs:
+
+~~~text
+B -> E -> B : 8
+B -> E -> H : 0
+~~~
+
+so a single successful observation is treated as **provisional recovery**, not
+proof of stability.
+
 Full derivation: [docs/model.md](docs/model.md)  
 Validation: [docs/validation.md](docs/validation.md)  
 Monte Carlo: [docs/monte-carlo.md](docs/monte-carlo.md)  
+Transition biopsy: [docs/transition-biopsy.md](docs/transition-biopsy.md)  
+Model competition: [docs/transition-model-competition.md](docs/transition-model-competition.md)  
+Transport redesign: [docs/transport-recovery-redesign.md](docs/transport-recovery-redesign.md)  
 External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 
 > **Evidence discipline:** local HAR-derived telemetry drives the quantitative
@@ -93,6 +117,9 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Independent validation / model audit](docs/validation.md)
 - [Recovery design proposal](docs/recovery-design.md)
 - [Robust Monte Carlo stress test](docs/monte-carlo.md)
+- [A -> B transition biopsy](docs/transition-biopsy.md)
+- [Transition model competition](docs/transition-model-competition.md)
+- [Transport / recovery-path redesign](docs/transport-recovery-redesign.md)
 - [External public-report archaeology](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
@@ -368,6 +395,97 @@ pressure rises, a completion-coupled loop can acquire positive feedback.
 The full derivation and falsification conditions are in
 [docs/model.md](docs/model.md).
 
+## A -> B transition biopsy and model competition
+
+The next failure transition is dominated by **history**, not by the current
+successful-request latency.
+
+Among 48 Accessible-origin transitions:
+
+~~~text
+current A immediately after B:
+    next B = 8 / 8
+
+other Accessible observations:
+    next B = 2 / 40
+~~~
+
+One-sided Fisher exact:
+
+~~~text
+p ~= 1.19e-7
+~~~
+
+A Jeffreys-prior model competition ranks the reentry-history partition first:
+
+| Predictor model | LOO log loss | LOO Brier |
+|---|---:|---:|
+| **reentry history** | **0.199** | **0.0423** |
+| previous gap <8 s | 0.205 | 0.0442 |
+| run length <=2 | 0.364 | 0.1069 |
+| epoch | 0.515 | 0.1662 |
+| constant hazard | 0.533 | 0.1719 |
+| service <5 s | 0.547 | 0.1765 |
+
+The history-aware H/E/B chain improves on the first-order A/B chain by roughly:
+
+~~~text
+Delta AIC ~= -31.25
+Delta BIC ~= -28.58
+~~~
+
+This makes recovery hysteresis a data-backed requirement for the proposed
+client state machine.
+
+See [transition biopsy](docs/transition-biopsy.md) and
+[model competition](docs/transition-model-competition.md).
+
+## Transport / recovery-path redesign
+
+The proposed recovery path separates cheap observation from expensive snapshot
+materialization and keeps correctness out of the transport session:
+
+~~~text
+local triggers
+ -> single-flight recovery lease
+ -> cheap state/version observation
+ -> start-anchored retry if blocked
+ -> E / Recovering on first success
+ -> stable confirmation
+ -> full snapshot once
+ -> atomic reconcile
+ -> optional realtime reattach
+~~~
+
+Transport preference:
+
+~~~text
+HTTP/2      preferred baseline
+HTTP/1.1    correctness-preserving fallback
+HTTP/3      optional path-survival acceleration
+WebSocket   optional realtime notification only
+~~~
+
+In the 5,000-trial request-count-pressure stress model:
+
+| Path | Stable recovery | Mean requests | Mean payload |
+|---|---:|---:|---:|
+| completion per context | 20.36% | 38.66 | 28.96 MiB |
+| anchor + single-flight | **68.18%** | 11.29 | 13.49 MiB |
+| observe -> snapshot | **68.18%** | 11.29 | **4.62 MiB** |
+
+The observe-first path intentionally receives no rate-limit advantage in that
+model: every request has equal pressure cost. Its benefit is lower expensive
+materialization.
+
+Under a separate byte/work-weighted pressure stress model, observe-first reaches
+100% recovery with p95 70 s versus 68.98% / p95 370 s for repeated full
+snapshots. That result is explicitly **hypothetical** and is not evidence about
+the production limiter.
+
+See [transport redesign](docs/transport-recovery-redesign.md) and
+[data/transport_recovery_reference.json](data/transport_recovery_reference.json).
+
 ## Recovery proposal
 
 The proposed client-side recovery rule is:
@@ -487,17 +605,25 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/external_observations.jsonl — curated Reddit/HN archaeology archive
 - data/external_summary.json — weak-evidence corpus summary
 - data/official_incidents.jsonl — official incident context
+- data/transition_biopsy_reference.json — A->B biopsy/model reference
+- data/transport_recovery_reference.json — transport-path simulation reference
 - docs/model.md — revised DCS / feedback model
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
 - docs/monte-carlo.md — robust policy stress test under causal-model uncertainty
 - docs/external-evidence.md — public-report archaeology and model constraints
+- docs/transition-biopsy.md — A->B pre-transition biopsy
+- docs/transition-model-competition.md — history-vs-latency model competition
+- docs/transport-recovery-redesign.md — protocol/path redesign and simulation
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
 - scripts/analyze_public_data.py — public JSONL -> reproduced statistics
 - scripts/monte_carlo_recovery.py — bootstrap + three-model policy stress test
 - scripts/analyze_external_evidence.py — reproducible Reddit/HN archaeology summary
+- scripts/analyze_transition_biopsy.py — A->B transition biopsy
+- scripts/compete_transition_models.py — small-sample transition model competition
+- scripts/simulate_transport_recovery_paths.py — protocol/path stress simulation
 
 ## Scope and limitations
 
