@@ -1,0 +1,116 @@
+{
+  "bootstrap": {
+    "accessible_gap_median_s": {
+      "p2_5": 10.00200000000001,
+      "p50": 10.272000000000027,
+      "p97_5": 10.986999999999966
+    },
+    "accessible_post_completion_wait_median_s": {
+      "p2_5": 5.067341000000053,
+      "p50": 5.382537999999979,
+      "p97_5": 5.513929000000017
+    },
+    "blocked_gap_median_s": {
+      "p2_5": 5.995999999999981,
+      "p50": 5.997500000000031,
+      "p97_5": 6.0020000000000095
+    },
+    "blocked_post_completion_wait_median_s": {
+      "p2_5": 5.62764149999995,
+      "p50": 5.647243000000016,
+      "p97_5": 5.678758500000036
+    }
+  },
+  "policies": {
+    "anchor_10s": {
+      "attempt_driven": {
+        "attempts": {"mean": 10.953381352541017, "p50": 7.0, "p90": 24.0, "p95": 32.0},
+        "blocked_attempts": {"mean": 9.691676670668267, "p50": 6.0, "p90": 22.0, "p95": 30.0},
+        "recovery_rate": 0.9996,
+        "recovery_time_s": {"mean": 110.77552796518609, "p50": 71.63825050000008, "p90": 240.60992690000015, "p95": 320.2823154}
+      },
+      "latent_wallclock": {
+        "attempts": {"mean": 5.3202, "p50": 5.0, "p90": 8.0, "p95": 9.0},
+        "blocked_attempts": {"mean": 4.3202, "p50": 4.0, "p90": 7.0, "p95": 8.0},
+        "detection_delay_s": {"mean": 5.01192162442872, "p50": 5.055463205081395, "p90": 9.070036916811622, "p95": 9.528504199144294},
+        "recovery_rate": 1.0,
+        "recovery_time_s": {"mean": 43.202, "p50": 40.0, "p90": 70.0, "p95": 80.0}
+      },
+      "policy": {"backoff_after": 1000000000, "base_backoff": 0.0, "cap": 0.0, "factor": 1.0, "jitter": 0.0, "min_period": 10.0},
+      "pressure_feedback": {
+        "attempts": {"mean": 10.953111432706223, "p50": 6, "p90": 23.0, "p95": 37.0},
+        "blocked_attempts": {"mean": 8.101013024602025, "p50": 4, "p90": 19.0, "p95": 31.0},
+        "recovery_rate": 0.691,
+        "recovery_time_s": {"mean": 101.37604438986976, "p50": 54.195441, "p90": 224.0867596, "p95": 362.0448586999998}
+      }
+    },
+    "baseline": {
+      "attempt_driven": {
+        "attempts": {"mean": 11.1498, "p50": 8.0, "p90": 23.0, "p95": 32.0},
+        "blocked_attempts": {"mean": 9.8776, "p50": 7.0, "p90": 22.0, "p95": 30.0},
+        "recovery_rate": 1.0,
+        "recovery_time_s": {"mean": 73.45375786099999, "p50": 52.08089449999997, "p90": 150.2004306, "p95": 198.24313925000067}
+      },
+      "latent_wallclock": {
+        "attempts": {"mean": 7.8544, "p50": 8.0, "p90": 12.0, "p95": 13.0},
+        "blocked_attempts": {"mean": 6.8544, "p50": 7.0, "p90": 11.0, "p95": 12.0},
+        "detection_delay_s": {"mean": 3.0615991007198966, "p50": 3.051739997701551, "p90": 5.4540913075399, "p95": 5.786668017177456},
+        "recovery_rate": 1.0,
+        "recovery_time_s": {"mean": 41.37270987819999, "p50": 41.658069999999846, "p90": 65.09944549999987, "p95": 72.11967565000019}
+      },
+      "policy": {"backoff_after": 1000000000, "base_backoff": 0.0, "cap": 0.0, "factor": 1.0, "jitter": 0.0, "min_period": 0.0},
+      "pressure_feedback": {
+        "attempts": {"mean": 16.30030372057707, "p50": 9.0, "p90": 36.0, "p95": 59.34999999999991},
+        "blocked_attempts": {"mean": 13.416476841305998, "p50": 6.0, "p90": 32.0, "p95": 54.0},
+        "recovery_rate": 0.5268,
+        "recovery_time_s": {"mean": 101.4180887232346, "p50": 52.71421649999982, "p90": 223.56917609999974, "p95": 372.1089656499999}
+      }
+    },
+    "moderate_backoff": {
+      "attempt_driven": {
+        "attempts": {"mean": 10.336446700507615, "p50": 7, "p90": 23.0, "p95": 29.0},
+        "blocked_attempts": {"mean": 9.063959390862944, "p50": 6, "p90": 21.0, "p95": 27.0},
+        "recovery_rate": 0.985,
+        "recovery_time_s": {"mean": 213.88652884236603, "p50": 121.65910188826965, "p90": 539.2890677033658, "p95": 722.7119298675414}
+      },
+      "latent_wallclock": {
+        "attempts": {"mean": 4.6292, "p50": 5.0, "p90": 6.0, "p95": 6.0},
+        "blocked_attempts": {"mean": 3.6292, "p50": 4.0, "p90": 5.0, "p95": 5.0},
+        "detection_delay_s": {"mean": 9.940860908094283, "p50": 8.473184651699068, "p90": 20.81806898369032, "p95": 24.82422009862096},
+        "recovery_rate": 1.0,
+        "recovery_time_s": {"mean": 47.89273674662005, "p50": 49.65111948426043, "p90": 79.097931348873, "p95": 82.11993183991142}
+      },
+      "policy": {"backoff_after": 2, "base_backoff": 8.0, "cap": 30.0, "factor": 1.5, "jitter": 0.2, "min_period": 10.0},
+      "pressure_feedback": {
+        "attempts": {"mean": 9.37833114897335, "p50": 7.0, "p90": 19.0, "p95": 28.0},
+        "blocked_attempts": {"mean": 6.638051550895588, "p50": 4.0, "p90": 15.0, "p95": 23.0},
+        "recovery_rate": 0.9156,
+        "recovery_time_s": {"mean": 125.96678998653503, "p50": 71.2906175, "p90": 297.38818544999356, "p95": 458.31532099711194}
+      }
+    },
+    "strong_backoff": {
+      "attempt_driven": {
+        "attempts": {"mean": 8.571084337349397, "p50": 7, "p90": 18.0, "p95": 21.0},
+        "blocked_attempts": {"mean": 7.343702081051479, "p50": 6, "p90": 16.0, "p95": 19.0},
+        "recovery_rate": 0.913,
+        "recovery_time_s": {"mean": 283.68768296944785, "p50": 157.58617459705408, "p90": 748.0644468231933, "p95": 941.8602074811731}
+      },
+      "latent_wallclock": {
+        "attempts": {"mean": 4.3224, "p50": 5.0, "p90": 5.0, "p95": 5.0},
+        "blocked_attempts": {"mean": 3.3224, "p50": 4.0, "p90": 4.0, "p95": 4.0},
+        "detection_delay_s": {"mean": 15.109061780281827, "p50": 11.238423247395822, "p90": 31.118662291560735, "p95": 36.293432216225504},
+        "recovery_rate": 1.0,
+        "recovery_time_s": {"mean": 52.747183565491476, "p50": 62.51615363327505, "p90": 74.5015539390749, "p95": 77.9645549273695}
+      },
+      "policy": {"backoff_after": 2, "base_backoff": 8.0, "cap": 60.0, "factor": 2.0, "jitter": 0.2, "min_period": 10.0},
+      "pressure_feedback": {
+        "attempts": {"mean": 7.83082938876312, "p50": 6, "p90": 14.0, "p95": 19.0},
+        "blocked_attempts": {"mean": 5.258901008437951, "p50": 4, "p90": 10.0, "p95": 15.0},
+        "recovery_rate": 0.9718,
+        "recovery_time_s": {"mean": 126.65287079297984, "p50": 80.54429893926033, "p90": 273.29294627615224, "p95": 404.6065149795265}
+      }
+    }
+  },
+  "trials_per_policy_per_model": 5000,
+  "warning": "Design stress test only. The pressure-feedback model is not identified from OpenAI internals."
+}
