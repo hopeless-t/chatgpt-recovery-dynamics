@@ -416,6 +416,183 @@ independence and reporting probabilities are unknown.
 
 See [external evidence archaeology](external-evidence.md).
 
+## H7 — provisional recovery state and history-dependent hazard
+
+The A -> B transition biopsy suggests that the binary Accessible/Blocked label
+is too coarse for recovery control.
+
+Define:
+
+~~~text
+H = established/stable Accessible
+E = first Accessible observation immediately after Blocked
+B = Blocked
+~~~
+
+Observed active-epoch transitions:
+
+~~~text
+H -> H: 38
+H -> B:  2
+
+B -> E:  8
+B -> B: 50
+
+E -> B:  8
+E -> H:  0
+~~~
+
+Thus:
+
+~~~text
+P(next B | E) = 1.00 observed
+P(next B | H) = 0.05 observed
+~~~
+
+with a one-sided Fisher exact value of approximately:
+
+~~~text
+1.19e-7
+~~~
+
+The Jeffreys posterior for the E -> B probability is:
+
+~~~text
+p_EB | data ~ Beta(8.5, 0.5)
+~~~
+
+whose posterior-predictive mean is:
+
+~~~text
+E[p_EB | data] = 8.5 / 9 ~= 0.944
+~~~
+
+This is the basis of the approximately 94.5% naive-first-success rebound rate
+in the transport stress simulation.
+
+The result should be interpreted as:
+
+> current transport success is insufficient state; recovery history carries
+> additional predictive information.
+
+A small-sample model competition gives the reentry-history partition a
+leave-one-out log loss of about 0.199 versus about 0.533 for a constant
+A -> B hazard.
+
+The history-aware H/E/B transition model improves the first-order A/B model by:
+
+~~~text
+Delta AIC ~= -31.25
+Delta BIC ~= -28.58
+~~~
+
+within this capture.
+
+This motivates a recovery controller that enters E after the first success and
+requires independent/stable confirmation before resetting failure history or
+declaring H.
+
+See:
+
+- [A -> B transition biopsy](transition-biopsy.md)
+- [transition model competition](transition-model-competition.md)
+
+## H8 — recovery-path cost model
+
+The earlier pressure equation counted observation throughput X(t). A transport
+redesign needs to distinguish request count from per-request work.
+
+Let recovery request i carry abstract cost:
+
+~~~text
+c_i =
+    w_request
+  + w_bytes * bytes_i
+  + w_work * server_work_i
+~~~
+
+and define total recovery load rate:
+
+~~~text
+L(t) = sum_i c_i / time
+~~~
+
+Then a more general latent pressure model is:
+
+~~~text
+dP/dt = alpha * L(t) - delta * P(t) + xi(t)
+~~~
+
+Two limiting cases are useful stress models.
+
+### Request-count dominated
+
+~~~text
+w_request >> w_bytes, w_work
+~~~
+
+A cheap status probe and a full snapshot can have similar rate-limit cost.
+
+In this case, observe-before-snapshot mainly saves transfer/materialization
+cost; start anchoring and single-flight provide the pressure benefit.
+
+### Byte/work dominated
+
+~~~text
+w_bytes or w_work is material
+~~~
+
+Repeated multi-MiB snapshot materialization can contribute more pressure than a
+small state/version observation.
+
+In this case, separating observation from materialization can improve both
+traffic cost and pressure dynamics.
+
+The production values of these weights are unknown.
+
+Therefore the transport simulation evaluates both regimes rather than assuming
+one.
+
+## H9 — transport survival invariants
+
+The mathematical model suggests the following correctness invariants:
+
+~~~text
+transport failure != canonical conversation loss
+transport attempt != logical recovery
+re-observation != re-execution
+first success != stable recovery
+UNKNOWN != retry permission
+~~~
+
+A robust recovery path therefore keeps stable application-level identity across
+transport changes:
+
+~~~text
+recovery_id stays fixed
+operation_id stays fixed when logical work exists
+attempt_id changes per network attempt
+conversation_version is reconciled monotonically
+~~~
+
+The proposed network path is:
+
+~~~text
+single-flight recovery owner
+ -> cheap observe/version request
+ -> bounded start-anchored retry
+ -> E / Recovering
+ -> stable confirmation
+ -> one full snapshot
+ -> atomic reconcile
+ -> optional realtime reattachment
+~~~
+
+HTTP/2, HTTP/1.1, HTTP/3 and WebSocket are transport choices around this state
+machine, not sources of canonical truth.
+
+See [transport and recovery-path redesign](transport-recovery-redesign.md).
+
 ## Recovery implication
 
 If completion-coupled fast failure is the main cadence amplifier, the key
