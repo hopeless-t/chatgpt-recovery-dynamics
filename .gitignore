@@ -1,0 +1,5 @@
+*.har
+*.har.gz
+.DS_Store
+__pycache__/
+*.pyc
