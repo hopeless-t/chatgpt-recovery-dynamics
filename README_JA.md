@@ -100,6 +100,58 @@ base useful work >= service capacity
 production OpenAI endpointへの意図的なload test、rate-limit回避、synthetic retry stormは
 このrepoでは推奨しません。過負荷実験はlocal simulationで行います。
 
+## 深掘り検算
+
+今のcycle lawは `R^2 ~= 0.991` ですが、残差にはまだ時系列構造が残っていました。
+
+~~~text
+Delta_n = 5.6164 + 0.9566 S_n + u_n
+u_n ~= 0.524 u_(n-1) + epsilon_n
+~~~
+
+AR(1)を加えると:
+
+~~~text
+Delta BIC ~= -29.3
+residual SSE 約27.4%減
+~~~
+
+さらにpost-completion waitそのものは:
+
+~~~text
+phi_W ~= 0.676
+~~~
+
+で、単純な「完全固定5.6秒sleep」より、ゆっくり変化するscheduler/controller
+stateを持つモデルの方が合います。
+
+解析閾値も検査済みです。
+
+~~~text
+pairing window 10–100 ms:
+  108 pairs / A48 / B60 / mixed0 で不変
+
+epoch gap 20–600 s:
+  AA38 / AB10 / BA8 / BB50 で不変
+~~~
+
+また、各active epochで独立にlatency change-pointを探すと、2epochとも
+**最初のBlocked観測と完全一致**しました。
+
+history-free A/B Markovが正しい場合に、Blocked直後のAccessible 8回が
+8/8すべて再びBlockedになるposterior predictive probabilityは:
+
+~~~text
+約 2.31e-5
+~~~
+
+です。
+
+詳細:
+
+- [deep trace validation](docs/deep-validation.md)
+- [deep validation reference](data/deep_validation_reference.json)
+
 ## まず結論
 
 再検算したところ、Blocked時に観測周期が短くなる現象は、
