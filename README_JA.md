@@ -167,6 +167,111 @@ Blockedはこのcapture内ではかなり持続的です。
 
 内部rate limiterのscopeや実装はHARだけでは分かりません。
 
+## A→B遷移生検とモデル競争
+
+Blockedに入る直前を切り出して再解析すると、現在の成功requestのlatencyよりも
+**「そのAccessibleがBlocked直後の一瞬の復帰かどうか」**が強い予測因子でした。
+
+~~~text
+Blocked直後の最初のAccessible:
+    次もBlocked = 8 / 8
+
+それ以外のAccessible:
+    次もBlocked = 2 / 40
+~~~
+
+一方向Fisher exact:
+
+~~~text
+p ~= 1.19e-7
+~~~
+
+したがって、
+
+~~~text
+B / Blocked
+   -> E / Recovering
+   -> H / Healthy
+~~~
+
+という中間状態Eを導入します。
+
+観測上は:
+
+~~~text
+B -> E -> B : 8
+B -> E -> H : 0
+~~~
+
+でした。
+
+小標本向けのJeffreys prior + leave-one-out model competitionでも
+reentry-historyモデルが最良でした。
+
+~~~text
+reentry history LOO log loss ~= 0.199
+constant hazard            ~= 0.533
+
+history-aware H/E/B vs first-order A/B:
+Delta BIC ~= -28.6
+~~~
+
+つまり「200が1回出たら復旧」ではなく、
+**最初の成功はprovisional recoveryとして扱う**のが現在のデータに合っています。
+
+詳細:
+
+- [A→B transition biopsy](docs/transition-biopsy.md)
+- [transition model competition](docs/transition-model-competition.md)
+
+## 通信プロトコル / recovery経路の再設計
+
+提案経路は:
+
+~~~text
+複数window/tabのtrigger
+ -> single-flight recovery lease
+ -> 軽量なstate/version観測
+ -> blockedなら10秒前後のstart-anchor + backoff
+ -> 最初の成功でE / Recovering
+ -> stable確認
+ -> full snapshotを1回だけ取得
+ -> atomic reconcile
+ -> realtimeを再接続
+~~~
+
+通信transport自体は:
+
+~~~text
+HTTP/2      基本経路
+HTTP/1.1    correctnessを保つfallback
+HTTP/3      path migration等のoptional acceleration
+WebSocket   realtime notification専用
+~~~
+
+とし、conversationの正しさはtransport sessionに依存させません。
+
+5,000試行のrequest-count pressure stress modelでは:
+
+| 経路 | stable recovery | 平均request | 平均payload |
+|---|---:|---:|---:|
+| completion/context | 20.36% | 38.66 | 28.96 MiB |
+| anchor + single-flight | **68.18%** | 11.29 | 13.49 MiB |
+| observe -> snapshot | **68.18%** | 11.29 | **4.62 MiB** |
+
+このモデルでは軽量probeもfull snapshotもrequest-count上は同じコストなので、
+observe-firstにrate-limit上の有利さを与えていません。
+それでもsnapshot materialization量は大幅に減ります。
+
+byte/work-weightedな仮想pressureモデルではobserve-firstが100% recovery /
+p95 70秒まで改善しましたが、これは**production limiterの推定値ではなく
+stress-test**です。
+
+詳細:
+
+- [transport / recovery-path redesign](docs/transport-recovery-redesign.md)
+- [transport simulation reference](data/transport_recovery_reference.json)
+
 ## Recovery修正案
 
 修正案の中心は、
