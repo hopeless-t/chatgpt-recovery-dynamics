@@ -733,6 +733,197 @@ Their role is to demonstrate a mechanism:
 
 See [server-friendly congestion control](server-friendly-congestion-control.md).
 
+## H11 — latent timing/controller memory
+
+The first-order cycle model is:
+
+~~~text
+Delta_n = beta_0 + beta_1 S_n + u_n
+~~~
+
+with:
+
+~~~text
+beta_0 ~= 5.6164
+beta_1 ~= 0.9566
+~~~
+
+and R² ~= 0.99136.
+
+However, the remaining residual is not independent noise.
+
+Within active epochs, an AR residual competition gives:
+
+~~~text
+u_n = phi u_(n-1) + epsilon_n
+
+phi ~= 0.524
+~~~
+
+and reduces residual SSE by about 27.4%.
+
+BIC:
+
+~~~text
+independent residuals  -290.26
+AR(1)                  -319.58
+AR(2)                  -318.22
+AR(3)                  -311.24
+AR(4)                  -306.53
+~~~
+
+The best tested residual model is therefore AR(1).
+
+Directly analyzing post-completion wait:
+
+~~~text
+W_n = Delta_n - S_n
+~~~
+
+gives an even larger lag-1 coefficient:
+
+~~~text
+phi_W ~= 0.676
+~~~
+
+A refined timing model is:
+
+~~~text
+Delta_n = S_n + mu + z_n + epsilon_n
+
+z_n = phi z_(n-1) + eta_n
+~~~
+
+where z_n is an unobserved slowly varying timing/controller state.
+
+Possible sources include client scheduling, timer state, event-loop effects,
+transport/recovery state, or another omitted variable.
+
+The public trace does not identify the physical implementation of z_n.
+
+## H12 — latency change point coincides with Blocked onset
+
+Within each active epoch, fit one unconstrained mean change point to:
+
+~~~text
+S_n = max(stream latency, snapshot latency)
+~~~
+
+Epoch 1:
+
+~~~text
+first Blocked index       = 32
+best service change point = 32
+mean before ~= 5.570 s
+mean after  ~= 1.025 s
+SSE reduction ~= 65.8%
+~~~
+
+Epoch 2:
+
+~~~text
+first Blocked index       = 8
+best service change point = 8
+mean before ~= 5.475 s
+mean after  ~= 0.947 s
+SSE reduction ~= 58.7%
+~~~
+
+A 5,000-permutation CI reference gives add-one Monte Carlo p ~= 0.00020 for a
+maximum change-point reduction at least this large in each epoch.
+
+Therefore the A/B boundary is not only a status-label transition. It coincides
+with an independently detectable latency-regime shift in both active epochs.
+
+This does not determine whether rate limiting caused the latency change.
+
+## H13 — analysis-threshold robustness
+
+The main paired-observation result is stable across pairing windows:
+
+~~~text
+10 ms through 100 ms:
+108 pairs = 48 Accessible + 60 Blocked + 0 mixed
+~~~
+
+The maximum canonical pair skew is 9 ms.
+
+The active-epoch transition matrix is unchanged for every tested epoch-gap
+threshold from 20 s through 600 s:
+
+~~~text
+A -> A: 38
+A -> B: 10
+B -> A:  8
+B -> B: 50
+~~~
+
+Only a 900 s threshold deliberately bridges the observed 775.640 s inactive
+period and recreates the older B -> A count of 9.
+
+The primary conclusions therefore do not depend on choosing exactly 50 ms or
+60 s.
+
+## H14 — history-free posterior predictive failure
+
+Under a history-free A-origin transition model with Jeffreys posterior:
+
+~~~text
+p_AB | data ~ Beta(10.5, 38.5)
+~~~
+
+the posterior-predictive probability that all eight Accessible observations
+immediately following Blocked would all return to Blocked is:
+
+~~~text
+P(8/8 rebound | history-free A/B)
+~= 2.31e-5
+~~~
+
+This complements the Fisher exact analysis and further disfavors collapsing E
+(provisional recovery) into ordinary H/Accessible state.
+
+## H15 — trace-preserving materialization accounting
+
+From the first Blocked observation onward, the two active epochs each contain:
+
+~~~text
+34 observations
+30 Blocked
+4 transient Accessible
+~~~
+
+There are no two consecutive Accessible observations in either tail.
+
+The eight transient successful snapshots represent:
+
+~~~text
+36.59375 MiB
+~~~
+
+of public rounded snapshot payload.
+
+Holding the observed state sequence fixed, a hypothetical 4 KiB state probe
+with full materialization only after two consecutive Accessible observations
+would transfer:
+
+~~~text
+68 probes * 4 KiB = 0.265625 MiB
+full materializations = 0
+~~~
+
+for an accounting reduction of about 99.27%.
+
+This is **not** a causal production estimate. Suppressing requests could alter
+the trajectory.
+
+Its purpose is narrower:
+
+> using a multi-MiB full snapshot as a recovery-health probe is intrinsically
+> expensive when successful observations are transient.
+
+See [deep validation](deep-validation.md).
+
 ## Recovery implication
 
 If completion-coupled fast failure is the main cadence amplifier, the key
