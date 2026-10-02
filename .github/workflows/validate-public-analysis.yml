@@ -370,3 +370,95 @@ jobs:
         with:
           name: server-congestion-reference
           path: /tmp/server-congestion.json
+
+
+  deep-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run deep trace validation
+        run: |
+          python scripts/deep_validate_trace.py \
+            --permutations 5000 \
+            --output /tmp/deep-validation.json
+
+      - name: Check deep-validation invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/deep-validation.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          pair = s["pairing_window_sensitivity"]
+
+          for ms in ("10", "20", "50", "100"):
+              assert pair[ms]["total"] == 108
+              assert pair[ms]["accessible"] == 48
+              assert pair[ms]["blocked"] == 60
+              assert pair[ms]["mixed"] == 0
+
+          gaps = s["epoch_gap_sensitivity"]
+
+          expected = {
+              "A->A": 38,
+              "A->B": 10,
+              "B->A": 8,
+              "B->B": 50,
+          }
+
+          for gap in ("20", "30", "45", "60", "90", "120", "300", "600"):
+              for key, value in expected.items():
+                  assert gaps[gap][key] == value
+
+          timing = s["timing_model"]
+          ar = timing["best_bic_model"]
+
+          assert ar["order"] == 1
+          assert 0.50 < ar["phi"][0] < 0.55
+          assert ar["bic"] < timing["ar_residual_competition"][0]["bic"] - 25
+
+          wait = timing["wait_dynamics"]
+          assert 0.64 < wait["ar1_phi"] < 0.71
+
+          cross = timing["cross_epoch_prediction"]
+          assert cross["fit_epoch1_test_epoch2"]["test"]["rmse_s"] < 0.30
+          assert cross["fit_epoch2_test_epoch1"]["test"]["rmse_s"] < 0.30
+
+          cps = s["change_points"]
+          assert len(cps) == 2
+
+          for cp in cps:
+              assert cp["change_point_matches_first_blocked"] is True
+              assert cp["observed"]["sse_reduction_fraction"] > 0.55
+              assert cp["p_max_reduction_ge_observed"] < 0.001
+
+          pp = s["posterior_predictive_history_free_markov"]
+          assert 2e-5 < pp["probability"] < 2.5e-5
+
+          morph = s["epoch_morphology"]
+          assert morph["epochs"][0]["length"] == 34
+          assert morph["epochs"][1]["length"] == 34
+          assert morph["epochs"][0]["a_count"] == 4
+          assert morph["epochs"][1]["a_count"] == 4
+          assert morph["exact_symbol_matches"] == 30
+          assert 0.05 < morph["random_4_of_34_overlap_tail"] < 0.07
+
+          replay = s["trace_preserving_replay"]
+          assert abs(replay["actual_success_snapshot_mib"] - 36.59375) < 1e-12
+          assert abs(replay["replay_payload_mib"] - 0.265625) < 1e-12
+          assert replay["full_materializations"] == 0
+          assert replay["payload_reduction_fraction"] > 0.992
+
+          print("deep trace validation: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deep-validation-reference
+          path: /tmp/deep-validation.json
