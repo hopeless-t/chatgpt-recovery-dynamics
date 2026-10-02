@@ -19,6 +19,13 @@
 | [[Recovery Helper]] | 日英対応・local-onlyの利用者向け復旧ヘルパー |
 | [[Deep Validation]] | AR(1), change-point, posterior predictive, threshold sensitivity |
 | [[External Archaeology]] | Reddit / Hacker News の歴史的観測記録 |
+| [[Paper]] | reproducible paper-style PDF |
+| [[Architecture Decisions]] | accepted ADRs |
+| [[RFCs]] | proposed recovery / congestion interfaces |
+| [[FAQ]] | common questions and caveats |
+| [[Glossary]] | canonical terminology |
+| [[Purrtocol]] | regrettably, the mascot |
+| [[Release Notes]] | release history |
 
 ## Core model
 
