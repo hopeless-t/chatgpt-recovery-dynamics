@@ -245,3 +245,119 @@ python3 scripts/analyze_public_data.py
 
 The script starts from data/session_b_events.jsonl, reconstructs the 108 pairs,
 censors the long inactive boundary, and emits the public statistics as JSON.
+
+
+## Deep validation
+
+A separate harness now checks whether the main results depend on analysis
+choices or leave structured residual dynamics.
+
+### Threshold sensitivity
+
+Pairing is identical from 10 ms through 100 ms:
+
+~~~text
+108 pairs
+48 Accessible
+60 Blocked
+0 mixed
+~~~
+
+The active transition matrix is identical for epoch-gap thresholds from 20 s
+through 600 s:
+
+~~~text
+A -> A: 38
+A -> B: 10
+B -> A:  8
+B -> B: 50
+~~~
+
+This means the primary counts are not artifacts of choosing exactly 50 ms and
+60 s.
+
+### Cross-epoch timing replication
+
+Fit on epoch 1, test on epoch 2:
+
+~~~text
+RMSE ~= 0.259 s
+~~~
+
+Fit on epoch 2, test on epoch 1:
+
+~~~text
+RMSE ~= 0.251 s
+~~~
+
+The approximately-one-for-one service-time coefficient reproduces across the
+two active epochs.
+
+### Residual memory
+
+The high-R² cycle law leaves temporally correlated residuals.
+
+AR(1):
+
+~~~text
+phi ~= 0.524
+Delta BIC vs independent residuals ~= -29.3
+SSE reduction ~= 27.4%
+~~~
+
+Post-completion wait itself has:
+
+~~~text
+phi_W ~= 0.676
+~~~
+
+This motivates a latent timing/controller state rather than a perfectly fixed
+sleep timer.
+
+### Change points
+
+The optimal one-change-point fit to service time coincides exactly with the
+first Blocked observation in both epochs.
+
+~~~text
+epoch 1: index 32, SSE reduction ~= 65.8%
+epoch 2: index  8, SSE reduction ~= 58.7%
+~~~
+
+The CI permutation reference gives p ~= 0.00020 per epoch for a maximum
+reduction at least this large.
+
+### Posterior predictive check
+
+Under a history-free A/B transition model:
+
+~~~text
+p_AB | data ~ Beta(10.5, 38.5)
+~~~
+
+the posterior-predictive probability of all eight reentry Accessible samples
+immediately returning to Blocked is:
+
+~~~text
+~2.31e-5
+~~~
+
+### Fixed-trace materialization accounting
+
+From the first Blocked observation onward, eight transient successful snapshots
+represent 36.59375 MiB of rounded payload.
+
+Holding the observed state path fixed, 68 conceptual 4 KiB probes with a
+two-success stability rule would transfer 0.265625 MiB and materialize no full
+snapshot during those transient excursions.
+
+Accounting reduction:
+
+~~~text
+~99.27%
+~~~
+
+This is not a causal production estimate. It is fixed-trace accounting.
+
+See [deep-validation.md](deep-validation.md) and
+[data/deep_validation_reference.json](../data/deep_validation_reference.json).
