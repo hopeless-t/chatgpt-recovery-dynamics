@@ -7,6 +7,13 @@
 - [[Recovery Helper]]
 - [[Deep Validation]]
 - [[External Archaeology]]
+- [[Paper]]
+- [[Architecture Decisions]]
+- [[RFCs]]
+- [[FAQ]]
+- [[Glossary]]
+- [[Purrtocol]]
+- [[Release Notes]]
 
 ---
 
