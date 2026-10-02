@@ -22,3 +22,12 @@ Japanese nickname: **パープロトコル / パケにゃ**
 - remind everyone that Visualization != Evidence.
 
 No empirical reason for the cat has been established.
+
+
+## Local-TV commercial mode
+
+[パケニャの会話復旧相談室](https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/)
+
+> あわてず・ふやさず・パケニャ！
+
+The page is intentionally styled like a local television commercial.
