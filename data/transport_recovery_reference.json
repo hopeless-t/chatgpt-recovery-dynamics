@@ -1,0 +1,89 @@
+{
+  "reference_trials_per_path_model": 5000,
+  "common_random_numbers": true,
+  "naive_first_success": {
+    "posterior_predictive_false_rebound_rate": 0.945,
+    "time_to_first_accessible_p50_s": 12.0,
+    "time_to_first_accessible_p95_s": 78.0
+  },
+  "paths": {
+    "completion_per_context": {
+      "request_count_pressure": {
+        "recovery_rate": 0.2036,
+        "mean_requests": 38.66208251473478,
+        "mean_payload_mib": 28.95956762647348,
+        "p95_recovery_s": 564.0
+      },
+      "byte_weighted_pressure": {
+        "recovery_rate": 0.21,
+        "mean_payload_mib": 29.065892857142856,
+        "p95_recovery_s": 537.3
+      },
+      "latent_wallclock": {
+        "recovery_rate": 1.0,
+        "mean_payload_mib": 22.7960765625,
+        "p95_detection_delay_s": 11.689310425033696
+      },
+      "attempt_driven_hysteresis": {
+        "recovery_rate": 0.5832,
+        "mean_requests": 146.6622085048011,
+        "mean_payload_mib": 180.7836036629801
+      }
+    },
+    "anchored_singleflight_full": {
+      "request_count_pressure": {
+        "recovery_rate": 0.6818,
+        "mean_requests": 11.291287767673804,
+        "mean_payload_mib": 13.493207318861836,
+        "p95_recovery_s": 360.0
+      },
+      "byte_weighted_pressure": {
+        "recovery_rate": 0.6898,
+        "mean_payload_mib": 13.262449260655263,
+        "p95_recovery_s": 370.0
+      },
+      "latent_wallclock": {
+        "recovery_rate": 1.0,
+        "mean_payload_mib": 9.1484375,
+        "p95_detection_delay_s": 19.540986604253533
+      },
+      "attempt_driven_hysteresis": {
+        "recovery_rate": 0.3822,
+        "mean_requests": 47.032967032967036,
+        "mean_payload_mib": 32.82139586603872
+      }
+    },
+    "observe_then_snapshot": {
+      "request_count_pressure": {
+        "recovery_rate": 0.6818,
+        "mean_requests": 11.291287767673804,
+        "mean_payload_mib": 4.618325342842476,
+        "p95_recovery_s": 360.0
+      },
+      "byte_weighted_pressure": {
+        "recovery_rate": 1.0,
+        "mean_requests": 4.7768,
+        "mean_payload_mib": 4.592878125,
+        "p95_recovery_s": 70.0
+      },
+      "latent_wallclock": {
+        "recovery_rate": 1.0,
+        "mean_payload_mib": 4.599059375,
+        "p95_detection_delay_s": 19.540986604253533
+      },
+      "attempt_driven_hysteresis": {
+        "recovery_rate": 0.3822,
+        "mean_requests": 47.032967032967036,
+        "mean_payload_mib": 4.757941277472527
+      }
+    }
+  },
+  "optional_http3_path_churn_sensitivity": {
+    "assumption_only": true,
+    "probability_any_path_change_in_60s": 0.4018,
+    "h2_mean_extra_delay_s": 1.1042107457844108,
+    "h3_mean_extra_delay_s": 0.44144161556910366,
+    "mean_h3_over_h2_delay_ratio": 0.3997802206276409
+  },
+  "guardrail": "Stress-model outputs are architecture comparisons under explicit assumptions, not estimates of OpenAI production behavior."
+}
