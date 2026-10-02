@@ -6,6 +6,24 @@ This repository does **not** claim to identify OpenAI's internal root cause.
 It publishes sanitized derivative telemetry, a reproducible timing analysis,
 a falsifiable mathematical model, and a client-side recovery proposal.
 
+<p align="center">
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/">
+    <img src="docs/assets/recovery-network.gif" alt="Animated conversation recovery network: naive retries versus provider-friendly recovery" width="100%" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/">Project Portal</a>
+  ·
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/">Animated Network</a>
+  ·
+  <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/recovery-helper/">Recovery Helper</a>
+  ·
+  <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki">Wiki</a>
+</p>
+
+> **Visualization ≠ Evidence.** The animation explains the proposed recovery architecture; it is not a reconstruction of OpenAI's internal network.
+
 ## Evidence & mathematical model at a glance
 
 | Layer | Result | Status |
@@ -137,6 +155,8 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Public quantitative summary](data/summary.json)
 - [Responsible testing](RESPONSIBLE_TESTING.md)
 - [Bilingual Recovery Helper](docs/recovery-helper/README.md)
+- [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
+- [Research Wiki](https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki)
 
 ## Recovery Helper for affected users
 
@@ -167,10 +187,7 @@ additional retry traffic.
 It is GitHub-Pages-ready from `/docs`. See
 [Recovery Helper documentation](docs/recovery-helper/README.md).
 
-> The static site is committed and deployment-ready. If Pages has not already
-> been enabled, the repository owner must perform the one-time GitHub Pages
-> source setting (`main /docs`); the connected repository tool used here does
-> not expose that account setting.
+> GitHub Pages is enabled from `main /docs`. The live project portal links the animated network, bilingual Recovery Helper, Wiki, and evidence ledger.
 
 ## Provider-friendly design objective
 
