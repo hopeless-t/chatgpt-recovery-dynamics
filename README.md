@@ -158,6 +158,31 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
 - [Research Wiki](https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki)
 
+## Repository infrastructure
+
+<p align="center">
+  <img src="docs/assets/purrtocol.svg" alt="Purrtocol the Recovery Cat" width="360" />
+</p>
+
+This repository now also maintains the deliberately excessive project surface:
+
+- [Paper / technical report](docs/paper/PAPER.md)
+- [Generated paper PDF](docs/paper/chatgpt-recovery-dynamics-paper.pdf)
+- [Architecture Decision Records](docs/adrs/)
+- [RFCs](rfcs/)
+- [FAQ](FAQ.md)
+- [Glossary](GLOSSARY.md)
+- [Changelog](CHANGELOG.md)
+- [v0.1.0 release notes](releases/RELEASE-NOTES-v0.1.0.md)
+- [Branding / visual identity](BRANDING.md)
+- [Purrtocol mascot brief](docs/mascot.md)
+
+**Purrtocol** is the Recovery Cat. Its motto is:
+
+> **Retry less. Observe more.**
+
+No empirical reason for the cat has been established.
+
 ## Recovery Helper for affected users
 
 The repository now includes a **bilingual Japanese/English, local-only
