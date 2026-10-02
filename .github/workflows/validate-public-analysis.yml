@@ -164,3 +164,124 @@ jobs:
 
           print("external archaeology invariants: PASS")
           PY
+
+
+  transition-biopsy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run A-to-B transition biopsy
+        run: |
+          python scripts/analyze_transition_biopsy.py \
+            --output /tmp/transition-biopsy.json \
+            --biopsy-output /tmp/transition-biopsy.jsonl
+
+      - name: Run transition model competition
+        run: |
+          python scripts/compete_transition_models.py \
+            --output /tmp/transition-models.json
+
+      - name: Check transition invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/transition-biopsy.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          assert s["accessible_origin_transitions"] == 48
+          assert s["a_to_b"] == 10
+          assert s["a_to_a"] == 38
+
+          c = s["reentry_contingency"]
+          assert c["reentry_n"] == 8
+          assert c["reentry_to_blocked"] == 8
+          assert c["non_reentry_n"] == 40
+          assert c["non_reentry_to_blocked"] == 2
+          assert c["fisher_exact_one_sided"] < 1.3e-7
+
+          mc = s["model_competition"]
+          assert mc["delta_aic_history_minus_two_state"] < -30
+          assert mc["delta_bic_history_minus_two_state"] < -28
+
+          with open("/tmp/transition-models.json", "r", encoding="utf-8") as f:
+              m = json.load(f)
+
+          assert m["models"][0]["name"] == "M2_reentry_history"
+          assert m["models"][0]["loo_logloss"] < 0.21
+          assert m["models"][0]["log_bayes_factor_vs_constant"] > 15
+
+          print("A-to-B transition biopsy/model competition: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: transition-biopsy-reference
+          path: |
+            /tmp/transition-biopsy.json
+            /tmp/transition-biopsy.jsonl
+            /tmp/transition-models.json
+
+  transport-recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run transport/recovery path simulation
+        run: |
+          python scripts/simulate_transport_recovery_paths.py \
+            --trials 5000 \
+            --output /tmp/transport-recovery.json
+
+      - name: Check transport robustness invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/transport-recovery.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          paths = s["paths"]
+          baseline = paths["completion_per_context"]
+          anchor = paths["anchored_singleflight_full"]
+          observe = paths["observe_then_snapshot"]
+
+          assert s["naive_first_success"]["posterior_predictive_false_rebound_rate"] > 0.85
+
+          assert (
+              anchor["request_count_pressure"]["recovery_rate"]
+              > baseline["request_count_pressure"]["recovery_rate"]
+          )
+          assert (
+              observe["request_count_pressure"]["recovery_rate"]
+              == anchor["request_count_pressure"]["recovery_rate"]
+          )
+          assert (
+              observe["request_count_pressure"]["payload_mib"]["mean"]
+              < anchor["request_count_pressure"]["payload_mib"]["mean"] * 0.5
+          )
+
+          assert (
+              observe["byte_weighted_pressure"]["recovery_rate"]
+              > anchor["byte_weighted_pressure"]["recovery_rate"]
+          )
+
+          churn = s["optional_http3_path_churn_sensitivity"]
+          assert churn["mean_h3_over_h2_delay_ratio"] < 0.6
+
+          print("transport/recovery robustness invariants: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: transport-recovery-reference
+          path: /tmp/transport-recovery.json
