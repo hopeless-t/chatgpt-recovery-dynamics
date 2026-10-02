@@ -45,6 +45,61 @@ SNS投稿はこの因果式の証明には使いません。代わりに、
 - [Monte Carlo](docs/monte-carlo.md)
 - [SNS考古学](docs/external-evidence.md)
 
+## OpenAI / provider-friendly設計
+
+このrepoの目的を、単なる原因推定ではなく次の形に固定しています。
+
+> **人気サーバーに余計なretry・duplicate snapshot・queue workを増やさず、
+> conversation recoveryを安定させる。**
+
+ローカルserver-load simulationでは、base foreground load `rho=0.90` のとき:
+
+| 方策 | retry amplification | recovery payload | recovery reject |
+|---|---:|---:|---:|
+| naive completion | **18.54x** | 847.4 MiB | 1298.2 |
+| Retry-After + jitter | 6.24x | 474.2 MiB | 395.9 |
+| single-flight + observe | 4.16x | **366.6 MiB** | 92.8 |
+| server-friendly stack | **3.98x** | **366.6 MiB** | **78.3** |
+
+`rho=1.00` では抽象stress model上:
+
+~~~text
+naive recovery completion          = 0.8896
+server-friendly recovery completion = 1.0000
+
+naive retry amplification          = 62.91x
+server-friendly retry amplification = 7.49x
+~~~
+
+一方で `rho >= 1` の持続負荷そのものはretry制御では解決できません。
+
+~~~text
+base useful work >= service capacity
+=> capacity不足
+=> 一部をwait / degrade / shedする必要がある
+~~~
+
+したがって優先順位は:
+
+~~~text
+1. clientでduplicate recoveryを発生させない
+2. cheap observation
+3. Retry-After + jitter
+4. single retry owner
+5. bounded queue / early load shedding
+6. foreground useful workを保護
+7. HTTP/2・HTTP/3はその後のtransport改善
+~~~
+
+詳細:
+
+- [provider-friendly congestion control](docs/server-friendly-congestion-control.md)
+- [server congestion reference](data/server_congestion_reference.json)
+- [responsible testing](RESPONSIBLE_TESTING.md)
+
+production OpenAI endpointへの意図的なload test、rate-limit回避、synthetic retry stormは
+このrepoでは推奨しません。過負荷実験はlocal simulationで行います。
+
 ## まず結論
 
 再検算したところ、Blocked時に観測周期が短くなる現象は、
