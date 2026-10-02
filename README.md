@@ -112,6 +112,10 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 > model. Reddit/Hacker News reports are preserved as weak historical
 > observations and model constraints; they are not treated as IID samples or as
 > proof of a shared root cause.
+>
+> **Responsible testing:** this repository does not recommend active load tests,
+> rate-limit bypass, or synthetic retry storms against production OpenAI
+> services. Congestion experiments are local simulations.
 
 ## Start here
 
@@ -126,6 +130,7 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [External public-report archaeology](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
+- [Responsible testing](RESPONSIBLE_TESTING.md)
 
 ## Provider-friendly design objective
 
