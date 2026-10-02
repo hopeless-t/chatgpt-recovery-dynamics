@@ -127,6 +127,7 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Transition model competition](docs/transition-model-competition.md)
 - [Transport / recovery-path redesign](docs/transport-recovery-redesign.md)
 - [Provider-friendly congestion control](docs/server-friendly-congestion-control.md)
+- [Provider-friendly recovery checklist](docs/provider-friendly-checklist.md)
 - [External public-report archaeology](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
@@ -191,8 +192,9 @@ The deeper conclusion is more general:
 > while upstream duplicate suppression prevents recovery traffic from moving
 > the overload knee earlier.
 
-See [provider-friendly congestion control](docs/server-friendly-congestion-control.md)
-and [server congestion reference](data/server_congestion_reference.json).
+See [provider-friendly congestion control](docs/server-friendly-congestion-control.md),
+[provider-friendly checklist](docs/provider-friendly-checklist.md), and
+[server congestion reference](data/server_congestion_reference.json).
 
 ## Main finding
 
@@ -687,6 +689,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - docs/transition-model-competition.md — history-vs-latency model competition
 - docs/transport-recovery-redesign.md — protocol/path redesign and simulation
 - docs/server-friendly-congestion-control.md — provider-friendly overload/admission design
+- docs/provider-friendly-checklist.md — compact operator/design review checklist
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
