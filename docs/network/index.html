@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Recovery Network Visualizer</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#0c1a2b;--grid:#11273d;--text:#eef6ff;--muted:#8ea2ba;
+  --red:#ef5f6c;--amber:#f6bb44;--cyan:#4cdaeb;--green:#4cd384;--blue:#658dff;
+}
+*{box-sizing:border-box}body{margin:0;background:
+linear-gradient(rgba(17,39,61,.38) 1px,transparent 1px),
+linear-gradient(90deg,rgba(17,39,61,.38) 1px,transparent 1px),
+radial-gradient(circle at 50% 0%,#13253d 0,#07111f 44%);
+background-size:40px 40px,40px 40px,auto;color:var(--text);font:16px/1.55 system-ui,sans-serif;min-height:100vh}
+main{max-width:1260px;margin:auto;padding:30px 18px 60px}
+header{display:flex;gap:18px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-bottom:22px}
+h1{font-size:clamp(2rem,5vw,4.6rem);line-height:.95;margin:0;letter-spacing:-.04em}
+.kicker{color:var(--cyan);font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.muted{color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{color:var(--text);text-decoration:none;border:1px solid #31506f;background:#0d2035;border-radius:999px;padding:9px 14px}
+a.btn:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(76,218,235,.18)}
+.panel{border:1px solid #203b58;background:rgba(7,17,31,.72);border-radius:28px;padding:12px;box-shadow:0 28px 80px rgba(0,0,0,.35);backdrop-filter:blur(10px)}
+svg{display:block;width:100%;height:auto}
+.node rect{fill:#0d1e31;stroke:#3d5a79;stroke-width:2}
+.node text{fill:var(--text);font:700 18px system-ui,sans-serif}
+.node .sub{fill:var(--muted);font:13px system-ui,sans-serif;font-weight:500}
+.lane{stroke:#304963;stroke-width:4;stroke-linecap:round}
+.packet{filter:drop-shadow(0 0 8px currentColor)}
+.red{color:var(--red);fill:var(--red)}.amber{color:var(--amber);fill:var(--amber)}
+.cyan{color:var(--cyan);fill:var(--cyan)}.green{color:var(--green);fill:var(--green)}.blue{color:var(--blue);fill:var(--blue)}
+.pulse-red{animation:pulseRed 1.6s ease-in-out infinite}.pulse-green{animation:pulseGreen 2.4s ease-in-out infinite}
+@keyframes pulseRed{50%{filter:drop-shadow(0 0 18px rgba(239,95,108,.9))}}
+@keyframes pulseGreen{50%{filter:drop-shadow(0 0 22px rgba(76,211,132,.7))}}
+.metric{font:800 20px system-ui,sans-serif}.label{font:800 17px system-ui,sans-serif;letter-spacing:.08em}
+.desc{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:16px}
+.card{border:1px solid #203b58;background:#0b1828;border-radius:18px;padding:16px}
+.card b{color:#fff}.card code{color:var(--cyan)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.92rem;margin-top:12px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
+footer{margin-top:24px;color:var(--muted);font-size:.92rem}
+@media (prefers-reduced-motion:reduce){animate,animateMotion{display:none}.pulse-red,.pulse-green{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <div class="kicker">Conversation Recovery Dynamics</div>
+    <h1>Network survival,<br>without retry storms.</h1>
+    <p class="muted">Animated design view — visualization ≠ evidence.</p>
+  </div>
+  <div class="actions">
+    <a class="btn" href="../recovery-helper/">Recovery Helper</a>
+    <a class="btn" href="../">Project Home</a>
+    <a class="btn" href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki">Wiki</a>
+  </div>
+</header>
+
+<section class="panel" aria-label="Animated recovery network">
+<svg viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+<title id="title">Naive versus provider-friendly conversation recovery</title>
+<desc id="desc">Animated packets compare repeated per-context retries with single-flight observation and snapshot-once recovery.</desc>
+<defs>
+  <filter id="glowCyan"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glowRed"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#45617e"/></marker>
+  <path id="topA" d="M190 225 H320"/>
+  <path id="topB" d="M490 225 H720"/>
+  <path id="topC" d="M900 225 H1000"/>
+  <path id="topBack" d="M1000 240 H900"/>
+  <path id="botA1" d="M190 475 C240 455 265 475 320 475"/>
+  <path id="botA2" d="M190 475 H320"/>
+  <path id="botA3" d="M190 475 C240 495 265 475 320 475"/>
+  <path id="botB" d="M490 475 H720"/>
+  <path id="botC" d="M900 475 H1000"/>
+  <path id="botBack" d="M1000 490 H900"/>
+</defs>
+
+<text x="44" y="55" class="label" fill="#ef5f6c">NAIVE RECOVERY</text>
+<text x="44" y="305" class="label" fill="#4cd384">PROVIDER-FRIENDLY RECOVERY</text>
+
+<rect x="30" y="78" width="1140" height="205" rx="24" fill="#0b1828" stroke="#203b58"/>
+<rect x="30" y="328" width="1140" height="235" rx="24" fill="#0b1828" stroke="#203b58"/>
+
+<g class="node"><rect x="55" y="185" width="135" height="80" rx="18"/><text x="122" y="218" text-anchor="middle">Clients</text><text class="sub" x="122" y="242" text-anchor="middle">tabs / windows</text></g>
+<g class="node pulse-red"><rect x="320" y="185" width="170" height="80" rx="18" stroke="#ef5f6c"/><text x="405" y="218" text-anchor="middle">Retry loop</text><text class="sub" x="405" y="242" text-anchor="middle">per context</text></g>
+<g class="node pulse-red"><rect x="720" y="178" width="180" height="94" rx="21" stroke="#ef5f6c"/><text x="810" y="215" text-anchor="middle">Conversation</text><text x="810" y="237" text-anchor="middle">service</text><text class="sub" x="810" y="258" text-anchor="middle">fast fail / 429</text></g>
+<g class="node"><rect x="1000" y="185" width="145" height="80" rx="18" stroke="#f6bb44"/><text x="1072" y="218" text-anchor="middle">Recovery</text><text class="sub" x="1072" y="242" text-anchor="middle">B ⇄ E</text></g>
+
+<line class="lane" x1="190" y1="225" x2="320" y2="225" marker-end="url(#arrow)"/>
+<line class="lane" x1="490" y1="225" x2="720" y2="225" marker-end="url(#arrow)"/>
+<line class="lane" x1="900" y1="225" x2="1000" y2="225" marker-end="url(#arrow)"/>
+<text x="585" y="204" fill="#8ea2ba" font-size="13">full snapshot / retry traffic</text>
+<text x="1068" y="112" class="metric" text-anchor="middle" fill="#ef5f6c">18.54× retry amplification</text>
+
+<g filter="url(#glowRed)">
+  <circle r="8" class="red packet"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0s"><mpath href="#topB"/></animateMotion></circle>
+  <circle r="8" class="red packet"><animateMotion dur="2.4s" repeatCount="indefinite" begin=".45s"><mpath href="#topB"/></animateMotion></circle>
+  <circle r="8" class="red packet"><animateMotion dur="2.4s" repeatCount="indefinite" begin=".9s"><mpath href="#topB"/></animateMotion></circle>
+  <circle r="7" class="amber packet"><animateMotion dur="3.2s" repeatCount="indefinite" begin=".7s"><mpath href="#topC"/></animateMotion></circle>
+  <circle r="7" class="red packet"><animateMotion dur="3.2s" repeatCount="indefinite" begin="2.2s"><mpath href="#topBack"/></animateMotion></circle>
+</g>
+
+<g class="node"><rect x="55" y="435" width="135" height="80" rx="18"/><text x="122" y="468" text-anchor="middle">Clients</text><text class="sub" x="122" y="492" text-anchor="middle">many triggers</text></g>
+<g class="node pulse-green"><rect x="320" y="435" width="170" height="80" rx="18" stroke="#4cdaeb"/><text x="405" y="468" text-anchor="middle">Single-flight</text><text class="sub" x="405" y="492" text-anchor="middle">one recovery owner</text></g>
+<g class="node pulse-green"><rect x="720" y="428" width="180" height="94" rx="21" stroke="#4cd384"/><text x="810" y="464" text-anchor="middle">Conversation</text><text x="810" y="486" text-anchor="middle">service</text><text class="sub" x="810" y="507" text-anchor="middle">observe → snapshot once</text></g>
+<g class="node pulse-green"><rect x="1000" y="435" width="145" height="80" rx="18" stroke="#4cd384"/><text x="1072" y="468" text-anchor="middle">Recovery</text><text class="sub" x="1072" y="492" text-anchor="middle">B → E → H</text></g>
+
+<line class="lane" x1="190" y1="475" x2="320" y2="475" marker-end="url(#arrow)"/>
+<line class="lane" x1="490" y1="475" x2="720" y2="475" marker-end="url(#arrow)"/>
+<line class="lane" x1="900" y1="475" x2="1000" y2="475" marker-end="url(#arrow)"/>
+<text x="570" y="454" fill="#8ea2ba" font-size="13">cheap observe → stable confirm → materialize once</text>
+<text x="1068" y="362" class="metric" text-anchor="middle" fill="#4cd384">3.98× retry amplification</text>
+
+<g filter="url(#glowCyan)">
+  <circle r="7" class="blue packet"><animateMotion dur="2s" repeatCount="indefinite" begin="0s"><mpath href="#botA1"/></animateMotion></circle>
+  <circle r="7" class="blue packet"><animateMotion dur="2s" repeatCount="indefinite" begin=".2s"><mpath href="#botA2"/></animateMotion></circle>
+  <circle r="7" class="blue packet"><animateMotion dur="2s" repeatCount="indefinite" begin=".4s"><mpath href="#botA3"/></animateMotion></circle>
+  <circle r="8" class="cyan packet"><animateMotion dur="5s" repeatCount="indefinite" begin="1.8s"><mpath href="#botB"/></animateMotion></circle>
+  <circle r="8" class="amber packet"><animateMotion dur="5s" repeatCount="indefinite" begin="4.3s"><mpath href="#botC"/></animateMotion></circle>
+  <circle r="8" class="cyan packet"><animateMotion dur="5s" repeatCount="indefinite" begin="6.6s"><mpath href="#botBack"/></animateMotion></circle>
+  <circle r="9" class="green packet"><animateMotion dur="5s" repeatCount="indefinite" begin="8.8s"><mpath href="#botB"/></animateMotion></circle>
+  <circle r="9" class="green packet"><animateMotion dur="5s" repeatCount="indefinite" begin="11.2s"><mpath href="#botC"/></animateMotion></circle>
+</g>
+
+<text x="600" y="608" text-anchor="middle" fill="#8ea2ba" font-size="15">Transport survival ≠ application truth · Observe cheaply · Suppress duplicates · Materialize once</text>
+</svg>
+</section>
+
+<div class="legend">
+  <span><i class="dot" style="background:var(--red)"></i>retry / overload</span>
+  <span><i class="dot" style="background:var(--amber)"></i>provisional recovery E</span>
+  <span><i class="dot" style="background:var(--cyan)"></i>cheap observation</span>
+  <span><i class="dot" style="background:var(--green)"></i>stable recovery H</span>
+</div>
+
+<section class="desc">
+  <article class="card"><b>Why the lower lane is kinder</b><p class="muted">Duplicate triggers collapse before the network. Cheap observations answer “is recovery stable yet?” without repeatedly materializing a multi-MiB snapshot.</p></article>
+  <article class="card"><b>What the animation is not</b><p class="muted">It is a design visualization. It does not represent OpenAI's internal topology, production queue layout, or exact request path.</p></article>
+  <article class="card"><b>Measured anchor</b><p class="muted"><code>18.54× → 3.98×</code> is from the repository's abstract local congestion simulation at base <code>ρ=0.90</code>, not production telemetry.</p></article>
+</section>
+
+<footer>Visualization ≠ Evidence · Generated concept from the repository's validated models and stress simulations.</footer>
+</main>
+</body>
+</html>
