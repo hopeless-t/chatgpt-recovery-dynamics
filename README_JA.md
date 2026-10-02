@@ -4,6 +4,47 @@
 
 **OpenAI内部の根本原因を断定するものではありません。**
 
+## 数理モデルとエビデンス概要
+
+| 層 | 結果 | 扱い |
+|---|---|---|
+| 観測ペア | 108 = Accessible 48 / Blocked 60 / mixed 0 | 実測・再計算可能 |
+| cycle law | `Delta ~= 5.616 + 0.957 S`, `R^2=0.99136` | CIで再計算 |
+| Blocked持続 | `P(B_next|B)=0.8621` | epoch境界補正後 |
+| 正常周期bootstrap | Accessible中央値 95%区間 **10.002–10.987秒** | 30,000 resamples |
+| ロバスト制御 | start-to-startを約10秒未満にしない | Monte Carlo stress-test |
+| SNS考古学 | Reddit/HN 15件を保存、default weak-evidence subset 13件 | 歴史資料・弱い観測 |
+| 2026反復 | 12の異なる投稿日、185日間に分布 | 発生率ではなく再発記録 |
+
+中核式:
+
+~~~text
+Delta_n = S_n + W_n
+X ~= 1 / (S + W)
+
+dP/dt = alpha * X(t) - delta * P(t) + xi(t)
+Pr(429) = sigmoid(P(t) - Theta(t))
+~~~
+
+pressure増加でrejectが速くなり `dS/dP < 0` なら、
+
+~~~text
+dX/dP = -S'(P) / (W + S(P))^2 > 0
+~~~
+
+となり、局所的な正帰還が成立し得ます。
+
+SNS投稿はこの因果式の証明には使いません。代わりに、
+**過去にどの症状の組み合わせが公開観測されていたかという考古学資料と、
+単純モデルへの反証constraint** として保存しています。
+
+詳細:
+
+- [数理モデル](docs/model.md)
+- [検算](docs/validation.md)
+- [Monte Carlo](docs/monte-carlo.md)
+- [SNS考古学](docs/external-evidence.md)
+
 ## まず結論
 
 再検算したところ、Blocked時に観測周期が短くなる現象は、
