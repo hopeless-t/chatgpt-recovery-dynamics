@@ -497,6 +497,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - scripts/extract_public_events.py — HAR -> public event extractor
 - scripts/analyze_public_data.py — public JSONL -> reproduced statistics
 - scripts/monte_carlo_recovery.py — bootstrap + three-model policy stress test
+- scripts/analyze_external_evidence.py — reproducible Reddit/HN archaeology summary
 
 ## Scope and limitations
 
