@@ -6,6 +6,8 @@ This repository does **not** claim to identify OpenAI's internal root cause.
 It publishes sanitized derivative telemetry, a reproducible timing analysis,
 a falsifiable mathematical model, and a client-side recovery proposal.
 
+> **Recover. Don't amplify.**
+
 <p align="center">
   <a href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/">
     <img src="docs/assets/recovery-network.gif" alt="Animated conversation recovery network: naive retries versus provider-friendly recovery" width="100%" />
@@ -176,6 +178,7 @@ This repository now also maintains the deliberately excessive project surface:
 - [v0.1.0 release notes](releases/RELEASE-NOTES-v0.1.0.md)
 - [Branding / visual identity](BRANDING.md)
 - [Purrtocol mascot brief](docs/mascot.md)
+- [パケニャの会話復旧相談室](https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/)
 
 **Purrtocol** is the Recovery Cat. Its motto is:
 
