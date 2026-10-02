@@ -19,6 +19,7 @@ a falsifiable mathematical model, and a client-side recovery proposal.
 | Healthy-cycle bootstrap | Accessible median cycle 95% bootstrap interval: **10.002–10.987 s** | **30k bootstrap resamples** |
 | Robust controller | start-to-start anchor near 10 s | **Monte Carlo stress-tested, not production-proven** |
 | Transport redesign | request-pressure recovery: **20.36% -> 68.18%** with anchor+single-flight; observe-first cuts mean payload to **4.62 MiB** | **5k-trial stress simulation** |
+| Popular-server congestion | at base `rho=0.90`, retry amplification **18.54x -> 3.98x**; sampled knee **0.98 -> 1.00** | **local server-load simulation** |
 | Public-report archaeology | 15 archived Reddit/HN artifacts; 13 in default weak-evidence subset | **Historical weak evidence** |
 | 2026 recurrence | 12 retained report dates spanning **185 days** | **Archive recurrence, not prevalence** |
 | Long archaeology span | oldest-to-newest retained report span: **1,301 days** | **Historical continuity only** |
@@ -104,6 +105,7 @@ Monte Carlo: [docs/monte-carlo.md](docs/monte-carlo.md)
 Transition biopsy: [docs/transition-biopsy.md](docs/transition-biopsy.md)  
 Model competition: [docs/transition-model-competition.md](docs/transition-model-competition.md)  
 Transport redesign: [docs/transport-recovery-redesign.md](docs/transport-recovery-redesign.md)  
+Server-friendly congestion control: [docs/server-friendly-congestion-control.md](docs/server-friendly-congestion-control.md)  
 External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 
 > **Evidence discipline:** local HAR-derived telemetry drives the quantitative
@@ -120,9 +122,72 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [A -> B transition biopsy](docs/transition-biopsy.md)
 - [Transition model competition](docs/transition-model-competition.md)
 - [Transport / recovery-path redesign](docs/transport-recovery-redesign.md)
+- [Provider-friendly congestion control](docs/server-friendly-congestion-control.md)
 - [External public-report archaeology](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
+
+## Provider-friendly design objective
+
+This repository is intentionally optimized for a constructive operator-facing
+question:
+
+> **How can conversation recovery add less avoidable load to an already-popular
+> service while improving the user's probability of stable recovery?**
+
+The proposed ordering is:
+
+~~~text
+1. suppress duplicate recovery at the client
+2. observe cheaply before materializing
+3. honor server-directed spacing / Retry-After
+4. use jitter and one retry owner
+5. bound queues and shed load early
+6. protect useful foreground work under true saturation
+7. use HTTP/2 or HTTP/3 as transport improvements, not as substitutes for
+   congestion control
+~~~
+
+A local popular-server stress model varies base foreground load `rho` from
+0.70 to 1.10 before recovery traffic is added.
+
+At `rho=0.90`:
+
+| Policy | Retry amplification | Recovery payload | Recovery rejects |
+|---|---:|---:|---:|
+| naive completion | **18.54x** | 847.4 MiB | 1298.2 |
+| Retry-After + jitter | 6.24x | 474.2 MiB | 395.9 |
+| single-flight + observe | 4.16x | **366.6 MiB** | 92.8 |
+| server-friendly stack | **3.98x** | **366.6 MiB** | **78.3** |
+
+At `rho=1.00`, the abstract reference run gives:
+
+~~~text
+naive recovery completion          = 0.8896
+server-friendly recovery completion = 1.0000
+
+naive retry amplification          = 62.91x
+server-friendly retry amplification = 7.49x
+~~~
+
+The conservative sampled operational knee moves from approximately:
+
+~~~text
+naive completion:        rho = 0.98
+provider-friendly paths: rho = 1.00
+~~~
+
+These are **simulation results, not OpenAI production estimates**.
+
+The deeper conclusion is more general:
+
+> once sustained foreground load reaches capacity, retry logic cannot create
+> more capacity. The safe action becomes graceful degradation / load shedding,
+> while upstream duplicate suppression prevents recovery traffic from moving
+> the overload knee earlier.
+
+See [provider-friendly congestion control](docs/server-friendly-congestion-control.md)
+and [server congestion reference](data/server_congestion_reference.json).
 
 ## Main finding
 
@@ -607,6 +672,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/official_incidents.jsonl — official incident context
 - data/transition_biopsy_reference.json — A->B biopsy/model reference
 - data/transport_recovery_reference.json — transport-path simulation reference
+- data/server_congestion_reference.json — popular-server congestion reference summary
 - docs/model.md — revised DCS / feedback model
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
@@ -615,6 +681,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - docs/transition-biopsy.md — A->B pre-transition biopsy
 - docs/transition-model-competition.md — history-vs-latency model competition
 - docs/transport-recovery-redesign.md — protocol/path redesign and simulation
+- docs/server-friendly-congestion-control.md — provider-friendly overload/admission design
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
@@ -624,6 +691,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - scripts/analyze_transition_biopsy.py — A->B transition biopsy
 - scripts/compete_transition_models.py — small-sample transition model competition
 - scripts/simulate_transport_recovery_paths.py — protocol/path stress simulation
+- scripts/simulate_server_congestion.py — popular-server pressure-knee simulator
 
 ## Scope and limitations
 
