@@ -173,6 +173,57 @@ next_start =
 python3 scripts/analyze_public_data.py
 ~~~
 
+## ロバストMonte Carlo検証
+
+原因モデルを1つに決め打ちせず、
+
+- retryするたびにしか状態が進まないモデル
+- 時間経過だけでblocked状態が解けるモデル
+- retry自体がpressureを増やす仮想feedbackモデル
+
+の3種類でRecovery方策をstress-testしました。
+
+Accessible周期の30,000回bootstrapでは中央値の95%区間が
+
+~~~text
+約10.00秒 ～ 10.99秒
+~~~
+
+となりました。
+
+そのため、まず
+
+~~~text
+次のrequest開始 >= 前回のrequest開始 + 約10秒
+~~~
+
+とする **start-to-start anchor** が、原因を取り違えても壊れにくい
+ロバストな中心設計になっています。
+
+CI上の5,000試行referenceでは、10秒anchorは:
+
+- attempt-drivenモデルでrecovery率 99.96%
+- latent wall-clockモデルでblocked probe平均 6.85 -> 4.32
+- 仮想pressure-feedbackモデルでrecovery率 52.68% -> 69.10%
+
+となりました。
+
+一方、強いexponential backoffはpressure-feedbackモデルでは非常に強いものの、
+原因モデルが違う場合は回復検知を大きく遅らせます。
+
+したがって現時点の設計結論は、
+
+> **まずfast-failで試行周期が勝手に短くなることを止める。
+> 強いbackoffは追加の証拠がある場合に段階的に使う。**
+
+です。
+
+詳細:
+
+- [Monte Carlo設計検証](docs/monte-carlo.md)
+- [Monte Carlo reference JSON](data/monte_carlo_reference.json)
+- [再現スクリプト](scripts/monte_carlo_recovery.py)
+
 ## プライバシー
 
 原HARは公開していません。
