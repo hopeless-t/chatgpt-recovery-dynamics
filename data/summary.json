@@ -1,0 +1,75 @@
+{
+  "source_policy": "Derived metrics only. Raw HAR files are intentionally excluded.",
+  "capture_relationship": {
+    "capture_a_entries": 345,
+    "capture_b_entries": 1705,
+    "capture_a_entries_matching_capture_b": 341,
+    "analysis_capture": "B only",
+    "reason": "Capture A is almost entirely nested in B; excluding A avoids double counting."
+  },
+  "relevant_events": {
+    "total": 253,
+    "by_type": {
+      "websocket": 14,
+      "stream_status": 122,
+      "conversation_snapshot": 114,
+      "conversation_resume": 3
+    },
+    "by_type_and_status": {
+      "websocket:101": 12,
+      "websocket:no_http_response": 2,
+      "stream_status:200": 61,
+      "conversation_snapshot:200": 54,
+      "stream_status:no_http_response": 61,
+      "conversation_resume:404": 2,
+      "conversation_snapshot:429": 60,
+      "conversation_resume:200": 1
+    }
+  },
+  "paired_observations": {
+    "pairing_window_ms": 50,
+    "total": 108,
+    "accessible": 48,
+    "blocked": 60,
+    "mixed": 0,
+    "median_next_observation_gap_s": {
+      "accessible": 10.272,
+      "blocked": 5.998
+    },
+    "median_latency_ms": {
+      "accessible_stream_status": 3570.987,
+      "accessible_snapshot": 5099.194,
+      "blocked_stream_status": 340.994,
+      "blocked_snapshot": 325.632
+    },
+    "transition_counts": {
+      "accessible->accessible": 38,
+      "accessible->blocked": 10,
+      "blocked->blocked": 50,
+      "blocked->accessible": 9
+    },
+    "p_blocked_given_blocked": 0.847458,
+    "blocked_run_count": 10,
+    "blocked_run_median_observations": 7.5,
+    "blocked_run_median_duration_s": 40.504
+  },
+  "resume_observations": {
+    "resume_404_count": 2,
+    "resume_404_episodes_to_first_snapshot_429": [
+      {
+        "seconds_to_first_snapshot_429": 349.013,
+        "successful_snapshots_before_429": 32,
+        "successful_snapshot_payload_mib_before_429": 146.331
+      },
+      {
+        "seconds_to_first_snapshot_429": 87.853,
+        "successful_snapshots_before_429": 8,
+        "successful_snapshot_payload_mib_before_429": 36.583
+      }
+    ],
+    "later_resume_200_observed": true,
+    "later_resume_200_latency_ms": 135837.783,
+    "later_resume_200_payload_kib_rounded_4": 812
+  },
+  "interpretation_guardrail": "These observations are compatible with a recovery-first positive-feedback hypothesis, but they do not establish OpenAI's internal root cause."
+}
