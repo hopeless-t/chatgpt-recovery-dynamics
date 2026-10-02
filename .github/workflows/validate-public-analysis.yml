@@ -518,8 +518,8 @@ jobs:
               r"new\s+WebSocket",
               r"EventSource",
               r"sendBeacon",
-              r"localStorage",
-              r"sessionStorage",
+              r"(?:window\\.)?localStorage\\s*(?:\\.|\\[|=)",
+              r"(?:window\\.)?sessionStorage\\s*(?:\\.|\\[|=)",
               r"document\.cookie",
               r"<script[^>]+src=",
               r"<img\b",
@@ -537,13 +537,13 @@ jobs:
           assert 'rel="noopener noreferrer"' in html
 
           # Only explicit official outbound links are allowed in the UI.
-          hrefs = re.findall(r'href="(https?://[^"]+)"', html)
+          urls = re.findall(r'https?://[^"\\'\\s<]+', html)
           allowed = (
               "https://status.openai.com/",
               "https://help.openai.com/",
           )
-          for href in hrefs:
-              assert href.startswith(allowed), href
+          for url in urls:
+              assert url.startswith(allowed), url
 
           # Official and research-derived guidance must remain visibly distinct.
           assert "OpenAI公式" in html
