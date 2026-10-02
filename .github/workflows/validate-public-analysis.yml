@@ -555,3 +555,53 @@ jobs:
           print("Recovery Helper safety/bilingual invariants: PASS")
           PY
 
+
+
+  repository-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate documentation/governance surface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          required = [
+              "FAQ.md",
+              "GLOSSARY.md",
+              "CHANGELOG.md",
+              "BRANDING.md",
+              "releases/RELEASE-NOTES-v0.1.0.md",
+              "docs/mascot.md",
+              "docs/assets/purrtocol.svg",
+              "docs/adrs/ADR-0001-evidence-boundary.md",
+              "docs/adrs/ADR-0002-recovery-hysteresis.md",
+              "docs/adrs/ADR-0003-provider-friendly-recovery.md",
+              "rfcs/RFC-0001-recovery-survival-plane.md",
+              "rfcs/RFC-0002-popular-server-congestion.md",
+              "docs/paper/PAPER.md",
+              "docs/paper/README.md",
+              "wiki-src/Purrtocol.md",
+              "wiki-src/Paper.md",
+              "wiki-src/Architecture-Decisions.md",
+              "wiki-src/RFCs.md",
+          ]
+
+          missing = [p for p in required if not Path(p).exists()]
+          assert not missing, missing
+
+          readme = Path("README.md").read_text(encoding="utf-8")
+          for phrase in [
+              "Recover. Don't amplify.",
+              "Visualization ≠ Evidence.",
+              "Purrtocol",
+              "Retry less. Observe more.",
+          ]:
+              assert phrase in readme, phrase
+
+          svg = Path("docs/assets/purrtocol.svg").read_text(encoding="utf-8")
+          assert "<svg" in svg and "PURRTOCOL" in svg
+
+          print("repository surface invariants: PASS")
+          PY
