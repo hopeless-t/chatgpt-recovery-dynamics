@@ -36,6 +36,8 @@ readable UI
 5. **429 is a control signal:** it should increase spacing, not shorten the next
    cycle indirectly through fast failure.
 6. **A brief accessible excursion is not necessarily stable recovery.**
+7. **A transport reconnect is not itself a recovery-state reset.**
+8. **One logical recovery epoch should have one network retry owner.**
 
 ## Why completion-coupled polling is risky here
 
@@ -142,8 +144,7 @@ reattachment from the latest known position.
 
 ### 6. Require recovery hysteresis
 
-The trace contains brief accessible observations inside longer blocked periods.
-Therefore, declaring recovery after one success can cause oscillation.
+The transition biopsy makes this stronger than a visual impression. Within active epochs, the first Accessible observation immediately after Blocked rebounded to Blocked in **8/8 observed cases**, while other Accessible observations transitioned to Blocked only **2/40** times. Therefore, declaring recovery after one success can cause oscillation.
 
 Possible policy:
 
@@ -154,8 +155,9 @@ Recovered =
     AND no throttling during a short stability window
 ~~~
 
-The exact thresholds should be measured rather than copied from this single
-capture.
+The exact thresholds should be measured rather than copied from this single capture. The current minimum justified state refinement is `Blocked -> Recovering/provisional -> Healthy`.
+
+See [A -> B transition biopsy](transition-biopsy.md) and [transition model competition](transition-model-competition.md).
 
 ## Retry budget
 
@@ -216,3 +218,24 @@ failure:
 
 These can be tested in a local simulator or mock service without load-testing a
 production endpoint.
+
+## Transport-path implementation profile
+
+The recovery controller should remain correct across transport choices.
+
+Preferred profile:
+
+~~~text
+HTTP/2      baseline multiplexed request path
+HTTP/1.1    correctness-preserving fallback
+HTTP/3      optional path-survival acceleration
+WebSocket   optional realtime notification only
+~~~
+
+The application-level state machine owns recovery truth.
+
+A stable recovery_id / conversation_version survives transport retries; attempt_id changes per network attempt. If logical mutating work exists, its operation_id also remains stable so ambiguous transport failure causes re-observation rather than blind re-execution.
+
+A 5,000-trial stress simulation of the proposed path is documented in [transport and recovery-path redesign](transport-recovery-redesign.md). The request-count-pressure model improved stable recovery from 20.36% for completion-coupled per-context recovery to 68.18% for start-anchored single-flight recovery. Separating cheap observation from snapshot materialization kept the same recovery rate while reducing mean payload from 13.49 MiB to 4.62 MiB versus repeated full snapshots.
+
+Those figures are simulation outputs under explicit assumptions, not estimates of production behavior.
