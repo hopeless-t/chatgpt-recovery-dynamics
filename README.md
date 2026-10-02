@@ -124,6 +124,7 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Mathematical model](docs/model.md)
 - [Independent validation / model audit](docs/validation.md)
 - [Deep trace validation](docs/deep-validation.md)
+- [Evidence / hypothesis ledger](docs/evidence-ledger.md)
 - [Recovery design proposal](docs/recovery-design.md)
 - [Robust Monte Carlo stress test](docs/monte-carlo.md)
 - [A -> B transition biopsy](docs/transition-biopsy.md)
@@ -734,6 +735,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - docs/server-friendly-congestion-control.md — provider-friendly overload/admission design
 - docs/provider-friendly-checklist.md — compact operator/design review checklist
 - docs/deep-validation.md — residual dynamics, sensitivity and change-point audit
+- docs/evidence-ledger.md — observed / supported / compatible / unknown separation
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
