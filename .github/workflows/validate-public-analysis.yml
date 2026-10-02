@@ -483,3 +483,73 @@ jobs:
           path: |
             /tmp/deep-validation.json
             /tmp/model-generalization.json
+
+
+  recovery-helper-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Validate bilingual privacy-preserving Recovery Helper
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("docs/recovery-helper/index.html")
+          html = path.read_text(encoding="utf-8")
+
+          assert "<!doctype html>" in html.lower()
+          assert 'id="langJa"' in html
+          assert 'id="langEn"' in html
+          assert "日本語" in html
+          assert "English" in html
+          assert "ChatGPT Recovery Helper" in html
+
+          # The helper must remain local-only. External navigation by explicit
+          # anchor click is allowed; background/network APIs are not.
+          forbidden = [
+              r"\bfetch\s*\(",
+              r"XMLHttpRequest",
+              r"new\s+WebSocket",
+              r"EventSource",
+              r"sendBeacon",
+              r"localStorage",
+              r"sessionStorage",
+              r"document\.cookie",
+              r"<script[^>]+src=",
+              r"<img\b",
+              r"<iframe\b",
+              r"<form\b",
+          ]
+
+          for pattern in forbidden:
+              assert re.search(pattern, html, re.I) is None, pattern
+
+          assert "connect-src 'none'" in html
+          assert "img-src 'none'" in html
+          assert "font-src 'none'" in html
+          assert "form-action 'none'" in html
+          assert 'rel="noopener noreferrer"' in html
+
+          # Only explicit official outbound links are allowed in the UI.
+          hrefs = re.findall(r'href="(https?://[^"]+)"', html)
+          allowed = (
+              "https://status.openai.com/",
+              "https://help.openai.com/",
+          )
+          for href in hrefs:
+              assert href.startswith(allowed), href
+
+          # Official and research-derived guidance must remain visibly distinct.
+          assert "OpenAI公式" in html
+          assert "OpenAI official" in html
+          assert "この研究からの提案" in html
+          assert "Research-derived" in html
+
+          print("Recovery Helper safety/bilingual invariants: PASS")
+          PY
