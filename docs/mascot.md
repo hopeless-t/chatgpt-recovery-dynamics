@@ -31,3 +31,19 @@ Purrtocol sits on a router-like panel with:
 No empirical reason whatsoever.
 
 That statement has unusually high confidence.
+
+
+## Commercial career
+
+Purrtocol also appears as **パケニャ** in the deliberately low-budget
+"パケニャの会話復旧相談室" commercial page.
+
+Live page:
+
+https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/
+
+Canonical local-TV line:
+
+> **あわてず・ふやさず・パケニャ！**
+
+This does not change its technical responsibilities.
