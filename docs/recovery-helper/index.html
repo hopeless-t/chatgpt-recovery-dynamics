@@ -204,14 +204,14 @@ ja: {
     status:"OpenAI Statusを確認し、Conversations / ChatGPTにincidentがあれば、まず公式案内に従う。",
     incident:"公式incidentが出ている間は、同じ会話への更新連打や複数clientからの反復アクセスを避ける。",
     tabs:"同じ会話を開いている余分なタブ・ウィンドウを閉じ、一つのclientだけで試す。",
-    refresh:"一度だけhard refresh / app restartを試す。改善しなければ同じ操作を連打しない。",
+    refresh:"hard refresh / app restartを試す。",
     incognito:"private/incognito windowまたは別browserで再現するか確認する。",
     extensions:"script/privacy/ad-block系拡張を無効にしたprivate/incognito windowで再現するか確認する。",
     vpn:"VPN / proxy / secure DNS / filteringを一時的に外し、信頼できる別networkで確認する。",
     transport:"別browser・別device・別networkでも同じtransport/recovery系エラーになるか比較する。",
     otherClient:"別clientで同じconversationが読める場合、canonical data lossと決めつけず、client/accessibility差としてSupportへ記録する。",
     rate:"429後は短時間の連続reloadを避ける。Retry-After等の待機指示が見える場合はそれを優先する。",
-    long:"作業継続が目的なら、新しいchatで同じ問題が出るか確認する。元conversationは削除せず保持する。",
+    long:"新しいchatで同じ問題が出るか確認する。",
     temporary:"一時的に1回読めても、その直後に再び失敗するかを記録する。短時間に何度も確認しない。",
     support:"複数browser/device/networkでも継続する場合、発生時刻・環境・conversation URL/ID・request ID・console error等を揃えてSupportへ連絡する。"
   },
@@ -277,14 +277,14 @@ en: {
     status:"Check OpenAI Status. If ChatGPT / Conversations has an incident, follow the official incident guidance first.",
     incident:"While an official incident is active, avoid rapid reloads or repeated access to the same conversation from multiple clients.",
     tabs:"Close extra tabs/windows for the same conversation and troubleshoot from one client.",
-    refresh:"Try one hard refresh / app restart. If it does not help, do not repeatedly hammer the same action.",
+    refresh:"Try a hard refresh / app restart.",
     incognito:"Test once in an incognito/private window or another browser.",
     extensions:"Test in an incognito/private window with script/privacy/ad-blocking extensions disabled.",
     vpn:"Temporarily disable VPN/proxy/secure DNS/filtering and test once on another trusted network.",
     transport:"Compare one other browser/device/network to see whether the transport/recovery error reproduces.",
     otherClient:"If another client can read the same conversation, record that difference for Support rather than assuming canonical conversation loss.",
     rate:"After a 429, avoid rapid reload loops. If a Retry-After or other server-directed wait is visible, honor it.",
-    long:"If you only need to keep working, test whether a new chat works. Do not delete the original conversation as a troubleshooting step.",
+    long:"Test whether a new chat works.",
     temporary:"If access returns once and then fails again, record the rebound. Avoid frequent confirmation polling.",
     support:"If the issue persists across browsers/devices/networks, collect the time, environment, conversation URL/ID, request ID, console errors, and other details requested by Support."
   },
@@ -365,12 +365,16 @@ function buildPlan(){
   if($("statusIncident").checked) addStep(steps,t().steps.incident,"research");
   if($("multiTabs").checked) addStep(steps,t().steps.tabs,"research");
   addStep(steps,t().steps.refresh,"official");
+  addStep(steps,lang==="ja"?"改善しなくても短時間に同じ操作を連打せず、次の切り分けへ進む。":"If it does not help, move to the next diagnostic step rather than rapidly repeating the same action.","research");
   addStep(steps,$("extensions").checked?t().steps.extensions:t().steps.incognito,"official");
   if($("vpn").checked) addStep(steps,t().steps.vpn,"official");
   if(s==="ws"||s==="recovery") addStep(steps,t().steps.transport,"official");
   if($("otherClient").checked||s==="client") addStep(steps,t().steps.otherClient,"research");
   if(s==="429") addStep(steps,t().steps.rate,"research");
-  if($("longChat").checked||s==="spinner") addStep(steps,t().steps.long,"official");
+  if($("longChat").checked||s==="spinner") {
+    addStep(steps,t().steps.long,"official");
+    addStep(steps,lang==="ja"?"元conversationを削除することを復旧手順にはしない。":"Do not use deletion of the original conversation as a recovery step.","research");
+  }
   if($("temporary").checked) addStep(steps,t().steps.temporary,"research");
   addStep(steps,t().steps.support,"official");
 
