@@ -575,6 +575,7 @@ jobs:
               "releases/RELEASE-NOTES-v0.1.0.md",
               "docs/mascot.md",
               "docs/assets/purrtocol.svg",
+              "docs/cm/index.html",
               "docs/adrs/ADR-0001-evidence-boundary.md",
               "docs/adrs/ADR-0002-recovery-hysteresis.md",
               "docs/adrs/ADR-0003-provider-friendly-recovery.md",
@@ -602,6 +603,11 @@ jobs:
 
           svg = Path("docs/assets/purrtocol.svg").read_text(encoding="utf-8")
           assert "<svg" in svg and "PURRTOCOL" in svg
+
+          cm = Path("docs/cm/index.html").read_text(encoding="utf-8")
+          assert "パケニャの会話復旧相談室" in cm
+          assert "あわてず・ふやさず・パケニャ" in cm
+          assert "Visualization ≠ Evidence" in cm
 
           print("repository surface invariants: PASS")
           PY
