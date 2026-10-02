@@ -1,0 +1,45 @@
+{
+  "archive_total": 15,
+  "default_inference_subset": 13,
+  "negative_controls": 1,
+  "possible_local_overlap_excluded": 1,
+  "distinct_dates_default": 13,
+  "archaeology_span_days": 1301,
+  "core_2026": {
+    "reports": 12,
+    "distinct_dates": 12,
+    "span_days": 185
+  },
+  "incident_confounded_reports": 3,
+  "incident_unconfounded_reports": 10,
+  "feature_counts_default_subset": {
+    "too_many_requests": 9,
+    "unable_to_load_conversation": 5,
+    "temporary_recovery": 5,
+    "history_or_sidebar_unavailable": 3,
+    "multi_client_symptom": 3,
+    "conversation_mutation_association": 3,
+    "canonical_conversation_apparently_present": 2,
+    "transport_recovery_anomaly": 2,
+    "conversation_resume_404": 1,
+    "stream_recovery_polling_timeout": 1,
+    "stream_status_reports_streaming": 1,
+    "cross_client_divergence": 1,
+    "multiple_tabs_association": 1,
+    "sidebar_refresh_hypothesis": 1
+  },
+  "cooccurrence_default_subset": {
+    "unable_load_and_too_many_requests": 4,
+    "too_many_requests_and_local_trigger_association": 5,
+    "state_dissociation_signature": 7,
+    "transport_recovery_signature": 2
+  },
+  "incident_unconfounded_sensitivity_subset": {
+    "n": 10,
+    "unable_load_and_too_many_requests": 3,
+    "too_many_requests_and_local_trigger_association": 4,
+    "state_dissociation_signature": 6,
+    "transport_recovery_signature": 1
+  },
+  "guardrail": "These are counts within a curated convenience archive of public posts, not prevalence estimates and not independent Bernoulli samples. No Bayes factor or population incidence is inferred from them."
+}
