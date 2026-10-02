@@ -6,12 +6,94 @@ This repository does **not** claim to identify OpenAI's internal root cause.
 It publishes sanitized derivative telemetry, a reproducible timing analysis,
 a falsifiable mathematical model, and a client-side recovery proposal.
 
+## Evidence & mathematical model at a glance
+
+| Layer | Result | Status |
+|---|---|---|
+| Pairing | 108 paired observations: 48 Accessible / 60 Blocked / 0 mixed | **Observed + reproducible** |
+| Fast-fail timing | blocked snapshot median 325.6 ms vs accessible 5099.2 ms | **Observed** |
+| Cycle law | `Delta ~= 5.616 + 0.957 S`, `R^2 = 0.99136` | **Recomputed / CI-checked** |
+| State persistence | `P(B_next | B) = 0.8621` after censoring the inactive epoch gap | **Observed + Wilson interval** |
+| Healthy-cycle bootstrap | Accessible median cycle 95% bootstrap interval: **10.002–10.987 s** | **30k bootstrap resamples** |
+| Robust controller | start-to-start anchor near 10 s | **Monte Carlo stress-tested, not production-proven** |
+| Public-report archaeology | 15 archived Reddit/HN artifacts; 13 in default weak-evidence subset | **Historical weak evidence** |
+| 2026 recurrence | 12 retained report dates spanning **185 days** | **Archive recurrence, not prevalence** |
+| Long archaeology span | oldest-to-newest retained report span: **1,301 days** | **Historical continuity only** |
+
+### Core mathematical model
+
+The directly observed timing layer is:
+
+~~~text
+Delta_n = S_n + W_n
+
+Delta_n ~= 5.6164 + 0.9566 * S_n
+R^2 = 0.99136
+~~~
+
+where:
+
+- `S_n` is the slower service/failure latency in the paired observation;
+- `W_n` is post-completion wait;
+- `Delta_n` is start-to-start time to the next observation cycle.
+
+The corresponding observation throughput is approximately:
+
+~~~text
+X ~= 1 / (S + W)
+~~~
+
+A conditional pressure-feedback hypothesis is:
+
+~~~text
+dP/dt = alpha * X(t) - delta * P(t) + xi(t)
+
+Pr(429) = sigmoid(P(t) - Theta(t))
+~~~
+
+If pressure causes faster rejection, so `dS/dP < 0`, then:
+
+~~~text
+dX/dP = -S'(P) / (W + S(P))^2 > 0
+~~~
+
+and a local self-amplifying regime is possible when:
+
+~~~text
+alpha * (-S'(P)) / (W + S(P))^2 > delta
+~~~
+
+That final feedback inequality is a **falsifiable causal hypothesis**, not an
+identified OpenAI internal mechanism.
+
+The robust controller suggested by the observed timing law is:
+
+~~~text
+X_controlled = 1 / max(S + W, T_normal)
+
+next_start >= previous_start + T_normal
+~~~
+
+with `T_normal ~= 10 s` for this capture, derived from the bootstrap interval
+of the Accessible cycle.
+
+Full derivation: [docs/model.md](docs/model.md)  
+Validation: [docs/validation.md](docs/validation.md)  
+Monte Carlo: [docs/monte-carlo.md](docs/monte-carlo.md)  
+External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
+
+> **Evidence discipline:** local HAR-derived telemetry drives the quantitative
+> model. Reddit/Hacker News reports are preserved as weak historical
+> observations and model constraints; they are not treated as IID samples or as
+> proof of a shared root cause.
+
 ## Start here
 
 - [Mathematical model](docs/model.md)
 - [Independent validation / model audit](docs/validation.md)
 - [Recovery design proposal](docs/recovery-design.md)
 - [Robust Monte Carlo stress test](docs/monte-carlo.md)
+- [External public-report archaeology](docs/external-evidence.md)
 - [Methodology](docs/methodology.md)
 - [Public quantitative summary](data/summary.json)
 
@@ -402,10 +484,14 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/paired_observations.csv — 108 paired observations
 - data/summary.json — quantitative summary
 - data/monte_carlo_reference.json — CI Monte Carlo reference output
+- data/external_observations.jsonl — curated Reddit/HN archaeology archive
+- data/external_summary.json — weak-evidence corpus summary
+- data/official_incidents.jsonl — official incident context
 - docs/model.md — revised DCS / feedback model
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
 - docs/monte-carlo.md — robust policy stress test under causal-model uncertainty
+- docs/external-evidence.md — public-report archaeology and model constraints
 - docs/methodology.md — pairing, sessionization and analysis rules
 - docs/privacy.md — sanitization policy
 - scripts/extract_public_events.py — HAR -> public event extractor
