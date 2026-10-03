@@ -14,9 +14,7 @@ concept
 `implemented` means the artifact exists in the repository and has commit-backed
 `timestamp_utc` and `source_commit`.
 
-`concept` is reserved for future adjacent ideas such as Purrtocol University,
-Evidence Court, the 3D model, or any other not-yet-built surface. Concept nodes
-must leave `timestamp_utc` and `source_commit` null.
+`concept` records the origin of an adjacent idea before implementation. Historical examples include Purrtocol University, Evidence Court, and the original PKE-106 3D model concept. Concept nodes keep `timestamp_utc` and `source_commit` null even after a separate promotion record links them to an implemented event.
 
 ## Analysis cohorts
 
