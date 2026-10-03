@@ -203,3 +203,35 @@ The highest-value future evidence would be:
 5. additional active epochs to test the repeated 34-observation morphology.
 
 The model should be simplified or rejected when those observations disagree.
+
+
+## Meta-observation: the research conversation itself hit 429
+
+While this repository was being built and discussed, the author reported that
+the active ChatGPT conversation used for the work itself encountered a
+**429 / Too Many Requests** error.
+
+Classification:
+
+~~~text
+source:
+  contemporaneous author report during repository construction
+
+status:
+  real-world anecdotal meta-observation
+
+included in original 108-pair quantitative dataset:
+  no
+
+used to recompute transition/timing statistics:
+  no
+
+used as proof of OpenAI internal root cause:
+  no
+~~~
+
+This event is preserved because it is historically relevant and unusually
+self-referential, but it does not upgrade or alter the evidentiary status of the
+original capture.
+
+> **Meta-observation != primary dataset.**
