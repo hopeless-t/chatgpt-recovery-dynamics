@@ -7,7 +7,7 @@ Interpretation:
 - A fork does not need upstream approval to exist.
 - Upstream registry inclusion records provenance, not endorsement or ranking.
 - The Sam/Tibo observation horizon is story-only and currently NOT OBSERVED.
-- PKE-106 3D Purrtocol remains PREPRODUCTION.
+- PKE-106 has been promoted to PKE-033; 3D Purrtocol First Light is an implemented canonical artifact.
 
 ## Variant workflow
 
@@ -21,4 +21,5 @@ Interpretation:
 
 - [Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Character and epistemic source of truth.
 - [Discovery manifest](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol.json): Compact machine-readable Purrtocol entry point.
-- [3D preflight](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/README.md): Current PKE-106 frontier.
+- [3D First Light](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/index.md): Canonical 3D baseline for derivative rigs.
+- [3D contract](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/README.md): Runtime semantic contract.
