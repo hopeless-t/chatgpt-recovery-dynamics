@@ -44,8 +44,11 @@ For variants/forks:
 
 For repository-wide improvement work:
 - `IMPROVEMENT_LOOP.md`
+- `META_IMPROVEMENT_LOOP.md`
 - `docs/repository-observatory/state.json`
+- `docs/repository-observatory/critic-router.md`
 - `data/improvement_events.jsonl`
+- `data/meta_improvement_events.jsonl`
 
 For machine discovery:
 - `docs/llms.txt`
@@ -56,15 +59,32 @@ For machine discovery:
 
 Prefer the smallest relevant check, then the full invariant stack before promotion.
 
-Useful commands:
+Start by routing the changed files:
+
+```bash
+python scripts/preflight_router.py --path path/you/changed
+```
+
+For a branch diff:
+
+```bash
+python scripts/preflight_router.py --diff-base origin/main
+```
+
+Add `--run` to execute the routed cheap diagnostics locally.
+
+Useful direct commands:
 
 ```bash
 python scripts/analyze_public_data.py
 python scripts/validate_purrtocol_3d.py
 python scripts/validate_purrtocol_variants.py
 python scripts/validate_pakenya_events.py
+python scripts/analyze_improvement_loop.py
 python scripts/audit_repository_state.py
 ```
+
+A preflight PASS is not a promotion PASS.
 
 GitHub Actions is the promotion gate for public analysis, Purrtocol lineage, 3D, and repository observatory checks.
 
@@ -100,3 +120,16 @@ observe -> biopsy -> competing explanations -> smallest reversible change
 Repository-local implementation does not require per-change owner approval, but evidence promotion remains fail-closed.
 
 If the observatory turns red, do not paint it green.
+
+The Meta Improvement Loop may tune diagnosis, routing, staging, and observer cost.
+It may not tune away the evidence boundary.
+
+Current first-order meta finding:
+
+```text
+median observation -> first change = 488.0 s
+median last change -> verification = 41.5 s
+median verification -> promotion = 32.5 s
+```
+
+So the first tuning target is critic localization, not weaker verification.
