@@ -247,7 +247,7 @@ explicit promotion event. The latest is:
 PKE-106 -> PKE-033
 3D Purrtocol First Light
 implementation checkpoint:
-38eb140c05de8153b3f0a0e60b58702c5f705496
+e4ea29f7a62f5c87063a9c7693df02a30595c9f5
 fit_cohort = post_checkpoint
 ~~~
 
