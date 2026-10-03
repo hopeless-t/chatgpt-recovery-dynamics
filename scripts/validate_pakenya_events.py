@@ -12,7 +12,7 @@ def check(e):
     assert set(e) <= allowed
     assert e["status"] in {"implemented","concept"}
     assert isinstance(e["adjacent_ideas_generated"],int) and e["adjacent_ideas_generated"]>=0
-    if "fit_cohort" in e: assert e["fit_cohort"] in {"primary","observer_effect"}
+    if "fit_cohort" in e: assert e["fit_cohort"] in {"primary","observer_effect","post_checkpoint"}
     if "measurement_associated" in e: assert isinstance(e["measurement_associated"],bool)
     if e["status"]=="implemented":
         assert e["timestamp_utc"] and e["source_commit"]
@@ -22,7 +22,7 @@ def check(e):
 
 schema=json.loads(Path("data/pakenya_event_schema.json").read_text())
 assert schema["properties"]["status"]["enum"]==["implemented","concept"]
-assert schema["properties"]["fit_cohort"]["enum"]==["primary","observer_effect"]
+assert schema["properties"]["fit_cohort"]["enum"]==["primary","observer_effect","post_checkpoint"]
 
 events=[json.loads(x) for x in Path("data/pakenya_events.jsonl").read_text().splitlines() if x.strip()]
 concepts=[json.loads(x) for x in Path("data/pakenya_concepts.jsonl").read_text().splitlines() if x.strip()]
@@ -40,8 +40,10 @@ for e in events+concepts:
 
 primary=[e for e in events if e.get("fit_cohort","primary")=="primary"]
 observer=[e for e in events if e.get("fit_cohort")=="observer_effect"]
-assert len(primary)==10 and len(observer)==12
+post=[e for e in events if e.get("fit_cohort")=="post_checkpoint"]
+assert len(primary)==10 and len(observer)==12 and len(post)>=1
 assert all(e.get("measurement_associated") is True for e in observer)
+assert all(e.get("measurement_associated") is True for e in post)
 assert len(concepts)==7
 assert all(e["timestamp_utc"] is None and e["source_commit"] is None for e in concepts)
 
