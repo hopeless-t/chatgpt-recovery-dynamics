@@ -55,3 +55,8 @@ Incident Investigation Board: https://hopeless-t.github.io/chatgpt-recovery-dyna
 Agent Retry Academy: https://hopeless-t.github.io/chatgpt-recovery-dynamics/agent-retry-academy/
 Purrtocol Museum: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-museum/
 Six of seven registered concepts have now been promoted to separate implemented post-checkpoint events. The remaining unimplemented concept is the future 3D Purrtocol model.
+
+Purrtocol Constitution: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/
+Failure Field Guide: https://hopeless-t.github.io/chatgpt-recovery-dynamics/failure-field-guide/
+Purrtocol Observatory: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-observatory/
+The Constitution compresses recovery/evidence invariants. The Field Guide separates symptoms from unsupported root-cause claims. The Observatory keeps frozen primary/observer-effect fits separate from continuing post-checkpoint repository growth.
