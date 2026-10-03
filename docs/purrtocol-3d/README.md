@@ -180,3 +180,49 @@ The 3D model must never imply that Purrtocol:
 The cat remains on the observer/recovery side.
 
 > **The joke may be sloppy; the footnote may not be sloppy.**
+
+
+## Browser observability
+
+A structural GLB check is not enough to prove that a user can see the model.
+
+The first browser-level observation now has two lanes:
+
+```text
+live render
+  Chrome + SwiftShader
+  -> model-viewer defined
+  -> GLB load event observed
+  -> 6 animations available
+  -> screenshot artifact captured
+
+forced viewer failure
+  both external viewer CDNs deliberately unavailable
+  -> poster fallback remains visible
+  -> dark-box-only failure mode does not recur
+```
+
+Canonical receipt:
+
+- `BROWSER_OBSERVATION.json`
+- workflow run `37147123715`
+
+Observed live status:
+
+```text
+GLB loaded · 6 animations · interactive 3D active
+```
+
+Observed forced-failure status:
+
+```text
+Interactive 3D did not become ready in 8s · poster fallback remains visible
+```
+
+The preview also reports WebGL/runtime/GLB state in-page and tries two pinned
+viewer CDNs before falling back to the poster.
+
+This browser observation was made on GitHub Actions Chrome/SwiftShader.
+
+It does **not** prove identical behavior in every device/WebView. In particular,
+a ChatGPT iOS in-app browser remains a separate device-specific observation.
