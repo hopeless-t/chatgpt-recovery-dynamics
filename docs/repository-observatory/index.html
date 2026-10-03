@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Repository Observatory | Recovery Dynamics</title>
+<meta name="description" content="The closed improvement loop for ChatGPT Conversation Recovery Dynamics: observe, biopsy, change, verify, promote, re-observe.">
+<link rel="canonical" href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/">
+<link rel="alternate" type="text/markdown" href="./index.md">
+<link rel="describedby" href="./llms.txt">
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--line:#294966;--text:#edf5ff;--muted:#95aac1;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,rgba(76,218,235,.12),transparent 34%),var(--bg);color:var(--text);font:16px/1.65 system-ui,sans-serif}
+main{max-width:1120px;margin:auto;padding:48px 22px 80px}.ey{color:var(--cyan);font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,7rem);line-height:.9;letter-spacing:-.06em;margin:.15em 0}.lead{color:var(--muted);font-size:1.15rem;max-width:850px}
+.loop{font:800 clamp(.9rem,2vw,1.15rem)/1.8 ui-monospace,monospace;border:1px solid var(--line);border-radius:20px;background:#050c15;padding:18px;overflow:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:13px;margin:22px 0}.card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px}.card h2{margin:.1rem 0}.tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 8px;color:var(--cyan);font-size:.78rem}.open{color:var(--amber)}a{color:var(--cyan)}.north{border-left:5px solid var(--green);padding:14px 18px;background:rgba(76,211,132,.05);margin:20px 0}.small{color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body><main>
+<div class="ey">Repository control plane</div>
+<h1>Observe.<br>Improve.<br>Re-observe.</h1>
+<p class="lead">The repository now treats its own evolution as a closed control loop. Fast change is welcome. Weakened evidence boundaries are not.</p>
+<div class="north" id="north">Loading North Star…</div>
+<div class="loop">state → observe → biopsy → competing explanations → smallest reversible change → verify → promote → re-observe ↺</div>
+
+<h2>Current frontiers</h2>
+<div class="grid" id="frontiers"></div>
+
+<h2>Cross-repository imports</h2>
+<div class="grid" id="imports"></div>
+
+<div class="card">
+<h2>First closed loop: RIL-001</h2>
+<p>3D First Light failed CI, got a binary biopsy, failed again on stale metadata, then passed the full invariant stack and was promoted. The failure strengthened the observatory instead of weakening the validator.</p>
+<p><a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl">Append-only improvement ledger</a> · <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md">Loop contract</a></p>
+</div>
+
+<p class="small">Observer warning: the observatory itself adds code, CI, documentation, and maintenance load. Measurement machinery is part of the system.</p>
+<p><a href="../">← research portal</a></p>
+</main>
+<script>
+fetch('./state.json').then(r=>r.json()).then(s=>{
+  document.getElementById('north').innerHTML='<b>North Star</b><br>'+s.north_star;
+  document.getElementById('frontiers').innerHTML=s.frontiers.map(x=>`
+    <article class="card"><span class="tag">${x.lane}</span> <span class="tag open">${x.status}</span>
+    <h2>${x.id}</h2><p>${x.target}</p><p class="small"><b>Gate:</b> ${x.promotion_gate}</p></article>`).join('');
+  document.getElementById('imports').innerHTML=s.cross_repo_imports.map(x=>`
+    <article class="card"><span class="tag">${x.source}</span><h2>${x.pattern}</h2><p>${x.adaptation}</p></article>`).join('');
+}).catch(e=>{document.getElementById('north').textContent='State load failed: '+e});
+</script>
+</body></html>
