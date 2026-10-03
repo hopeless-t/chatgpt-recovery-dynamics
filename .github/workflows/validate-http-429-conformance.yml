@@ -96,7 +96,23 @@ jobs:
           print("HTTP 429 loopback conformance: PASS")
           PY
 
+      - name: Compare frozen conformance reference
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/http-429-conformance.json", "r", encoding="utf-8") as f:
+              observed = json.load(f)
+          with open("data/http_429_conformance_reference.json", "r", encoding="utf-8") as f:
+              reference = json.load(f)
+
+          assert observed == reference
+          print("HTTP 429 frozen conformance reference: PASS")
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: http-429-local-conformance
-          path: /tmp/http-429-conformance.json
+          path: |
+            /tmp/http-429-conformance.json
+            data/http_429_conformance_reference.json
