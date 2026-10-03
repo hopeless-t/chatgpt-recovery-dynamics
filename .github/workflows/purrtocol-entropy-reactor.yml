@@ -1,0 +1,82 @@
+name: Purrtocol Entropy Reactor
+
+on:
+  push:
+    paths:
+      - "data/purrtocol_genome.json"
+      - "data/purrtocol_variants.jsonl"
+      - "scripts/breed_purrtocol.py"
+      - "scripts/analyze_purrtocol_entropy.py"
+      - "docs/purrtocol-entropy/**"
+      - ".github/workflows/purrtocol-entropy-reactor.yml"
+  pull_request:
+    paths:
+      - "data/purrtocol_genome.json"
+      - "data/purrtocol_variants.jsonl"
+      - "scripts/breed_purrtocol.py"
+      - "scripts/analyze_purrtocol_entropy.py"
+      - "docs/purrtocol-entropy/**"
+      - ".github/workflows/purrtocol-entropy-reactor.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  entropy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Probe deterministic breeder diversity
+        run: |
+          python scripts/analyze_purrtocol_entropy.py \
+            --samples 4096 \
+            --output /tmp/purrtocol-entropy.json
+      - name: Check structural entropy invariants
+        run: |
+          python - <<'PY'
+          import json
+          import math
+
+          with open("/tmp/purrtocol-entropy.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "purrtocol-entropy-report/v1"
+          assert r["classification"] == "deterministic_breeder_quality_diagnostic"
+          assert r["seed_cohort"]["samples"] == 4096
+
+          space = r["theoretical_space"]
+          assert space["genotype_combinations"] == 199_148_544
+          assert abs(
+              space["idealized_uniform_max_entropy_bits"]
+              - math.log2(199_148_544)
+          ) < 1e-12
+
+          probe = r["fixed_seed_breeder_probe"]
+          assert probe["unique_variant_ids"] == 4096
+          assert probe["unique_genotypes"] >= 4080
+          assert probe["genotype_collisions"] <= 16
+
+          for gene, row in r["genes"].items():
+              assert row["all_options_observed"], gene
+              assert row["normalized_entropy"] > 0.99, (gene, row)
+              assert row["max_abs_relative_deviation_from_uniform"] < 0.15, (
+                  gene,
+                  row,
+              )
+
+          # Registry count is real lineage; theoretical genotype space is not.
+          assert r["registered_lineage"]["registry_variants"] >= 1
+          assert (
+              r["registered_lineage"]["registry_variants"]
+              < space["genotype_combinations"]
+          )
+
+          print("Purrtocol entropy structural invariants: PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-entropy-probe
+          path: /tmp/purrtocol-entropy.json
