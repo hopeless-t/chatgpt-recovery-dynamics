@@ -1,0 +1,45 @@
+{
+  "schema": "purrtocol-schrodinger-contract/v1",
+  "classification": "deterministic_epistemic_toy_not_quantum_physics",
+  "title": "Schrödinger's Purrtocol Observation Contract",
+  "purpose": "Model concept uncertainty and observation bookkeeping without claiming quantum physics.",
+  "sealed_box": {
+    "candidate_count": 2,
+    "candidate_labels": [
+      "A",
+      "B"
+    ],
+    "candidate_seed_prefix": "schrodinger-pakenya-box-001",
+    "parent_variant_id": "PKV-CANONICAL",
+    "candidate_status": "concept",
+    "candidate_evidence_status": "concept"
+  },
+  "observation": {
+    "observer_seed": "schrodinger-pakenya-observer-001",
+    "algorithm": "SHA256(observer_seed + '\\n' + candidate_variant_ids_joined_by_comma); first 64 bits big-endian modulo candidate_count",
+    "first_run_policy": "Do not freeze or implement the selected candidate until the first CI observation is actually read.",
+    "observation_does_not_mean": [
+      "quantum measurement",
+      "physical wavefunction collapse",
+      "external human attention",
+      "OpenAI backend observation",
+      "empirical evidence about production systems"
+    ]
+  },
+  "promotion": {
+    "implemented_variant_id": "PKV-SCHRODINGER-OBS-001",
+    "selected_candidate_is_copied_into_implemented_variant": true,
+    "selected_genome_is_preserved": true,
+    "concept_candidates_remain_concepts": true,
+    "registry_rule": "Only the implemented observed derivative is added to the real indexed lineage registry."
+  },
+  "invariants": [
+    "recover_dont_amplify",
+    "visualization_not_evidence",
+    "unknown_not_retry_permission",
+    "observer_side_not_omniscient_backend",
+    "concept_not_implemented",
+    "first_success_not_necessarily_healthy",
+    "observe_before_materialize"
+  ]
+}
