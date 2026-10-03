@@ -12,7 +12,7 @@ Core rule:
 
 - [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md): Authority, loop semantics, and imported disciplines.
 - [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl): Append-only loop observations.
-- [Improvement Event Schema](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_event_schema.json): RIL event contract.
+- [Improvement Event Schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/improvement-event.schema.json): RIL event contract.
 - [Observatory State](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/state.json): North Star and active frontiers.
 - [Observatory Markdown](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/index.md): Human/agent explanation.
 - [Repository Audit Script](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/audit_repository_state.py): Standard-library invariant audit.
