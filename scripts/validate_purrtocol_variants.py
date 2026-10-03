@@ -93,7 +93,11 @@ def main() -> None:
     assert discovery["schema"] == "purrtocol-discovery/v1"
     assert discovery["canonical_variant_id"] == "PKV-CANONICAL"
     assert discovery["current_frontier"]["concept_id"] == "PKE-106"
-    assert discovery["current_frontier"]["implemented"] is False
+    assert discovery["current_frontier"]["implemented"] is True
+    assert discovery["current_frontier"]["status"] == "IMPLEMENTED_FIRST_LIGHT"
+    assert discovery["current_frontier"]["implemented_event_id"] == "PKE-033"
+    assert discovery["current_frontier"]["sha256"] == "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467"
+    assert "docs/assets/purrtocol/purrtocol.glb" in by_id["PKV-CANONICAL"]["assets"]
     horizon = discovery["observer_horizon_story"]
     assert horizon["sam"] == "NOT_OBSERVED"
     assert horizon["tibo"] == "NOT_OBSERVED"
@@ -131,7 +135,7 @@ def main() -> None:
                 "status": "PASS",
                 "registry_variants": len(registry),
                 "canonical_root": "PKV-CANONICAL",
-                "3d_frontier": "PKE-106 PREPRODUCTION",
+                "3d_frontier": "PKE-106 -> PKE-033 IMPLEMENTED_FIRST_LIGHT",
                 "observer_horizon": "story_only / NOT_OBSERVED",
             },
             ensure_ascii=False,
