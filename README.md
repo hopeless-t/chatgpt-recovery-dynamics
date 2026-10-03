@@ -160,6 +160,26 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
 - [Research Wiki](https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki)
 
+## Recursive incident note
+
+During the construction of this repository, the author **also encountered a 429 / Too Many Requests failure in the very ChatGPT conversation being used to build and discuss the project**.
+
+This is intentionally recorded as a contemporaneous **author-reported meta-observation**, not merged into the original 108-pair quantitative capture and not used to recompute any published statistics.
+
+In other words:
+
+~~~text
+research topic:
+  ChatGPT conversation recovery / 429 dynamics
+
+while building the research:
+  the research conversation itself hit 429
+~~~
+
+The repository therefore achieved accidental self-reference.
+
+> **Meta-observation != primary dataset.**
+
 ## Repository infrastructure
 
 <p align="center">
