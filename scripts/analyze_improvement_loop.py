@@ -88,6 +88,10 @@ def main() -> None:
         if parse_time(verification["wall_time_utc"]) > parse_time(promotion["wall_time_utc"]):
             violations.append(f"{cycle_id}: promotion preceded verification")
 
+        promotion_censored = bool(
+            promotion.get("details", {}).get("timing_censor_after_verification", False)
+        )
+
         first_change = first(rows, "change")
         counts = Counter(row["record_type"] for row in rows)
         failed_observations = sum(
@@ -111,9 +115,12 @@ def main() -> None:
                 "cycle_id": cycle_id,
                 "target": start["target"],
                 "duration_s": seconds(start, end),
+                "duration_included_in_latency_aggregate": not promotion_censored,
                 "observation_to_first_change_s": seconds(observation, first_change),
                 "last_change_to_verification_s": seconds(change, verification),
                 "verification_to_promotion_s": seconds(verification, promotion),
+                "verification_to_promotion_included_in_latency_aggregate": not promotion_censored,
+                "timing_censor_after_verification": promotion_censored,
                 "record_counts": dict(counts),
                 "failed_observations": failed_observations,
                 "observations_after_first_change": observations_after_first_change,
@@ -128,10 +135,18 @@ def main() -> None:
     if not cycles:
         raise SystemExit("no complete improvement cycles")
 
-    durations = [c["duration_s"] for c in cycles]
+    durations = [
+        c["duration_s"]
+        for c in cycles
+        if c["duration_included_in_latency_aggregate"]
+    ]
     observe_change = [c["observation_to_first_change_s"] for c in cycles]
     change_verify = [c["last_change_to_verification_s"] for c in cycles]
-    verify_promote = [c["verification_to_promotion_s"] for c in cycles]
+    verify_promote = [
+        c["verification_to_promotion_s"]
+        for c in cycles
+        if c["verification_to_promotion_included_in_latency_aggregate"]
+    ]
 
     workflows = list((ROOT / ".github" / "workflows").glob("*.yml"))
     audit_files = [
@@ -160,6 +175,11 @@ def main() -> None:
         "verified_before_promotion_ratio": (
             sum(c["verified_before_promotion"] for c in cycles) / len(cycles)
         ),
+        "timing_censored_cycles": sum(
+            c["timing_censor_after_verification"] for c in cycles
+        ),
+        "latency_aggregate_cycle_count": len(durations),
+        "promotion_latency_sample_count": len(verify_promote),
     }
 
     signals = []
@@ -271,6 +291,10 @@ def main() -> None:
         "interpretation": {
             "single_overall_score": "FORBIDDEN",
             "speed": "diagnostic only",
+            "timing_censoring": (
+                "Explicitly marked external orchestration pauses remain visible in raw cycle rows "
+                "but are excluded from aggregate cycle/promotion latency statistics."
+            ),
             "current_tuning_direction": (
                 "Use triggered signals to choose bounded improvements while preserving immutable guardrails."
             ),
