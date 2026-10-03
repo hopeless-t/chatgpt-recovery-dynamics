@@ -188,9 +188,9 @@
   ],
   "registered_lineage": {
     "note": "Registry count is real indexed lineage; theoretical space is not population.",
-    "occupancy_fraction_of_theoretical_space": 5.02137740961842e-9,
-    "occupancy_percent_of_theoretical_space": 5.02137740961842e-7,
-    "registry_variants": 1
+    "occupancy_fraction_of_theoretical_space": 1.004275481923684e-8,
+    "occupancy_percent_of_theoretical_space": 0.000001004275481923684,
+    "registry_variants": 2
   },
   "schema": "purrtocol-entropy-report/v1",
   "seed_cohort": {

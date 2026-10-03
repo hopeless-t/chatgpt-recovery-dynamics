@@ -160,6 +160,45 @@ def main() -> None:
     assert "199,148,544 theoretical genotype combinations" in nursery_md
     assert "Generated != implemented." in nursery_md
 
+    schrodinger = by_id["PKV-SCHRODINGER-OBS-001"]
+    assert schrodinger["status"] == "implemented"
+    assert schrodinger["parent_variant_id"] == "PKV-CANONICAL"
+    assert schrodinger["evidence_status"] == "implemented_artifact"
+    assert schrodinger["origin"]["commit"] == "8016a326c0b324dfd2884926c070228b5f44d36c"
+    assert "docs/purrtocol-schrodinger/index.html" in schrodinger["assets"]
+
+    schrodinger_observation = json.loads(
+        (ROOT / "data" / "purrtocol_schrodinger_observation.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    schrodinger_observation_pages = json.loads(
+        (ROOT / "docs" / "purrtocol-schrodinger" / "observation.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert schrodinger_observation == schrodinger_observation_pages
+    assert (
+        schrodinger_observation["observation"]["selected_label"] == "A"
+    )
+    assert (
+        schrodinger["genome"]
+        == schrodinger_observation["observation"]["selected_genome"]
+    )
+    candidate_b = next(
+        row for row in schrodinger_observation["box"]["candidates"]
+        if row["label"] == "B"
+    )
+    assert candidate_b["variant_id"] not in by_id
+    assert schrodinger_observation["observation"]["quantum_physics_claim"] is False
+
+    schrodinger_variant_pages = json.loads(
+        (ROOT / "docs" / "purrtocol-schrodinger" / "variant.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert schrodinger_variant_pages == schrodinger
+
     discovery = json.loads(
         (ROOT / "docs" / "purrtocol.json").read_text(encoding="utf-8")
     )
@@ -207,6 +246,7 @@ def main() -> None:
             {
                 "status": "PASS",
                 "registry_variants": len(registry),
+                "schrodinger_variant": "PKV-SCHRODINGER-OBS-001",
                 "theoretical_genotype_combinations": theoretical_combinations,
                 "nursery_reference_variant_id": bred_a["variant_id"],
                 "canonical_root": "PKV-CANONICAL",
