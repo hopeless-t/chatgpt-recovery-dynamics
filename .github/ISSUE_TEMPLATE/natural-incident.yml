@@ -1,0 +1,56 @@
+name: "Natural recovery incident"
+description: "Share a naturally occurring, sanitized recovery observation without generating extra production load."
+title: "[natural incident] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not create traffic to reproduce an incident.** Report only failures that occurred during ordinary use. Never upload raw authenticated HAR files, cookies, tokens, message content, account identifiers, conversation identifiers, exact private URLs, or other secrets.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety gate
+      options:
+        - label: "This occurred naturally during ordinary use; I did not generate a retry storm or deliberately trigger 429."
+          required: true
+        - label: "I removed credentials, tokens, cookies, private message content, account/conversation IDs, and exact private URLs."
+          required: true
+        - label: "I understand this is a client-visible observation and does not establish backend root cause."
+          required: true
+  - type: input
+    id: date
+    attributes:
+      label: Approximate date
+      placeholder: "2026-10-03"
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: Primary symptom
+      options:
+        - Conversation would not load
+        - HTTP 429 / Too Many Requests visible
+        - Blank or partial UI
+        - Realtime / reconnect problem
+        - Temporary recovery then relapse
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: sequence
+    attributes:
+      label: Sanitized sequence
+      description: "Coarse states and relative timing only."
+      placeholder: "Blocked for ~2 min -> one readable observation -> blocked again -> later stable recovery"
+    validations:
+      required: true
+  - type: textarea
+    id: passive
+    attributes:
+      label: Passive observations
+      description: "Optional: coarse status, relative latency, Retry-After presence, reconnect symptom. Do not include headers or bodies."
+  - type: textarea
+    id: interpretation
+    attributes:
+      label: Interpretation (optional)
+      description: "Mark speculation as speculation; do not present an inferred cause as observed fact."

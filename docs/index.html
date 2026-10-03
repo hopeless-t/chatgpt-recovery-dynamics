@@ -155,16 +155,20 @@ footer{margin:38px 0 64px;padding-top:18px;border-top:1px solid rgba(49,90,126,.
   html{scroll-behavior:auto}.packet{animation:none;display:none}.card,.path,.btn{transition:none}
 }
 </style>
-</head>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"SoftwareSourceCode","name":"ChatGPT Conversation Recovery Dynamics","codeRepository":"https://github.com/hopeless-t/chatgpt-recovery-dynamics","url":"https://hopeless-t.github.io/chatgpt-recovery-dynamics/","license":"https://opensource.org/license/mit","programmingLanguage":"Python","description":"A sanitized client-side case study of conversation recovery dynamics with reproducible analysis and provider-friendly recovery design."},{"@type":"Dataset","name":"Sanitized conversation recovery derivative telemetry","url":"https://github.com/hopeless-t/chatgpt-recovery-dynamics/tree/main/data","isAccessibleForFree":true,"description":"Sanitized derivative event data used for public reproducible analysis; raw authenticated HAR files are not published."}]}
+</script></head>
 <body>
 <header class="topbar">
   <div class="wrap nav">
     <div class="brand"><span class="brand-dot"></span>Recovery Dynamics</div>
     <nav class="navlinks" aria-label="Primary">
+      <a href="./brief/">Brief</a>
       <a href="#evidence">Evidence</a>
       <a href="#recovery">Recovery</a>
       <a href="#start">Start here</a>
       <a href="./glossary/">Glossary</a>
+      <a href="./429/">429 trivia</a>
       <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki">Wiki</a>
       <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics">GitHub</a>
     </nav>
@@ -296,6 +300,10 @@ footer{margin:38px 0 64px;padding-top:18px;border-top:1px solid rgba(49,90,126,.
     </div>
   </div>
   <div class="grid">
+    <a class="card" href="./brief/"><div class="card-metric">30 sec</div><h3>30-second Brief</h3><p>The whole project, evidence boundary, recovery proposal, and limits in one screen.</p></a>
+    <a class="card" href="./reproduce/"><div class="card-metric">~1 min</div><h3>Reproduce</h3><p>Minimal commands to recompute the public analysis locally without touching production services.</p></a>
+    <a class="card" href="./lab/"><div class="card-metric">108 pairs</div><h3>Evidence Explorer</h3><p>A static visual index of the published trace and validation results.</p></a>
+    <a class="card" href="./429/"><div class="card-metric">429 = C₇</div><h3>パケニャの429教養講座</h3><p>Sloppy mascot explanations, annoyingly rigorous footnotes.</p></a>
     <a class="card" href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/paper/README.md">
       <div class="card-metric">PDF Artifact</div><h3>Technical paper</h3><p>Reproducible paper candidates are built and validated in Actions before deliberate merge.</p>
     </a>

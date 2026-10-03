@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hopeless-t.github.io/chatgpt-recovery-dynamics/sitemap.xml

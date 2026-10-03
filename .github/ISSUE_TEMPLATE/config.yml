@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Responsible testing policy
+    url: https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/RESPONSIBLE_TESTING.md
+    about: Read this before contributing production observations.

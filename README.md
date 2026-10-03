@@ -159,6 +159,10 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Bilingual Recovery Helper](docs/recovery-helper/README.md)
 - [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
 - [Research Wiki](https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki)
+- [Pakenya 429 trivia](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429/)
+- [30-second brief](https://hopeless-t.github.io/chatgpt-recovery-dynamics/brief/)
+- [One-minute reproduction guide](https://hopeless-t.github.io/chatgpt-recovery-dynamics/reproduce/)
+- [Static evidence explorer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/lab/)
 
 ## Recursive incident note
 
