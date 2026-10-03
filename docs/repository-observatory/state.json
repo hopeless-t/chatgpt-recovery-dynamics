@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "6f9e2c4a8c2eb224c6b9a86e48564147822cbc5b",
+    "baseline_main_commit": "450a20fc931704d5064f022fc8e7f7c0a6b81970",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -27,7 +27,7 @@
     "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified",
     "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
     "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED",
-    "meta_improvement_loop": "Critic Router v1 validated PASS on 3 predeclared post-tuning RIL samples: median observation->first-change 109s vs 488s baseline; verification integrity 1.0; observer footprint under soft budgets",
+    "meta_improvement_loop": "MIL-002 PASS: Critic Router v1 validated on 3 post-tuning samples (78/109/142s; median 109s vs 488s baseline), verification integrity 1.0, observer footprint under soft budgets; Branch Convergence Gate v1 observation-only",
     "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
     "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
     "critic_router_post_tuning_samples": "3 of 3 minimum RIL cycles observed; Meta Loop effect evaluation now eligible",
