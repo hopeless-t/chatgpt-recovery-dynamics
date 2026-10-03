@@ -169,7 +169,7 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 This repository now also maintains the deliberately excessive project surface:
 
 - [Paper / technical report](docs/paper/PAPER.md)
-- [Generated paper PDF](docs/paper/chatgpt-recovery-dynamics-paper.pdf)
+- Paper PDF candidates are generated as reviewable GitHub Actions artifacts; selected candidates can be merged later.
 - [Architecture Decision Records](docs/adrs/)
 - [RFCs](rfcs/)
 - [FAQ](FAQ.md)
