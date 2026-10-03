@@ -1,0 +1,100 @@
+{
+  "schema": "purrtocol-3d-contract/v1",
+  "status": "preproduction_concept",
+  "concept_event_id": "PKE-106",
+  "canonical_source": "docs/purrtocol-design-bible.md",
+  "preflight_document": "docs/purrtocol-3d/README.md",
+  "runtime_asset": "docs/assets/purrtocol/purrtocol.glb",
+  "runtime_preview": "docs/purrtocol-3d/index.html",
+  "runtime_format": {
+    "name": "glTF 2.0 binary",
+    "extension": ".glb",
+    "coordinate_system": {
+      "handedness": "right",
+      "up": "+Y",
+      "forward": "+Z",
+      "linear_units": "meter"
+    }
+  },
+  "authoring": {
+    "preferred_tool": "Blender",
+    "source_format_required": false,
+    "preserve_editable_source_when_license_allows": true
+  },
+  "semantic_states": {
+    "B_blocked": {
+      "color": "red",
+      "non_color_cues": ["left_ear_down", "blocked_pose"]
+    },
+    "E_recovering": {
+      "color": "amber",
+      "non_color_cues": ["amber_goggles", "cautious_forward_step"]
+    },
+    "H_healthy": {
+      "color": "green",
+      "non_color_cues": ["green_tail_tip", "single_snapshot_carried"]
+    },
+    "observe": {
+      "color": "cyan",
+      "non_color_cues": ["tiny_packet_prop"]
+    }
+  },
+  "required_nodes": [
+    "root",
+    "head",
+    "ear_L",
+    "ear_R",
+    "eye_L",
+    "eye_R",
+    "eyelid_L",
+    "eyelid_R",
+    "mouth",
+    "paw_FL",
+    "paw_FR",
+    "paw_BL",
+    "paw_BR",
+    "tail",
+    "goggles",
+    "socket_packet",
+    "socket_snapshot"
+  ],
+  "required_animations": [
+    "idle_observe",
+    "blocked_429",
+    "provisional_step_E",
+    "stable_snapshot_carry_H",
+    "duplicate_retry_attempt",
+    "director_neck_scruff_stop"
+  ],
+  "required_expression_intents": [
+    "neutral",
+    "B_blocked",
+    "E_recovering",
+    "H_healthy",
+    "about_to_retry",
+    "director_stopped_me",
+    "visualization_is_evidence_oops"
+  ],
+  "epistemic_invariants": [
+    "Purrtocol remains on the observer/recovery side.",
+    "Visualization is not evidence.",
+    "UNKNOWN does not authorize re-execution.",
+    "The first post-Blocked success is Recovering, not automatically Healthy.",
+    "Tiny observation and heavy snapshot must remain visually distinguishable."
+  ],
+  "promotion_gate": {
+    "concept_record_remains_historical": true,
+    "requires_runtime_asset": true,
+    "requires_runtime_preview": true,
+    "requires_explicit_promotion_record": true,
+    "requires_ci_validation": true,
+    "automatic_promotion": false
+  },
+  "performance_policy": {
+    "web_first": true,
+    "memory_conscious": true,
+    "fixed_triangle_budget": null,
+    "fixed_texture_budget": null,
+    "rule": "Declare measured runtime size, geometry, texture, and memory budgets in the implementation PR; do not invent them during preproduction."
+  }
+}

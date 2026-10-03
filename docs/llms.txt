@@ -54,7 +54,7 @@ Concept promotions are recorded separately in data/pakenya_promotions.jsonl. The
 Incident Investigation Board: https://hopeless-t.github.io/chatgpt-recovery-dynamics/incident-board/
 Agent Retry Academy: https://hopeless-t.github.io/chatgpt-recovery-dynamics/agent-retry-academy/
 Purrtocol Museum: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-museum/
-Six of seven registered concepts have now been promoted to separate implemented post-checkpoint events. The remaining unimplemented concept is the future 3D Purrtocol model.
+Six of seven registered concepts have now been promoted to separate implemented post-checkpoint events. The remaining unimplemented concept is the future 3D Purrtocol model. Current frontier: PKE-106 is in preproduction with a machine-readable 3D contract and CI gate; no runtime 3D model has been promoted yet.
 
 Purrtocol Constitution: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/
 Failure Field Guide: https://hopeless-t.github.io/chatgpt-recovery-dynamics/failure-field-guide/

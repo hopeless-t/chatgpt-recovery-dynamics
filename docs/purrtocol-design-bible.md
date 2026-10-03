@@ -109,6 +109,14 @@ The cat is on the observer/recovery side.
 
 ## Future 3D contract
 
+Current frontier: **3D Purrtocol preproduction**. PKE-106 remains a concept until a runtime model, preview, explicit promotion record, and CI validation land together.
+
+Machine-readable/preflight contract:
+
+- [Purrtocol 3D Preflight](purrtocol-3d/README.md)
+- `data/purrtocol_3d_contract.json`
+- `scripts/validate_purrtocol_3d.py`
+
 ~~~text
 turnaround:
   front / side / back / 3-quarter
