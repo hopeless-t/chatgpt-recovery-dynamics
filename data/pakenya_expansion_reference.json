@@ -1,0 +1,11 @@
+{
+  "carrying_capacity_escape": {"interpretation":"Tooling and reusable surfaces can increase the effective capacity for future Purrtocol artifacts.","model":"dK/dt=cP","status":"symbolic_only"},
+  "earth_saturation": {"forecast":"NOT_ESTABLISHED","note":"No empirical Purrtocol surface-coverage measurement exists.","status":"NOT_YET_OBSERVED"},
+  "event_log": {"distinct_parents":6,"edges":9,"events_total":10,"implemented_timestamped_events":10,"mean_adjacent_ideas_generated_mark":3.3,"mean_children_among_observed_parents":1.5,"observed_edges_per_event":0.9,"pairwise_contact_surface":45,"roots":1,"span_hours":7.0183333333333335},
+  "evidence_class":"satirical_side-study_with_commit-backed_event_times",
+  "exponential_growth_fit":{"doubling_time_hours":3.7580063798226635,"intercept_log_p0":0.7717935854795618,"model":"P(t)=P0*exp(r*t)","p0_fit":2.1636434551836197,"r2_log_cumulative":0.7334548699924759,"r_per_hour":0.1844454507266308,"warning":"This is a descriptive fit to a manually curated subset of Purrtocol-related commits, not a forecast."},
+  "hawkes_fit":{"alpha_per_hour":6.7517899951564,"beta_per_hour":7.943282347242825,"branching_ratio_n":0.85,"classification":"subcritical","fit_status":"descriptive_grid_fit","log_likelihood":1.7391011196297743,"mu_per_hour":0.4166256573088865,"warning":"Selected commit events are sparse, curated, bursty, and right-censored. This fit is not a general law of mascot growth."},
+  "observation_hazard_scenario":{"expected_P_at_observation_when_h0_zero":11.385915991515159,"h0_per_hour":0.0,"model":"h(P)=h0+sP","s_per_event_hour":0.02,"survival_formula":"S(t)=exp(-h0*t-(s*P0/r)*(exp(r*t)-1)) for r>0","warning":"Sam/Tibo observation is not instrumented. Hazard parameters are illustrative only."},
+  "quadratic_contact_scenario":{"b_per_event_hour":0.02,"finite_time_singularity_hours_from_origin":9.003114797648042,"model":"dP/dt=rP+bP^2","r_source":"descriptive exponential fit","warning":"b is an illustrative scenario parameter, not estimated from production or biological cat dynamics."},
+  "schema":"purrtocol-expansion-analysis/v1"
+}
