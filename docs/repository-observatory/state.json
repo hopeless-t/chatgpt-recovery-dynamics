@@ -27,13 +27,14 @@
     "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified",
     "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
     "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED",
-    "meta_improvement_loop": "MIL-001 deployed Critic Router v1 and bounded two-level control; effect on observation-to-change latency NOT_ESTABLISHED pending at least three post-tuning RIL cycles",
+    "meta_improvement_loop": "Critic Router v1 validated PASS on 3 predeclared post-tuning RIL samples: median observation->first-change 109s vs 488s baseline; verification integrity 1.0; observer footprint under soft budgets",
     "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
     "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
     "critic_router_post_tuning_samples": "3 of 3 minimum RIL cycles observed; Meta Loop effect evaluation now eligible",
     "purrtocol_3d_browser": "interactive GLB observed in Chrome/SwiftShader; forced viewer-runtime failure shows poster fallback instead of a dark stage",
     "purrtocol_indexed_variants": 2,
-    "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept"
+    "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
+    "branch_convergence_tuning": "v1 observation-only diagnostic integrated into existing Meta Improvement Loop workflow; no new workflow"
   },
   "frontiers": [
     {
@@ -95,9 +96,16 @@
     {
       "id": "META-001",
       "lane": "governance",
-      "status": "three_samples_ready_for_evaluation",
-      "target": "Determine whether Critic Router v1 reduces observation-to-first-change latency across at least three post-tuning RIL cycles without weakening verification or increasing observer footprint beyond soft budgets.",
+      "status": "validated_pass",
+      "target": "Preserve Critic Router v1 diagnosis-latency gains while accumulating more cycles; do not universalize the 3-sample result.",
       "promotion_gate": "at least 3 post-tuning RIL cycles; post-tuning median observation->first-change < 488s; verified-before-promotion ratio remains 1.0; critical guardrails unchanged; observer footprint under warnings"
+    },
+    {
+      "id": "META-002",
+      "lane": "governance",
+      "status": "observation_only_tuning",
+      "target": "Detect long-lived branch/base path overlap before it becomes late reintegration rework, without adding another workflow or force-updating history.",
+      "promotion_gate": "real PR observations demonstrate useful early signal; full promotion CI remains required; no hard gate until false-positive/false-negative behavior is observed"
     }
   ],
   "cross_repo_imports": [

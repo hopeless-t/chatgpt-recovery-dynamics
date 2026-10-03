@@ -1,0 +1,74 @@
+{
+  "schema": "meta-improvement-tuning-evaluation/v1",
+  "source": {
+    "workflow_run_id": 37148041595,
+    "job_id": 111275923863,
+    "head_sha": "7328f2f6689e929afa9a06e4f382f595ac2fecc6",
+    "observation_class": "first_evaluation_after_predeclared_three_sample_minimum"
+  },
+  "evaluation": {
+    "baseline": {
+      "median_observation_to_first_change_s": 488,
+      "sample_cycles": 4
+    },
+    "guardrails": {
+      "enough_samples": true,
+      "latency_improved": true,
+      "no_critical_violations": true,
+      "observer_footprint_within_soft_budget": true,
+      "verification_integrity_preserved": true
+    },
+    "interpretation": "PASS means the explicitly tagged post-tuning sample satisfies the predeclared latency and guardrail criteria. It is repository-process evidence for this tuning, not a universal performance law.",
+    "observer_footprint": {
+      "github_workflows": 14,
+      "github_workflows_warning_above": 16,
+      "observatory_python_bytes": 38676,
+      "observatory_python_bytes_warning_above": 50000
+    },
+    "post_tuning": {
+      "cycle_ids": [
+        "RIL-005",
+        "RIL-006",
+        "RIL-007"
+      ],
+      "median_observation_to_first_change_s": 109,
+      "minimum_required": 3,
+      "observation_to_first_change_s": [
+        78,
+        109,
+        142
+      ],
+      "sample_count": 3,
+      "verified_before_promotion_ratio": 1
+    },
+    "status": "PASS",
+    "tuning_id": "critic-router-v1"
+  },
+  "aggregate_at_observation": {
+    "completed_cycles": 7,
+    "fraction_cycles_with_failed_observations": 0.2857142857142857,
+    "fraction_cycles_with_multiple_changes": 0.2857142857142857,
+    "latency_aggregate_cycle_count": 6,
+    "max_cycle_duration_s": 6846,
+    "mean_cycle_duration_s": 1730,
+    "median_cycle_duration_s": 631.5,
+    "median_last_change_to_verification_s": 56,
+    "median_observation_to_first_change_s": 151,
+    "median_verification_to_promotion_s": 32.5,
+    "min_cycle_duration_s": 206,
+    "promotion_latency_sample_count": 6,
+    "timing_censored_cycles": 1,
+    "verified_before_promotion_ratio": 1
+  },
+  "triggered_tuning_signals": [
+    {
+      "evidence": {
+        "fraction_cycles_with_multiple_changes": 0.2857142857142857
+      },
+      "recommendation": "Add cheaper intermediate validation near the failure source.",
+      "rule": "rework_signal",
+      "status": "TRIGGERED"
+    }
+  ],
+  "violations": []
+}

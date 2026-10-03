@@ -129,6 +129,32 @@
     "note": "A single faster cycle is not sufficient evidence that the loop improved.",
     "deployment_commit": "a784da0ebe0064acf3cd8d7382a29dc3e0bc5592",
     "meta_cycle_id": "MIL-001",
-    "status": "deployed_awaiting_post_tuning_cycles"
+    "status": "validated_pass",
+    "evaluation_reference": "data/critic_router_v1_evaluation.json",
+    "observed_result": {
+      "sample_count": 3,
+      "baseline_median_observation_to_first_change_s": 488,
+      "post_tuning_observation_to_first_change_s": [
+        78,
+        109,
+        142
+      ],
+      "post_tuning_median_observation_to_first_change_s": 109,
+      "verified_before_promotion_ratio": 1,
+      "observer_footprint_within_soft_budget": true,
+      "critical_violations": 0
+    }
+  },
+  "next_tuning": {
+    "tuning_id": "branch-convergence-gate-v1",
+    "status": "observation_only",
+    "motivation": "RIL-007 exposed late old-base reintegration after diagnosis latency had already improved.",
+    "implementation": [
+      "scripts/check_branch_convergence.py",
+      "docs/repository-observatory/branch-convergence.md",
+      "existing Meta Improvement Loop workflow"
+    ],
+    "promotion_rule": "Observe real pull-request convergence reports before deciding whether any status should become a hard gate.",
+    "observer_rule": "Reuse the existing Meta Improvement Loop workflow; do not add a new workflow."
   }
 }
