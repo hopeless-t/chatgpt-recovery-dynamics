@@ -114,7 +114,7 @@
   "first_light": {
     "implemented_event_id": "PKE-033",
     "asset_bytes": 7672,
-    "sha256": "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467",
+    "sha256": "c3d2a82aaf14af5219f5236fcb22b296bd8b736fd9c2bb639d5450a3f000e3db",
     "scene_nodes": 21,
     "animation_clips": 6,
     "textures": 0,
