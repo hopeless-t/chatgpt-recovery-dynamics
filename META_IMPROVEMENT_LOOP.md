@@ -197,3 +197,30 @@ python scripts/analyze_improvement_loop.py \
 The canonical policy is:
 
 `data/meta_improvement_loop_policy.json`
+
+
+## Timing censoring
+
+Wall-clock latency can include pauses outside the repository control process.
+
+If all required verification has already passed and execution is externally
+paused before promotion, the promotion event may set:
+
+```text
+timing_censor_after_verification = true
+```
+
+The raw timestamps remain in the ledger.
+
+The Meta Loop excludes that cycle's total-duration and verification-to-promotion
+interval from aggregate latency statistics while retaining:
+
+- observation-to-change;
+- change-to-verification;
+- verification-before-promotion integrity;
+- the raw uncensored wall-clock record.
+
+This prevents an orchestration pause from being misdiagnosed as repository
+promotion friction.
+
+Censoring must be explicit in the ledger. It is not inferred automatically.
