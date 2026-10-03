@@ -1,62 +1,68 @@
 # ChatGPT Conversation Recovery Dynamics
-> A sanitized client-side case study of conversation recovery failures, HTTP 429 dynamics, history-aware recovery state, and provider-friendly recovery design.
 
-Canonical repository: https://github.com/hopeless-t/chatgpt-recovery-dynamics
-Project portal: https://hopeless-t.github.io/chatgpt-recovery-dynamics/
-30-second brief: https://hopeless-t.github.io/chatgpt-recovery-dynamics/brief/
-Reproduction guide: https://hopeless-t.github.io/chatgpt-recovery-dynamics/reproduce/
-Evidence explorer: https://hopeless-t.github.io/chatgpt-recovery-dynamics/lab/
-Glossary: https://hopeless-t.github.io/chatgpt-recovery-dynamics/glossary/
+> A reproducible client-side study of conversation recovery failures, HTTP 429 dynamics, history-aware recovery state, provider-friendly recovery design, and the fork-friendly Purrtocol universe.
 
-## Evidence boundary
-Observed facts, recomputed quantities, model-supported claims, simulations, design proposals, weak external evidence, and unknowns are deliberately separated.
-This project does not claim to identify OpenAI's internal root cause, production topology, exact rate-limit scope, capacity, or queue sizes.
-Raw authenticated HAR files are not published.
+Important interpretation rules:
+- Observed, recomputed, modeled, simulated, proposed, weak external, and unknown claims are deliberately separated.
+- This project does not claim OpenAI's internal root cause, production topology, exact rate-limit scope, capacity, or queue sizes.
+- Raw authenticated HAR files are not published.
+- Purrtocol is an anthropomorphic error model and communication layer, not evidence.
+- Current 3D frontier: PKE-106 is PREPRODUCTION; no runtime 3D model has been promoted.
+- Forked Purrtocol variants are welcome. Lineage is provenance, not approval or ranking.
+- The Sam/Tibo observation horizon is a story mechanic only; named-person attention is NOT OBSERVED and is not monitored.
 
-## Core public results
+Core observed/recomputed anchors:
 - 108 paired observations: 48 Accessible, 60 Blocked, 0 mixed.
 - Cycle law: Delta ~= 5.6164 + 0.9566 * service_time, R^2 ~= 0.99136.
-- First Accessible observation after Blocked rebounded to Blocked in 8/8 observed reentry cases within this capture.
-- History-aware H/E/B model improves within-capture fit versus first-order A/B.
-- Local congestion simulations support duplicate suppression, cheap observation, start-anchored spacing, and provider-friendly recovery. These are not OpenAI production estimates.
+- In this capture, all 8 first Accessible reentry observations after Blocked returned to Blocked next.
+- H/E/B history-aware state modeling outperforms first-order A/B within the capture.
 
-## Terminology
-B = Blocked.
-E = first Accessible excursion after Blocked; human-facing label: Recovering / provisional recovery.
-H = Healthy / established Accessible after stable confirmation.
+Safety:
+Do not load-test production OpenAI services, create synthetic retry storms, deliberately trigger 429s, or bypass rate limits. Prefer passive observation and local simulation.
 
-## Safety
-Do not use this repository to load-test production OpenAI services, generate synthetic retry storms, deliberately trigger 429s, or bypass rate limits.
-Prefer passive observation of naturally occurring failures and local simulation.
+## Core research
 
-Recover. Don't amplify.
-Visualization != Evidence.
+- [Clean project entry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/index.md): Compact Markdown map of the project.
+- [Evidence ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/evidence-ledger.md): Claim classes and explicit unknowns.
+- [Recovery design](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/recovery-design.md): Start anchoring, single-flight, observation before materialization, and recovery hysteresis.
+- [Deep validation](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/deep-validation.md): Sensitivity, residual memory, change points, and cross-epoch checks.
+- [Provider-friendly congestion control](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/server-friendly-congestion-control.md): Retry amplification and graceful degradation.
+- [Methodology](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/methodology.md): Pairing, timing, sessionization, and limitations.
 
+## Reproduction and public data
 
-## Purrtocol side-study
-Purrtocol is the project's Recovery Cat and an anthropomorphic error model for recovery systems.
-Canonical design bible: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
-Expansion side-study: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/
-The expansion analysis is deliberately separate from the primary evidence base. Current selected commit-event fit: doubling time about 3.758 h; Hawkes branching ratio about 0.85 (subcritical); Earth saturation NOT YET OBSERVED.
+- [Public analysis script](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/analyze_public_data.py): Recompute the sanitized trace analysis.
+- [Sanitized event stream](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/session_b_events.jsonl): Public derivative telemetry.
+- [Recovery Helper](https://hopeless-t.github.io/chatgpt-recovery-dynamics/recovery-helper/): Local-only bilingual troubleshooting surface.
 
-Doomsday toy-model dashboard: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/
-Purrtocol concept registry: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/concepts/
-The doomsday page is a sensitivity/falsification toy model. Quadratic coupling and observation-hazard parameters are illustrative; planetary saturation forecast is NOT ESTABLISHED.
-Concept-registry entries have status=concept with null timestamp/source_commit and are excluded from commit-time growth/Hawkes fits.
+## Purrtocol canon
 
-## Purrtocol learning surfaces
-Purrtocol University: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-university/
-Evidence Court: https://hopeless-t.github.io/chatgpt-recovery-dynamics/evidence-court/
-Queueing Restaurant: https://hopeless-t.github.io/chatgpt-recovery-dynamics/queueing-restaurant/
-These are educational/satirical surfaces. Evidence Court mirrors the repository evidence boundary. Queueing Restaurant uses an explicitly labeled M/M/1 toy model and is not a model of OpenAI production.
-Concept promotions are recorded separately in data/pakenya_promotions.jsonl. The original concept records remain concept-origin provenance.
+- [Purrtocol Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical visual, narrative, epistemic, and future-3D rules.
+- [Purrtocol Expansion Dynamics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-expansion/PAPER.md): Deliberately separate mascot-expansion side-study.
+- [Purrtocol Constitution](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/): Compressed recovery/evidence laws.
+- [Purrtocol Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-observatory/): Frozen fits and post-checkpoint growth.
+- [3D preflight](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/README.md): PKE-106 preproduction/promotion contract.
 
-Incident Investigation Board: https://hopeless-t.github.io/chatgpt-recovery-dynamics/incident-board/
-Agent Retry Academy: https://hopeless-t.github.io/chatgpt-recovery-dynamics/agent-retry-academy/
-Purrtocol Museum: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-museum/
-Six of seven registered concepts have now been promoted to separate implemented post-checkpoint events. The remaining unimplemented concept is the future 3D Purrtocol model. Current frontier: PKE-106 is in preproduction with a machine-readable 3D contract and CI gate; no runtime 3D model has been promoted yet.
+## Purrtocol propagation
 
-Purrtocol Constitution: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/
-Failure Field Guide: https://hopeless-t.github.io/chatgpt-recovery-dynamics/failure-field-guide/
-Purrtocol Observatory: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-observatory/
-The Constitution compresses recovery/evidence invariants. The Field Guide separates symptoms from unsupported root-cause claims. The Observatory keeps frozen primary/observer-effect fits separate from continuing post-checkpoint repository growth.
+- [Purrtocol Variant Foundry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Fork workflow, lineage semantics, invariant list, and observation-horizon story.
+- [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md): Rules for derivative cats and canonical indexing.
+- [Variant schema](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_variant_schema.json): `purrtocol-variant/v1`.
+- [Canonical variant registry](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_variants.jsonl): Starts at PKV-CANONICAL.
+- [Machine discovery manifest](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol.json): Compact Purrtocol discovery/lineage entry point.
+- [Variant manifest example](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/examples/purrtocol-variant.example.json): Copy this into a fork.
+
+## Learning surfaces
+
+- [Purrtocol University](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-university/): HTTP, distributed systems, queueing, statistics, control, and epistemology.
+- [Evidence Court](https://hopeless-t.github.io/chatgpt-recovery-dynamics/evidence-court/): Claim classification game.
+- [Queueing Restaurant](https://hopeless-t.github.io/chatgpt-recovery-dynamics/queueing-restaurant/): Explicitly toy M/M/1 queueing surface.
+- [Incident Investigation Board](https://hopeless-t.github.io/chatgpt-recovery-dynamics/incident-board/): Facts, hypotheses, unknowns, actions.
+- [Agent Retry Academy](https://hopeless-t.github.io/chatgpt-recovery-dynamics/agent-retry-academy/): Operation identity, attempt identity, and re-observation.
+- [Purrtocol Museum](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-museum/): Repository archaeology.
+
+## Optional
+
+- [Animated recovery network](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/): Visual recovery explanation; visualization is not evidence.
+- [PKN-429 local TV](https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/): Intentionally unnecessary communication layer.
+- [Doomsday toy model](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/): Illustrative sensitivity model; planetary saturation is NOT ESTABLISHED.
