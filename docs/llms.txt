@@ -47,7 +47,7 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 
 - [Purrtocol Variant Foundry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Fork workflow, lineage semantics, invariant list, and observation-horizon story.
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md): Rules for derivative cats and canonical indexing.
-- [Variant schema](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_variant_schema.json): `purrtocol-variant/v1`.
+- [Variant schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant.schema.json): `purrtocol-variant/v1`.
 - [Canonical variant registry](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_variants.jsonl): Starts at PKV-CANONICAL.
 - [Machine discovery manifest](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol.json): Compact Purrtocol discovery/lineage entry point.
 - [Variant manifest example](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/examples/purrtocol-variant.example.json): Copy this into a fork.
