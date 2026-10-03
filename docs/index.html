@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>ChatGPT Conversation Recovery Dynamics</title>
+<meta name="description" content="A reproducible client-side study of ChatGPT conversation recovery failures, 429 dynamics, and provider-friendly recovery design.">
+<link rel="canonical" href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ChatGPT Conversation Recovery Dynamics">
+<meta property="og:url" content="https://hopeless-t.github.io/chatgpt-recovery-dynamics/">
+<meta property="og:title" content="ChatGPT Conversation Recovery Dynamics">
+<meta property="og:description" content="Client-side failure analysis, 429 dynamics, and a reproducible provider-friendly recovery design.">
+<meta property="og:image" content="https://hopeless-t.github.io/chatgpt-recovery-dynamics/assets/social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Recover. Don't amplify. ChatGPT Conversation Recovery Dynamics">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ChatGPT Conversation Recovery Dynamics">
+<meta name="twitter:description" content="Client-side failure analysis, 429 dynamics, and a reproducible provider-friendly recovery design.">
+<meta name="twitter:image" content="https://hopeless-t.github.io/chatgpt-recovery-dynamics/assets/social-card.png">
 <style>
 :root{--bg:#07111f;--panel:#0d1b2d;--line:#213f5d;--text:#edf5ff;--muted:#91a5bd;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font:16px/1.6 system-ui,sans-serif;background:
@@ -38,6 +53,7 @@ small,footer{color:var(--muted)}footer{margin-top:30px}
   <div class="eyebrow">Conversation Recovery Dynamics</div>
   <h1>Recover.<br>Don't amplify.</h1>
   <p class="lead">A sanitized failure study turned into a recovery architecture: history-aware state, low-amplification retries, provider-friendly congestion control, and a bilingual user Recovery Helper.</p>
+  <p class="lead" lang="ja">日本語概要：ChatGPTの会話読み込み失敗と429発生時のクライアント側挙動を、取得可能なデータから分析した再現可能なケーススタディです。観測・仮説・シミュレーションを分離し、利用者とサービス提供側の双方に負荷を増幅させにくい復旧設計を整理しています。</p>
   <div class="actions">
     <a class="btn primary" href="./network/">Animated network</a>
     <a class="btn" href="./recovery-helper/">Recovery Helper / 復旧ヘルパー</a>
