@@ -81,12 +81,12 @@ Current canonical sets:
 - Purrtocol University
 - Evidence Court
 - Purrtocol Restaurant for queueing theory
-
-Permitted future adjacent sets:
-
 - Incident Investigation Board
 - Agent Retry Academy
 - Museum / archive
+
+Permitted future adjacent sets:
+
 - Future 3D Purrtocol model
 
 ## Props
@@ -172,3 +172,6 @@ First promotions:
 - PKE-100 → PKE-024 — Purrtocol University
 - PKE-101 → PKE-025 — Evidence Court
 - PKE-103 → PKE-026 — Queueing Restaurant
+- PKE-102 → PKE-027 — Incident Investigation Board
+- PKE-104 → PKE-028 — Agent Retry Academy
+- PKE-105 → PKE-029 — Purrtocol Museum
