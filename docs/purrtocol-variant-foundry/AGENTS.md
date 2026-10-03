@@ -11,6 +11,17 @@ Read:
 - `../../../examples/purrtocol-variant.example.json`
 - `../../../data/purrtocol_variants.jsonl`
 
+## Genome Nursery
+
+A deterministic concept can be generated with:
+
+```bash
+python scripts/breed_purrtocol.py --seed your-seed
+```
+
+The result is still a **concept**. Do not add it to the canonical registry as an
+implemented/external variant until a real artifact and provenance exist.
+
 ## Variant rules
 
 - A fork does not need upstream permission to exist.
