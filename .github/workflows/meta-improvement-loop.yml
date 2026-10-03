@@ -1,0 +1,62 @@
+name: Meta Improvement Loop
+
+on:
+  push:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "data/meta_improvement_loop_policy.json"
+      - "scripts/analyze_improvement_loop.py"
+      - "META_IMPROVEMENT_LOOP.md"
+      - ".github/workflows/meta-improvement-loop.yml"
+  pull_request:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "data/meta_improvement_loop_policy.json"
+      - "scripts/analyze_improvement_loop.py"
+      - "META_IMPROVEMENT_LOOP.md"
+      - ".github/workflows/meta-improvement-loop.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "43 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  tune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Analyze improvement loop telemetry
+        run: |
+          python scripts/analyze_improvement_loop.py \
+            --output /tmp/meta-loop.json
+      - name: Check second-order guardrails
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/meta-loop.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "meta-improvement-loop-report/v1"
+          assert r["classification"] == "repository_process_telemetry_not_quality_score"
+          assert r["aggregate"]["completed_cycles"] >= 4
+          assert r["aggregate"]["verified_before_promotion_ratio"] == 1.0
+          assert r["interpretation"]["single_overall_score"] == "FORBIDDEN"
+          assert not r["violations"]
+          assert all(
+              cycle["verified_before_promotion"]
+              for cycle in r["cycles"]
+          )
+
+          # Observe before freezing any particular bottleneck.
+          print("meta improvement structural invariants: PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meta-improvement-loop-report
+          path: /tmp/meta-loop.json
