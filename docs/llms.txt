@@ -37,7 +37,7 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 
 ## Purrtocol canon
 
-- [Purrtocol Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical visual, narrative, epistemic, and future-3D rules.
+- [Purrtocol Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical visual, narrative, epistemic, and 3D rules.
 - [Purrtocol Expansion Dynamics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-expansion/PAPER.md): Deliberately separate mascot-expansion side-study.
 - [Purrtocol Constitution](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/): Compressed recovery/evidence laws.
 - [Purrtocol Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-observatory/): Frozen fits and post-checkpoint growth.
