@@ -53,6 +53,8 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 
 ## Purrtocol propagation
 
+- [Purrtocol Entropy Reactor](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/index.md): Fixed 4,096-seed breeder diversity probe; entropy collapse NOT OBSERVED in the regression cohort, external ecosystem entropy NOT MEASURED.
+
 - [Purrtocol Genome Nursery](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/index.md): Deterministic concept breeder; 199,148,544 theoretical genotypes, not implemented variants.
 - [Purrtocol Genome JSON](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-genome.json): Canonical gene option space.
 
