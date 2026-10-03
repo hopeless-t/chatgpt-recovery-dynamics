@@ -25,7 +25,7 @@ assert schema["properties"]["status"]["enum"]==["implemented","concept"]
 assert schema["properties"]["fit_cohort"]["enum"]==["primary","observer_effect","post_checkpoint"]
 
 events=[json.loads(x) for x in Path("data/pakenya_events.jsonl").read_text().splitlines() if x.strip()]
-concepts=[json.loads(x) for x in Path("data/pakenya_concepts.jsonl").read_text().splitlines() if x.strip()]
+concepts=[json.loads(x) for x in Path("data/pakenya_concepts.jsonl").read_text().splitlines() if x.strip()]\npromotions=[json.loads(x) for x in Path("data/pakenya_promotions.jsonl").read_text().splitlines() if x.strip()]
 for e in events+concepts: check(e)
 
 assert all(e["status"]=="implemented" for e in events)
@@ -44,7 +44,7 @@ post=[e for e in events if e.get("fit_cohort")=="post_checkpoint"]
 assert len(primary)==10 and len(observer)==12 and len(post)>=1
 assert all(e.get("measurement_associated") is True for e in observer)
 assert all(e.get("measurement_associated") is True for e in post)
-assert len(concepts)==7
+assert len(concepts)==7\nassert len(promotions)==3\nby_event={e["event_id"]:e for e in events}\nconcept_ids={e["event_id"] for e in concepts}\nfor p in promotions:\n    assert p["concept_id"] in concept_ids\n    assert p["implemented_event_id"] in by_event\n    assert by_event[p["implemented_event_id"]]["source_commit"]==p["implementation_commit"]\n    assert by_event[p["implemented_event_id"]]["fit_cohort"]=="post_checkpoint"
 assert all(e["timestamp_utc"] is None and e["source_commit"] is None for e in concepts)
 
 print(f"Purrtocol event schema: PASS ({len(events)} implemented, {len(concepts)} concepts)")
