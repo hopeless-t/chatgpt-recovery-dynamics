@@ -204,7 +204,6 @@ The highest-value future evidence would be:
 
 The model should be simplified or rejected when those observations disagree.
 
-
 ## Meta-observation: the research conversation itself hit 429
 
 While this repository was being built and discussed, the author reported that
@@ -236,51 +235,6 @@ original capture.
 
 > **Meta-observation != primary dataset.**
 
-
-## Meta-observation: community trust promotion and temporary hold
-
-The author reports that an OpenAI Developer Community account was placed on a
-temporary hold shortly after the author posted a feature-improvement suggestion
-about the iOS ChatGPT app.
-
-Later, the Community UI displayed a system message promoting the account's
-trust level and encouraging further participation, while a related message in
-the same interface read:
-
-~~~text
-Account temporarily on hold
-~~~
-
-Classification:
-
-~~~text
-source:
-  contemporaneous author report + community UI screenshot
-
-recorded fact:
-  temporal ordering and simultaneous UI presentation
-
-causal claim that the iOS feature-improvement post caused the hold:
-  not established
-
-included in the primary 108-pair dataset:
-  no
-
-evidence of shared backend mechanism:
-  no
-~~~
-
-This is retained as project archaeology and a UI-state dissociation anecdote.
-
-See the Wiki page:
-https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki/The-Trust-Level-Paradox
-
-Repository:
-https://github.com/hopeless-t/chatgpt-recovery-dynamics
-
-> **Temporal adjacency != causation.**
-
-
 ## Satirical side-study — Purrtocol Expansion Dynamics
 
 Purrtocol mascot proliferation is analyzed separately from the primary recovery evidence base.
@@ -311,6 +265,42 @@ forecast of planetary Purrtocol coverage:
   NOT ESTABLISHED
 ~~~
 
-The selected 10-event sequence currently gives a descriptive exponential doubling time of about **3.758 hours** and a grid-fit Hawkes branching ratio of about **0.85**, classified as **subcritical**. The manually annotated adjacent-idea mark averages **3.3 ideas/event**; that number is not a Hawkes branching ratio.
+The selected 10-event sequence gives a descriptive exponential doubling time of
+about **3.758 hours** and a grid-fit Hawkes branching ratio of about **0.85**,
+classified as **subcritical**. The manually annotated adjacent-idea mark averages
+**3.3 ideas/event**; that number is not a Hawkes branching ratio.
 
 The joke is allowed to outrun common sense. It is not allowed to outrun the evidence boundary.
+
+
+### Purrtocol measurement backaction checkpoint
+
+Operationalizing the Purrtocol expansion side-study produced **12 additional
+Purrtocol-related repository artifacts in 183 seconds** after the original
+10-event selected cohort.
+
+~~~text
+primary cohort:
+  events = 10
+  Hawkes n ~= 0.85
+  classification = subcritical
+
+observer-inclusive checkpoint:
+  events = 22
+  Hawkes n ~= 1.00
+  classification = near-critical
+
+checkpoint:
+  ec25244a024f2049cfc7851c7fafd421d35a113c
+
+causal generalization:
+  NOT ESTABLISHED
+
+Earth saturation:
+  NOT YET OBSERVED
+~~~
+
+Classification: **measurement-associated repository backaction**. Building the
+measurement/communication apparatus added artifacts to the measured project
+surface. This does not establish a universal observer-effect law or a forecast
+of runaway mascot growth.
