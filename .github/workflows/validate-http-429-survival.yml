@@ -5,6 +5,7 @@ on:
     paths:
       - "data/http_429_survival_contract.json"
       - "data/http_429_survival_scenarios.json"
+      - "data/http_429_survival_reference.json"
       - "docs/429-survival-kit/**"
       - "docs/recovery-design.md"
       - "docs/server-friendly-congestion-control.md"
