@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "5b39c49b0705f8ded8dc3fec4618ade00e906bbd",
+    "baseline_main_commit": "38b7d385359c67fdda296c618d8bce6a958f15f0",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -26,7 +26,8 @@
     "variant_breeding": "Genome Nursery v1: 199,148,544 theoretical genotypes; fixed 4,096-seed entropy probe produced 4,096 unique genotypes, zero collisions, and minimum normalized marginal entropy 0.999326; real registry count remains separate",
     "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified",
     "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
-    "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED"
+    "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED",
+    "closed_improvement_cycles": 4
   },
   "frontiers": [
     {
