@@ -205,6 +205,29 @@ def main() -> int:
     meta_policy = read_json(
         ROOT / "data" / "meta_improvement_loop_policy.json"
     )
+    meta_reference = read_json(
+        ROOT / "data" / "meta_improvement_loop_reference.json"
+    )
+    published_meta_reference = read_json(
+        ROOT
+        / "docs"
+        / "repository-observatory"
+        / "meta-loop"
+        / "reference.json"
+    )
+    check(
+        "meta.reference_mirror",
+        meta_reference == published_meta_reference,
+        "frozen meta-loop reference and Pages mirror must be identical",
+    )
+    check(
+        "meta.first_tuning_baseline_bound",
+        meta_policy["first_tuning_evaluation"]["baseline_reference"]
+        == "data/meta_improvement_loop_reference.json"
+        and meta_reference["aggregate"]["median_observation_to_first_change_s"]
+        == 488.0,
+        repr(meta_policy["first_tuning_evaluation"]),
+    )
     recursion = meta_policy["recursion_policy"]
     check(
         "meta.recursion_bounded",
@@ -347,6 +370,9 @@ def main() -> int:
         "data/meta_improvement_events.jsonl",
         "docs/repository-observatory/meta-improvement-event.schema.json",
         "docs/repository-observatory/critic-router.md",
+        "docs/repository-observatory/meta-loop/index.md",
+        "docs/repository-observatory/meta-loop/llms.txt",
+        "docs/repository-observatory/meta-loop/reference.json",
         "data/preflight_routes.json",
         "scripts/preflight_router.py",
         "AGENTS.md",
@@ -491,6 +517,13 @@ def main() -> int:
         "observatory.frontiers_present",
         len(state.get("frontiers", [])) >= 4,
         f"{len(state.get('frontiers', []))} declared frontiers",
+    )
+
+    frontier_ids = {item["id"] for item in state.get("frontiers", [])}
+    check(
+        "meta.frontier_declared",
+        "META-001" in frontier_ids,
+        repr(sorted(frontier_ids)),
     )
 
     docs_dir = ROOT / "docs"
