@@ -26,6 +26,7 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [Evidence ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/evidence-ledger.md): Claim classes and explicit unknowns.
 - [Recovery design](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/recovery-design.md): Start anchoring, single-flight, observation before materialization, and recovery hysteresis.
 - [Deep validation](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/deep-validation.md): Sensitivity, residual memory, change points, and cross-epoch checks.
+- [Latent timing model competition](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/latent-timing-model-competition.md): HMM-2 wins pooled BIC, while AR(1) wins both held-out cross-epoch prediction folds; mechanism remains unidentified.
 - [Provider-friendly congestion control](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/server-friendly-congestion-control.md): Retry amplification and graceful degradation.
 - [Methodology](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/methodology.md): Pairing, timing, sessionization, and limitations.
 

@@ -172,6 +172,47 @@ effects, transport/recovery-controller state, or another omitted variable.
 
 The trace does **not** identify which one.
 
+### Competing continuous and discrete latent-state descriptions
+
+A separate executable competition tests whether the same residual structure is
+better described as continuous one-step carryover or as a discrete two-state
+latent regime.
+
+Same-sample BIC prefers the two-state Gaussian HMM:
+
+~~~text
+HMM-2 BIC ~= -15.99
+AR(1) BIC ~= -10.10
+Delta BIC (HMM - AR1) ~= -5.89
+~~~
+
+But cross-epoch prediction reverses the practical ranking:
+
+~~~text
+train epoch 1 -> test epoch 2:
+  AR(1) NLL ~= 0.0191
+  HMM-2 NLL ~= 0.3678
+
+train epoch 2 -> test epoch 1:
+  AR(1) NLL ~= -0.2203
+  HMM-2 NLL ~= -0.0337
+~~~
+
+AR(1) is best in both held-out directions.
+
+The observed A/B-conditioned Gaussian control also does not explain the
+structure well enough to replace the temporal model.
+
+The evidence therefore favors this cautious summary:
+
+> pooled residuals admit a strong discrete two-state compression, but continuous
+> one-step memory transfers better across the two active epochs.
+
+This is still **within one capture** and does not identify a physical
+scheduler/timer/backend state.
+
+See [latent timing model competition](latent-timing-model-competition.md).
+
 ---
 
 ## 5. Change-point detection

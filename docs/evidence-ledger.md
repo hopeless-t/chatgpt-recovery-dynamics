@@ -98,6 +98,24 @@ established Accessible state.
 
 Supported by BIC and persists after controlling for state and epoch.
 
+A direct residual-model competition adds an important qualification:
+
+~~~text
+same-sample BIC:
+  HMM-2  ~= -15.99
+  AR(1)  ~= -10.10
+
+cross-epoch held-out mean NLL:
+  epoch 1 -> 2: AR(1) 0.0191  < HMM-2 0.3678
+  epoch 2 -> 1: AR(1) -0.2203 < HMM-2 -0.0337
+~~~
+
+So a two-state Gaussian HMM compresses the pooled residuals better in-sample,
+while AR(1) transfers better between the two active epochs in both directions.
+
+This supports one-step predictive memory while weakening any temptation to name
+the HMM's two statistical states as physical controller modes.
+
 The physical implementation of this memory is unknown.
 
 ## Compatible causal hypotheses, not identified mechanisms
@@ -189,6 +207,7 @@ The repository does not establish:
 - that resume 404 causes 429;
 - that WebSocket failure initiates the problem;
 - that the AR(1) residual state is a specific scheduler or timer;
+- that the HMM's two latent states correspond to two physical controller/backend states;
 - that local simulation parameters correspond to production values.
 
 ## Falsification priorities

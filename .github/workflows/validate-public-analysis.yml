@@ -661,3 +661,116 @@ jobs:
         with:
           name: purrtocol-expansion-reference
           path: /tmp/pakenya-expansion.json
+
+
+  latent-timing-model-competition:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Compete residual timing models
+        run: |
+          python scripts/latent_timing_model_competition.py \
+            --output /tmp/latent-timing-models.json
+
+      - name: Check structural model-competition invariants
+        run: |
+          python - <<'PY'
+          import json
+          import math
+
+          with open("/tmp/latent-timing-models.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          assert s["schema"] == "latent-timing-model-competition/v1"
+          assert s["evidence_class"] == "within_capture_model_competition"
+
+          within = s["within_capture"]
+          assert within["n"] == 106
+
+          expected = {
+              "iid_gaussian",
+              "observed_ab_conditioned",
+              "ar1",
+              "hmm2_latent_gaussian",
+          }
+          assert set(within["models"]) == expected
+          assert {r["model"] for r in within["bic_ranking"]} == expected
+
+          for name, model in within["models"].items():
+              assert math.isfinite(model["bic"]), name
+              assert math.isfinite(model["mean_nll"]), name
+              assert math.isfinite(model["log_likelihood"]), name
+
+          ar1 = within["models"]["ar1"]
+          assert -0.98 <= ar1["phi"] <= 0.98
+
+          hmm = within["models"]["hmm2_latent_gaussian"]
+          assert len(hmm["means"]) == 2
+          assert hmm["means"][0] <= hmm["means"][1]
+          assert len(hmm["transition"]) == 2
+          for row in hmm["transition"]:
+              assert len(row) == 2
+              assert abs(sum(row) - 1.0) < 1e-9
+
+          cross = s["cross_epoch_prediction"]
+          assert set(cross) == {
+              "train_epoch1_test_epoch2",
+              "train_epoch2_test_epoch1",
+          }
+          for fold in cross.values():
+              assert set(fold["test_mean_nll"]) == expected
+              for value in fold["test_mean_nll"].values():
+                  assert math.isfinite(value)
+
+          # The first observed run established an intentionally asymmetric result:
+          # HMM-2 wins pooled same-sample BIC, while AR(1) wins both held-out folds.
+          assert within["bic_ranking"][0]["model"] == "hmm2_latent_gaussian"
+          assert within["bic_ranking"][1]["model"] == "ar1"
+          assert (
+              within["models"]["hmm2_latent_gaussian"]["bic"]
+              < within["models"]["ar1"]["bic"] - 5.0
+          )
+
+          for fold in cross.values():
+              assert fold["ranking"][0] == "ar1"
+
+          with open("data/latent_timing_model_reference.json", "r", encoding="utf-8") as f:
+              ref = json.load(f)
+
+          assert ref["schema"] == "latent-timing-model-reference/v1"
+          assert ref["source"]["workflow_run_id"] == 37125194387
+          assert ref["sample"]["within_epoch_transitions"] == 106
+
+          assert abs(
+              within["models"]["ar1"]["phi"]
+              - ref["within_capture_bic"]["ar1_phi"]
+          ) < 1e-12
+          assert abs(
+              within["models"]["hmm2_latent_gaussian"]["bic"]
+              - ref["within_capture_bic"]["ranking"][0]["bic"]
+          ) < 1e-9
+          assert abs(
+              within["models"]["ar1"]["bic"]
+              - ref["within_capture_bic"]["ranking"][1]["bic"]
+          ) < 1e-9
+
+          for key, fold in cross.items():
+              expected_fold = ref["cross_epoch_prediction"][key]
+              assert fold["ranking"] == expected_fold["ranking"]
+              for model, value in fold["test_mean_nll"].items():
+                  assert abs(value - expected_fold["test_mean_nll"][model]) < 1e-9
+
+          print("latent timing model competition: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: latent-timing-model-competition
+          path: |
+            /tmp/latent-timing-models.json
+            data/latent_timing_model_reference.json

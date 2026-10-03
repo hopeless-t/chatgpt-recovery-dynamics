@@ -23,7 +23,8 @@
     "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
     "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only",
     "agent_entrypoints": "root AGENTS.md plus local 3D/variant maps; size and task-routing invariants audited",
-    "variant_breeding": "Genome Nursery v1 provides 199,148,544 deterministic theoretical genotypes while the canonical registry still counts only real indexed variants"
+    "variant_breeding": "Genome Nursery v1 provides 199,148,544 deterministic theoretical genotypes while the canonical registry still counts only real indexed variants",
+    "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified"
   },
   "frontiers": [
     {
@@ -36,9 +37,9 @@
     {
       "id": "SCI-LATENT-001",
       "lane": "science",
-      "status": "open",
-      "target": "Compete latent-state explanations for residual timing memory rather than naming one scheduler mechanism prematurely.",
-      "promotion_gate": "model competition and cross-epoch/cross-client predictive evidence"
+      "status": "within_capture_baseline_implemented",
+      "target": "Replicate or falsify the AR(1)-over-HMM cross-epoch predictive advantage on an independent capture/client before naming any physical latent state.",
+      "promotion_gate": "independent capture or cross-client predictive evidence; physical mechanism naming remains separate"
     },
     {
       "id": "3D-G2-001",
