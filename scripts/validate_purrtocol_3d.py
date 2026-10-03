@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the Purrtocol 3D preflight contract and, when present, the GLB runtime asset."""
+"""Validate the Purrtocol 3D contract, GLB asset, promotion, and event lineage."""
 
 from __future__ import annotations
 
+import hashlib
 import json
 import struct
 from pathlib import Path
@@ -11,14 +12,15 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "data" / "purrtocol_3d_contract.json"
 CONCEPTS_PATH = ROOT / "data" / "pakenya_concepts.jsonl"
 PROMOTIONS_PATH = ROOT / "data" / "pakenya_promotions.jsonl"
+EVENTS_PATH = ROOT / "data" / "pakenya_events.jsonl"
 
 
 def read_jsonl(path: Path) -> list[dict]:
-    rows = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            rows.append(json.loads(line))
-    return rows
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def parse_glb_json(path: Path) -> dict:
@@ -39,7 +41,7 @@ def parse_glb_json(path: Path) -> dict:
         offset += 8
         chunk = data[offset : offset + chunk_length]
         offset += chunk_length
-        if chunk_type == 0x4E4F534A:  # JSON
+        if chunk_type == 0x4E4F534A:
             json_chunk = chunk
             break
 
@@ -49,14 +51,13 @@ def parse_glb_json(path: Path) -> dict:
 
 def main() -> None:
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
-
     assert contract["schema"] == "purrtocol-3d-contract/v1"
-    assert contract["status"] == "preproduction_concept"
     assert contract["concept_event_id"] == "PKE-106"
     assert contract["promotion_gate"]["automatic_promotion"] is False
 
     concepts = read_jsonl(CONCEPTS_PATH)
     concept = next(row for row in concepts if row["event_id"] == "PKE-106")
+    # Historical concept provenance remains immutable after promotion.
     assert concept["status"] == "concept"
     assert concept["timestamp_utc"] is None
     assert concept["source_commit"] is None
@@ -71,23 +72,35 @@ def main() -> None:
     preview = ROOT / contract["runtime_preview"]
 
     if not asset.exists():
-        assert promotion is None, "PKE-106 promoted before the runtime 3D asset exists"
-        print("Purrtocol 3D preproduction contract: PASS (asset not yet implemented)")
+        assert contract["status"] == "preproduction_concept"
+        assert promotion is None, "PKE-106 promoted before runtime asset exists"
+        print("Purrtocol 3D preproduction contract: PASS")
         return
 
-    assert promotion is not None, "3D runtime asset exists without explicit PKE-106 promotion"
-    assert preview.exists(), "3D runtime asset exists without runtime preview"
+    assert contract["status"] == "implemented_first_light"
+    assert promotion is not None, "3D asset exists without PKE-106 promotion"
+    assert preview.exists(), "3D asset exists without runtime preview"
+
+    expected = contract["first_light"]
+    data = asset.read_bytes()
+    assert len(data) == expected["asset_bytes"]
+    actual_sha256 = hashlib.sha256(data).hexdigest()
+    assert actual_sha256 == expected["sha256"], (
+        f"GLB sha256 mismatch: actual={actual_sha256} expected={expected['sha256']}"
+    )
 
     gltf = parse_glb_json(asset)
     assert gltf.get("asset", {}).get("version") == "2.0"
+    extras = gltf.get("asset", {}).get("extras", {})
+    assert extras.get("variant_id") == "PKV-CANONICAL"
+    assert extras.get("classification") == "visualization_not_evidence"
 
     node_names = {
         node.get("name")
         for node in gltf.get("nodes", [])
         if isinstance(node, dict) and node.get("name")
     }
-    required_nodes = set(contract["required_nodes"])
-    missing_nodes = sorted(required_nodes - node_names)
+    missing_nodes = sorted(set(contract["required_nodes"]) - node_names)
     assert not missing_nodes, f"missing required runtime nodes: {missing_nodes}"
 
     animation_names = {
@@ -95,18 +108,42 @@ def main() -> None:
         for anim in gltf.get("animations", [])
         if isinstance(anim, dict) and anim.get("name")
     }
-    required_animations = set(contract["required_animations"])
-    missing_animations = sorted(required_animations - animation_names)
-    assert not missing_animations, f"missing required animations: {missing_animations}"
+    missing_animations = sorted(
+        set(contract["required_animations"]) - animation_names
+    )
+    assert not missing_animations, (
+        f"missing required animations: {missing_animations}"
+    )
+
+    assert len(gltf.get("nodes", [])) == expected["scene_nodes"]
+    assert len(gltf.get("animations", [])) == expected["animation_clips"]
+    assert promotion["implemented_event_id"] == expected["implemented_event_id"]
+
+    events = read_jsonl(EVENTS_PATH)
+    event = next(
+        row for row in events
+        if row["event_id"] == promotion["implemented_event_id"]
+    )
+    assert event["status"] == "implemented"
+    assert event["domain"] == "3d"
+    assert event["source_commit"] == promotion["implementation_commit"]
+
+    html = preview.read_text(encoding="utf-8")
+    assert 'src="../assets/purrtocol/purrtocol.glb"' in html
+    assert "model-viewer/4.3.1/model-viewer.min.js" in html
+    for name in contract["required_animations"]:
+        assert name in html
 
     print(
         json.dumps(
             {
                 "status": "IMPLEMENTATION CONTRACT PASS",
-                "asset_bytes": asset.stat().st_size,
+                "asset_bytes": len(data),
+                "sha256": expected["sha256"],
                 "nodes": len(gltf.get("nodes", [])),
                 "animations": sorted(animation_names),
                 "promotion_event": promotion["implemented_event_id"],
+                "concept_origin_preserved": True,
             },
             ensure_ascii=False,
             indent=2,

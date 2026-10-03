@@ -1,4 +1,4 @@
-name: Validate Purrtocol 3D preflight
+name: Validate Purrtocol 3D
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - "data/purrtocol_3d_contract.json"
       - "data/pakenya_concepts.jsonl"
       - "data/pakenya_promotions.jsonl"
+      - "data/pakenya_events.jsonl"
       - "docs/purrtocol-3d/**"
       - "docs/assets/purrtocol/**"
       - "docs/purrtocol-design-bible.md"
@@ -16,6 +17,7 @@ on:
       - "data/purrtocol_3d_contract.json"
       - "data/pakenya_concepts.jsonl"
       - "data/pakenya_promotions.jsonl"
+      - "data/pakenya_events.jsonl"
       - "docs/purrtocol-3d/**"
       - "docs/assets/purrtocol/**"
       - "docs/purrtocol-design-bible.md"
@@ -30,5 +32,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Validate 3D concept/implementation boundary
+      - name: Validate 3D asset, promotion, and lineage
         run: python scripts/validate_purrtocol_3d.py

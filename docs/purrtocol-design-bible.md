@@ -87,10 +87,12 @@ Current canonical sets:
 - Purrtocol Constitution
 - Failure Field Guide
 - Purrtocol Observatory
+- 3D Purrtocol First Light
 
 Permitted future adjacent sets:
 
-- Future 3D Purrtocol model
+- expressive 3D rig / organic silhouette refinement
+- 3D Purrtocol variant strains
 
 ## Props
 
@@ -107,13 +109,14 @@ Purrtocol must not be depicted as knowing OpenAI's internal topology or root cau
 
 The cat is on the observer/recovery side.
 
-## Future 3D contract
+## 3D contract
 
-Current frontier: **3D Purrtocol preproduction**. PKE-106 remains a concept until a runtime model, preview, explicit promotion record, and CI validation land together.
+Current state: **3D Purrtocol First Light is implemented**. PKE-106 remains preserved as concept-origin provenance and is explicitly promoted to PKE-033. The next frontier is expressive rig/art refinement without weakening the semantic contract.
 
 Machine-readable/preflight contract:
 
-- [Purrtocol 3D Preflight](purrtocol-3d/README.md)
+- [Purrtocol 3D First Light](purrtocol-3d/index.md)
+- [Purrtocol 3D contract](purrtocol-3d/README.md)
 - `data/purrtocol_3d_contract.json`
 - `scripts/validate_purrtocol_3d.py`
 

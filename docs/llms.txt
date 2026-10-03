@@ -7,7 +7,7 @@ Important interpretation rules:
 - This project does not claim OpenAI's internal root cause, production topology, exact rate-limit scope, capacity, or queue sizes.
 - Raw authenticated HAR files are not published.
 - Purrtocol is an anthropomorphic error model and communication layer, not evidence.
-- Current 3D frontier: PKE-106 is PREPRODUCTION; no runtime 3D model has been promoted.
+- Current 3D state: PKE-106 has been promoted to implemented event PKE-033; First Light GLB is live and CI-validated.
 - Forked Purrtocol variants are welcome. Lineage is provenance, not approval or ranking.
 - The Sam/Tibo observation horizon is a story mechanic only; named-person attention is NOT OBSERVED and is not monitored.
 
@@ -37,11 +37,12 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 
 ## Purrtocol canon
 
-- [Purrtocol Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical visual, narrative, epistemic, and future-3D rules.
+- [Purrtocol Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical visual, narrative, epistemic, and 3D rules.
 - [Purrtocol Expansion Dynamics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-expansion/PAPER.md): Deliberately separate mascot-expansion side-study.
 - [Purrtocol Constitution](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-constitution/): Compressed recovery/evidence laws.
 - [Purrtocol Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-observatory/): Frozen fits and post-checkpoint growth.
-- [3D preflight](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/README.md): PKE-106 preproduction/promotion contract.
+- [3D Purrtocol First Light](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/index.md): Implemented GLB, animation semantics, measurements, and next frontier.
+- [3D contract](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/README.md): Promotion/validation contract.
 
 ## Purrtocol propagation
 

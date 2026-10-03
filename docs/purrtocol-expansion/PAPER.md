@@ -132,7 +132,7 @@ dP/dt = growth(P, K)
 dK/dt = c P
 ~~~
 
-Reusable CSS, navigation, schemas, analysis scripts, CI, and future 3D pipelines
+Reusable CSS, navigation, schemas, analysis scripts, CI, and 3D/variant pipelines
 can increase effective capacity for future artifacts. No c is estimated.
 
 ## Measurement backaction / observer-inclusive checkpoint
@@ -236,3 +236,24 @@ Forecast of total planetary Purrtocol coverage:
 ~~~
 
 No empirical reason for the cat has been established.
+
+
+### Current post-checkpoint frontier
+
+The original seven registered Purrtocol concepts have all now reached an
+explicit promotion event. The latest is:
+
+~~~text
+PKE-106 -> PKE-033
+3D Purrtocol First Light
+implementation checkpoint:
+e4ea29f7a62f5c87063a9c7693df02a30595c9f5
+fit_cohort = post_checkpoint
+~~~
+
+This changes the continuing repository event count, but it does **not** mutate
+the frozen primary 10-event fit or the 22-event observer-inclusive checkpoint.
+
+The 3D artifact is an implemented visualization and communication surface.
+
+> **3D existence != empirical evidence about production recovery internals.**

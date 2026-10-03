@@ -70,7 +70,7 @@ assert all(e.get("measurement_associated") is True for e in observer)
 assert all(e.get("measurement_associated") is True for e in post)
 
 assert len(concepts) == 7
-assert len(promotions) == 6
+assert len(promotions) == 7
 by_event = {e["event_id"]: e for e in events}
 concept_ids = {e["event_id"] for e in concepts}
 seen_concepts = set()
@@ -88,6 +88,7 @@ for p in promotions:
     seen_concepts.add(p["concept_id"])
     seen_events.add(p["implemented_event_id"])
 
+assert seen_concepts == concept_ids
 assert all(e["timestamp_utc"] is None and e["source_commit"] is None for e in concepts)
 
 print(

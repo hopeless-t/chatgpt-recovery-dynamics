@@ -1,0 +1,32 @@
+{
+  "schema": "purrtocol-3d-first-light-receipt/v1",
+  "concept_origin": "PKE-106",
+  "implemented_event": "PKE-033",
+  "variant_id": "PKV-CANONICAL",
+  "asset": "docs/assets/purrtocol/purrtocol.glb",
+  "preview": "docs/purrtocol-3d/index.html",
+  "contract": "data/purrtocol_3d_contract.json",
+  "asset_bytes": 7672,
+  "asset_sha256": "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467",
+  "scene_nodes": 21,
+  "animation_clips": [
+    "idle_observe",
+    "blocked_429",
+    "provisional_step_E",
+    "stable_snapshot_carry_H",
+    "duplicate_retry_attempt",
+    "director_neck_scruff_stop"
+  ],
+  "textures": 0,
+  "classification": "implemented_visualization_not_evidence",
+  "promotion_semantics": "concept origin remains immutable; implemented artifact is a separate event",
+  "next_frontier": [
+    "expressive rig",
+    "organic silhouette",
+    "editable authoring source",
+    "measured mobile runtime memory",
+    "state-preserving 3D variant strains"
+  ],
+  "implementation_commit": "c50d280eebad266899e4177bec4d8ab9f230ffec",
+  "asset_repair_note": "The first uploaded GLB blob contained a two-character JSON-chunk corruption; CI detected it. c50d280e is the repaired binary implementation checkpoint."
+}

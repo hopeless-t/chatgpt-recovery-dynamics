@@ -49,14 +49,20 @@ Canonical local-TV line:
 This does not change its technical responsibilities.
 
 
-## Design bible and future 3D
+## Design bible and 3D First Light
 
 Canonical setting source:
 
 - [Purrtocol Design Bible](purrtocol-design-bible.md)
 - https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
 
-The Bible defines the character as an **anthropomorphic error model for recovery systems** and specifies turnaround, expression, rig, prop-socket, and animation requirements for a future 3D asset.
+The Bible defines the character as an **anthropomorphic error model for recovery systems** and specifies turnaround, expression, rig, prop-socket, and animation requirements. The first canonical 3D implementation is now live as **3D Purrtocol First Light**: a 7,672-byte GLB with 21 scene nodes, six semantic animation clips, no textures, and a deliberately minimal voxel form.
+
+3D page:
+
+https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/
+
+The next frontier is expressive rig and art refinement, not redefinition of the recovery semantics.
 
 Expansion side-study:
 
