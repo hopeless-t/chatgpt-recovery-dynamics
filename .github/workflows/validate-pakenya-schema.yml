@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "data/pakenya_events.jsonl"
-      - "data/pakenya_concepts.jsonl"
+      - "data/pakenya_concepts.jsonl"\n      - "data/pakenya_promotions.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
@@ -13,7 +13,7 @@ on:
   pull_request:
     paths:
       - "data/pakenya_events.jsonl"
-      - "data/pakenya_concepts.jsonl"
+      - "data/pakenya_concepts.jsonl"\n      - "data/pakenya_promotions.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
