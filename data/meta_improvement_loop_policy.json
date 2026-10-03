@@ -126,6 +126,9 @@
       "no critical evidence/lineage/standards guardrail is weakened",
       "observer footprint remains below soft design warnings"
     ],
-    "note": "A single faster cycle is not sufficient evidence that the loop improved."
+    "note": "A single faster cycle is not sufficient evidence that the loop improved.",
+    "deployment_commit": "a784da0ebe0064acf3cd8d7382a29dc3e0bc5592",
+    "meta_cycle_id": "MIL-001",
+    "status": "deployed_awaiting_post_tuning_cycles"
   }
 }
