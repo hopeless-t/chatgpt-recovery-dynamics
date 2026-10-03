@@ -1,0 +1,31 @@
+# HTTP 429 Survival Kit
+
+> Vendor-neutral defensive retry/recovery control for throttling and ambiguous outcomes.
+
+Core rules:
+- 429 is backpressure, not root-cause identification.
+- Retry-After is a minimum timing floor.
+- Jitter is nonnegative after server timing floors; never return earlier than Retry-After.
+- operation_id stays stable while attempt_id changes.
+- UNKNOWN non-idempotent outcome without an explicit provider/application idempotency contract => REOBSERVE.
+- Retry budgets are bounded.
+- First success after Blocked => Recovering, not automatically Healthy.
+
+Standards snapshot: 2026-10-03.
+
+Stable:
+- RFC 6585 / 429 Too Many Requests
+- RFC 9110 / Retry-After
+- RFC 9457 / Problem Details
+
+Draft:
+- draft-ietf-httpapi-ratelimit-headers-11: active draft, not RFC
+- draft-ietf-httpapi-idempotency-key-header-07: expired
+
+## Machine / code surfaces
+
+- [Contract](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-survival-kit/contract.json)
+- [Markdown guide](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-survival-kit/index.md)
+- [Python scheduler](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/http_429_survival.py)
+- [Validator](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/validate_http_429_survival.py)
+- [Scenarios](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/http_429_survival_scenarios.json)

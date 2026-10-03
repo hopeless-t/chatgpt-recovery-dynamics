@@ -70,11 +70,29 @@ next_start =
 For throttling / 429:
 
 - honor a server-provided retry delay when available;
-- otherwise use exponential backoff with jitter;
+- treat `Retry-After` as a **minimum floor**, not a jitter center;
+- apply herd jitter only in the nonnegative direction after all timing floors;
+- otherwise use bounded exponential backoff;
 - cap attempts with a retry budget;
 - open a circuit after repeated throttling and allow only sparse probes.
 
-This prevents a fast rejection from automatically increasing request frequency.
+A more explicit form is:
+
+~~~text
+next_start =
+    max(
+        last_start + minimum_period,
+        now + retry_after_floor,
+        now + local_backoff
+    )
+    + nonnegative_herd_jitter
+~~~
+
+This prevents both fast-failure cadence amplification and a subtle failure mode
+where negative jitter returns **before** a server-requested `Retry-After`
+minimum.
+
+See [HTTP 429 Survival Kit](429-survival-kit/index.md).
 
 General retry/backoff guidance:
 https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_mitigate_interaction_failure_limit_retries.html

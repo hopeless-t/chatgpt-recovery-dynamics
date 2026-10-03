@@ -28,6 +28,7 @@ For recovery evidence or claims:
 
 For recovery architecture:
 - `docs/recovery-design.md`
+- `docs/429-survival-kit/index.md` for standards-aware 429/backpressure client behavior
 - `docs/transport-recovery-redesign.md`
 - `docs/server-friendly-congestion-control.md`
 

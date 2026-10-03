@@ -103,6 +103,36 @@ def main() -> int:
         theoretical_genotypes == 199_148_544,
         f"{theoretical_genotypes} theoretical concept genotypes; not artifact count",
     )
+    survival_contract = read_json(ROOT / "data" / "http_429_survival_contract.json")
+    published_survival_contract = read_json(
+        ROOT / "docs" / "429-survival-kit" / "contract.json"
+    )
+    check(
+        "429.contract_mirror",
+        survival_contract == published_survival_contract,
+        "data contract and Pages contract must be identical",
+    )
+    survival_standards = {
+        row["id"]: row["status"] for row in survival_contract["standards"]
+    }
+    check(
+        "429.standards_maturity_boundary",
+        survival_standards == {
+            "RFC6585-429": "stable",
+            "RFC9110-Retry-After": "stable",
+            "RFC9457-Problem-Details": "stable",
+            "draft-ietf-httpapi-ratelimit-headers-11": "active_draft_not_rfc",
+            "draft-ietf-httpapi-idempotency-key-header-07": "expired",
+        },
+        repr(survival_standards),
+    )
+    check(
+        "429.retry_after_floor_contract",
+        survival_contract["scheduler"]["retry_after_precedence"] == "floor"
+        and survival_contract["scheduler"]["jitter_direction"] == "nonnegative",
+        survival_contract["scheduler"]["formula"],
+    )
+
     improvement_schema = read_json(ROOT / "data" / "improvement_event_schema.json")
     published_improvement_schema = read_json(
         ROOT / "docs" / "repository-observatory" / "improvement-event.schema.json"
@@ -222,6 +252,11 @@ def main() -> int:
         "scripts/breed_purrtocol.py",
         "docs/purrtocol-3d/llms.txt",
         "docs/repository-observatory/state.json",
+        "docs/429-survival-kit/index.md",
+        "docs/429-survival-kit/llms.txt",
+        "docs/429-survival-kit/contract.json",
+        "scripts/http_429_survival.py",
+        "scripts/validate_http_429_survival.py",
         "IMPROVEMENT_LOOP.md",
         "AGENTS.md",
         "docs/purrtocol-3d/AGENTS.md",
@@ -341,6 +376,23 @@ def main() -> int:
             "sha256": actual_sha,
             "nodes": len(gltf.get("nodes", [])) if gltf else None,
             "animations": len(gltf.get("animations", [])) if gltf else None,
+        },
+        "429_survival": {
+            "stable_rfc_surfaces": sum(
+                1 for row in survival_contract["standards"]
+                if row["status"] == "stable"
+            ),
+            "active_drafts": sum(
+                1 for row in survival_contract["standards"]
+                if row["status"] == "active_draft_not_rfc"
+            ),
+            "expired_drafts": sum(
+                1 for row in survival_contract["standards"]
+                if row["status"] == "expired"
+            ),
+            "retry_after_is_floor": (
+                survival_contract["scheduler"]["retry_after_precedence"] == "floor"
+            ),
         },
         "frontiers": {
             "open": sum(1 for item in state.get("frontiers", []) if item.get("status") == "open")

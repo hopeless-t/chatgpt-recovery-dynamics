@@ -11,7 +11,8 @@ This is not a description of OpenAI internals.
 - [ ] Multiple local tabs/windows coalesce recovery work.
 - [ ] Fast failure does not shorten start-to-start retry spacing.
 - [ ] 429 / Retry-After increases or preserves spacing.
-- [ ] Retry timing includes jitter.
+- [ ] Retry-After is treated as a lower bound, not a jitter center.
+- [ ] Herd jitter is nonnegative after server-directed timing floors.
 - [ ] Retry budget is bounded.
 - [ ] First successful observation enters Recovering, not Healthy.
 - [ ] Stable confirmation is required before backoff/failure history is reset.
@@ -220,3 +221,9 @@ The central provider-friendly rule is:
 > **Do the least expensive observation that can answer the current question,
 > and do expensive reconstruction only once the system has evidence that it
 > will be useful.**
+
+
+## Standards-aware client reference
+
+See [HTTP 429 Survival Kit](429-survival-kit/index.md) for the stable-RFC vs
+active/expired-draft boundary, retry authorization, and executable scenarios.
