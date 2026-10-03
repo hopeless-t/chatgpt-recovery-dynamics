@@ -7,7 +7,7 @@
   "preview": "docs/purrtocol-3d/index.html",
   "contract": "data/purrtocol_3d_contract.json",
   "asset_bytes": 7672,
-  "asset_sha256": "c3d2a82aaf14af5219f5236fcb22b296bd8b736fd9c2bb639d5450a3f000e3db",
+  "asset_sha256": "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467",
   "scene_nodes": 21,
   "animation_clips": [
     "idle_observe",
@@ -26,5 +26,7 @@
     "editable authoring source",
     "measured mobile runtime memory",
     "state-preserving 3D variant strains"
-  ]
+  ],
+  "implementation_commit": "c50d280eebad266899e4177bec4d8ab9f230ffec",
+  "asset_repair_note": "The first uploaded GLB blob contained a two-character JSON-chunk corruption; CI detected it. c50d280e is the repaired binary implementation checkpoint."
 }
