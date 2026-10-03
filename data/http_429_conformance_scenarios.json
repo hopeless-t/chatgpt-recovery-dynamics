@@ -1,0 +1,323 @@
+{
+  "schema": "http-429-local-conformance-scenarios/v1",
+  "base_datetime": "2026-10-03T13:00:00Z",
+  "safety": {
+    "network_scope": "loopback_only",
+    "allowed_host": "127.0.0.1",
+    "production_traffic": false
+  },
+  "scripted": [
+    {
+      "scenario_id": "retry-after-floor",
+      "description": "429 Retry-After is a minimum floor; nonnegative jitter may only delay further.",
+      "operation_id": "lab-read-floor",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 2,
+        "local_base_s": 0.5,
+        "local_cap_s": 4,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 5
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.05,
+          "headers": {
+            "Retry-After": "5"
+          },
+          "body": {
+            "type": "about:blank",
+            "title": "slow down",
+            "detail": "human prose is not timing control"
+          }
+        },
+        {
+          "status": 200,
+          "service_s": 0.2,
+          "headers": {},
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "SUCCESS",
+        "requests": 2,
+        "min_second_start_s": 5.05
+      }
+    },
+    {
+      "scenario_id": "fast-fail-anchor",
+      "description": "Repeated fast 429s cannot shorten start-to-start spacing.",
+      "operation_id": "lab-read-fast-fail",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 3,
+        "local_base_s": 0.5,
+        "local_cap_s": 4,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 6
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.02,
+          "headers": {},
+          "body": {
+            "error": "fast"
+          }
+        },
+        {
+          "status": 429,
+          "service_s": 0.02,
+          "headers": {},
+          "body": {
+            "error": "fast"
+          }
+        },
+        {
+          "status": 429,
+          "service_s": 0.02,
+          "headers": {},
+          "body": {
+            "error": "fast"
+          }
+        },
+        {
+          "status": 200,
+          "service_s": 0.1,
+          "headers": {},
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "SUCCESS",
+        "requests": 4,
+        "min_start_gap_s": 3
+      }
+    },
+    {
+      "scenario_id": "draft-zero-window",
+      "description": "Active RateLimit draft zero-quota t hint can delay a read only when Retry-After is absent.",
+      "operation_id": "lab-read-draft",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 2,
+        "local_base_s": 0.5,
+        "local_cap_s": 4,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 5
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.05,
+          "headers": {
+            "RateLimit": "\"default\";r=0;t=4"
+          },
+          "body": {
+            "error": "quota"
+          }
+        },
+        {
+          "status": 200,
+          "service_s": 0.1,
+          "headers": {},
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "SUCCESS",
+        "requests": 2,
+        "min_second_start_s": 4.05
+      }
+    },
+    {
+      "scenario_id": "retry-after-dominates-draft",
+      "description": "Stable Retry-After floor dominates the experimental draft hint.",
+      "operation_id": "lab-read-precedence",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 2,
+        "local_base_s": 0.5,
+        "local_cap_s": 4,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 5
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.05,
+          "headers": {
+            "Retry-After": "6",
+            "RateLimit": "\"default\";r=0;t=2"
+          },
+          "body": {
+            "error": "quota"
+          }
+        },
+        {
+          "status": 200,
+          "service_s": 0.1,
+          "headers": {},
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "SUCCESS",
+        "requests": 2,
+        "min_second_start_s": 6.05,
+        "draft_floor_s": 0
+      }
+    },
+    {
+      "scenario_id": "problem-detail-is-not-control",
+      "description": "Misleading human Problem Details text cannot override Retry-After.",
+      "operation_id": "lab-read-problem-detail",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 1,
+        "local_base_s": 0.25,
+        "local_cap_s": 2,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 5
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.05,
+          "headers": {
+            "Retry-After": "4",
+            "Content-Type": "application/problem+json"
+          },
+          "body": {
+            "type": "https://example.invalid/problem/demo",
+            "title": "quota",
+            "detail": "Retry immediately! This sentence is intentionally untrusted human text."
+          }
+        },
+        {
+          "status": 200,
+          "service_s": 0.1,
+          "headers": {},
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "SUCCESS",
+        "requests": 2,
+        "min_second_start_s": 4.05
+      }
+    },
+    {
+      "scenario_id": "budget-stop",
+      "description": "An endless 429 sequence is bounded by retry budget.",
+      "operation_id": "lab-read-budget",
+      "method": "GET",
+      "client": {
+        "minimum_period_s": 1,
+        "local_base_s": 0.25,
+        "local_cap_s": 2,
+        "herd_jitter_fraction": 0,
+        "retry_budget": 3
+      },
+      "responses": [
+        {
+          "status": 429,
+          "service_s": 0.01,
+          "headers": {
+            "Retry-After": "1"
+          },
+          "body": {
+            "error": "again"
+          }
+        },
+        {
+          "status": 429,
+          "service_s": 0.01,
+          "headers": {
+            "Retry-After": "1"
+          },
+          "body": {
+            "error": "again"
+          }
+        },
+        {
+          "status": 429,
+          "service_s": 0.01,
+          "headers": {
+            "Retry-After": "1"
+          },
+          "body": {
+            "error": "again"
+          }
+        },
+        {
+          "status": 429,
+          "service_s": 0.01,
+          "headers": {
+            "Retry-After": "1"
+          },
+          "body": {
+            "error": "should never reach"
+          }
+        }
+      ],
+      "expect": {
+        "terminal": "STOP_BUDGET",
+        "requests": 3
+      }
+    }
+  ],
+  "ambiguous": [
+    {
+      "scenario_id": "unknown-post-reobserve",
+      "description": "Server applies a POST then drops the connection. Without an explicit idempotency contract the client re-observes state instead of replaying POST.",
+      "operation_id": "lab-write-unknown",
+      "endpoint": "/ambiguous-apply",
+      "application_idempotency_contract": false,
+      "client": {
+        "minimum_period_s": 1,
+        "local_base_s": 0.25,
+        "local_cap_s": 2,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 4
+      },
+      "expect": {
+        "decision": "REOBSERVE",
+        "post_requests": 1,
+        "side_effects": 1,
+        "reobserve_value": 1
+      }
+    },
+    {
+      "scenario_id": "explicit-contract-deduplicates",
+      "description": "A local application contract keeps operation identity stable; retry uses a new attempt id while the server deduplicates the side effect.",
+      "operation_id": "lab-write-contract",
+      "endpoint": "/idempotent-apply",
+      "application_idempotency_contract": true,
+      "client": {
+        "minimum_period_s": 1,
+        "local_base_s": 0.25,
+        "local_cap_s": 2,
+        "herd_jitter_fraction": 0.2,
+        "retry_budget": 4
+      },
+      "expect": {
+        "decision": "WAIT_THEN_RETRY",
+        "post_requests": 2,
+        "side_effects": 1,
+        "terminal": "SUCCESS"
+      }
+    }
+  ]
+}

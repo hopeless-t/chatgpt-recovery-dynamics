@@ -60,13 +60,17 @@
         "docs/429-survival-kit/*",
         "rfcs/RFC-0003-http-429-survival-plane.md",
         "scripts/http_429_survival.py",
-        "scripts/validate_http_429_survival.py"
+        "scripts/validate_http_429_survival.py",
+        "data/http_429_conformance_*",
+        "docs/429-conformance-lab/*",
+        "scripts/http_429_conformance_lab.py"
       ],
       "commands": [
-        "python scripts/validate_http_429_survival.py"
+        "python scripts/validate_http_429_survival.py",
+        "python scripts/http_429_conformance_lab.py --output /tmp/http-429-conformance-preflight.json"
       ],
       "promotion_gate": "Validate HTTP 429 Survival Kit",
-      "rationale": "Catch timing-floor, authorization, budget, standards-boundary, and reference drift locally."
+      "rationale": "Catch timing-floor, authorization, budget, standards-boundary, reference drift, and loopback conformance failures close to the 429 source."
     },
     {
       "route_id": "meta-improvement-loop",
