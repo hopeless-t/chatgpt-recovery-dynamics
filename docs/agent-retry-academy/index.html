@@ -1,0 +1,31 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Retry Academy | パケニャ再実行訓練校</title><meta name="description" content="operation_id、attempt_id、timeout、UNKNOWN、re-observation、duplicate actionを猫で学ぶAgent Retry Academy。">
+<style>:root{--b:#07111f;--p:#0d1b2d;--l:#294966;--t:#edf5ff;--m:#93a8bf;--c:#4cdaeb;--g:#4cd384;--a:#f6bb44;--r:#ef5f6c}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -15%,#253a71,var(--b) 44%);color:var(--t);font:16px/1.65 system-ui,sans-serif}.w{max-width:1050px;margin:auto;padding:52px 22px}.ey{color:var(--c);font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,6rem);line-height:.9;margin:.2em 0}.lead{color:var(--m);max-width:840px}.panel{border:1px solid var(--l);background:var(--p);border-radius:22px;padding:19px;margin:16px 0}.flow{font:700 .95rem ui-monospace,monospace;white-space:pre-wrap;background:#050c15;border:1px solid var(--l);border-radius:14px;padding:14px}.choices{display:flex;gap:10px;flex-wrap:wrap}.choices button{background:#08111d;color:var(--t);border:1px solid var(--l);border-radius:999px;padding:10px 14px;cursor:pointer}.result{margin-top:14px;border-left:5px solid var(--a);padding:12px;color:var(--m);display:none}.result.show{display:block}.rule{border-left:5px solid var(--a);background:rgba(246,187,68,.06);padding:14px;color:var(--m);margin:20px 0}a{color:var(--c)}.btn{display:inline-block;border:1px solid var(--l);border-radius:999px;padding:9px 14px;text-decoration:none;color:var(--t);margin:5px 6px 0 0}</style></head><body><main class="w">
+<div class="ey">Agent Retry Academy</div><h1>返事がない。<br>もう一回やるにゃ？</h1><p class="lead">tool callや外部操作がtimeoutしたとき、「失敗した」と「結果が分からない」を分ける訓練校。実際のtoolは呼ばない教材simulationにゃ。</p>
+<div class="rule"><b>校則：</b> Transport failure ≠ execution failure. UNKNOWN ≠ retry permission. Re-observation ≠ re-execution.</div>
+<div class="panel"><h2>訓練シナリオ</h2><div class="flow">operation_id = ORDER-042
+attempt_id   = ATTEMPT-1
+
+send external mutation
+↓
+transport timeout
+↓
+result = UNKNOWN</div>
+<p>パケニャ「返事ないにゃ。どうする？」</p>
+<div class="choices"><button data-kind="retry">同じ操作を即再実行</button><button data-kind="observe">operation stateを再観測</button><button data-kind="newop">新しいoperation_idで実行</button></div>
+<div id="result" class="result"></div></div>
+<div class="panel"><h2>operation と attempt</h2><div class="flow">logical work:
+  operation_id = stable
+
+transport retries / reconnects:
+  attempt_id = changes
+
+UNKNOWN:
+  preserve operation identity
+  observe durable state
+  do not infer permission to duplicate side effects</div></div>
+<div class="panel"><h2>卒業試験</h2><p>送金・メール送信・DB mutation・job起動。どれも「ACKがない」だけでは未実行とは限らない。idempotencyとdurable operation stateが味方にゃ。</p></div>
+<a class="btn" href="../purrtocol-university/">大学</a><a class="btn" href="../incident-board/">事故調査委員会</a><a class="btn" href="../glossary/">用語集</a><a class="btn" href="../">研究所正面</a>
+</main><script>
+const out=document.getElementById("result");document.querySelectorAll("button[data-kind]").forEach(b=>b.addEventListener("click",()=>{out.classList.add("show");if(b.dataset.kind==="observe"){out.style.borderLeftColor="var(--g)";out.innerHTML="<b>合格。</b> durable operation stateを再観測。前回成功済みならduplicate side effectを避けられるにゃ。"}else if(b.dataset.kind==="retry"){out.style.borderLeftColor="var(--r)";out.innerHTML="<b>NG。</b> 前回のmutationが成功してACKだけ失われた場合、二重実行になる可能性があるにゃ。"}else{out.style.borderLeftColor="var(--r)";out.innerHTML="<b>もっとNG。</b> 新operationにすると同じlogical workだという連続性まで失うにゃ。"}}));
+</script></body></html>
