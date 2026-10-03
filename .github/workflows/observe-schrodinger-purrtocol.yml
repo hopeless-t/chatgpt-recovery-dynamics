@@ -1,0 +1,71 @@
+name: Observe Schrodinger Purrtocol
+
+on:
+  push:
+    paths:
+      - "data/purrtocol_schrodinger_contract.json"
+      - "data/purrtocol_schrodinger_observation.json"
+      - "scripts/observe_schrodinger_purrtocol.py"
+      - "docs/purrtocol-schrodinger/**"
+      - "data/purrtocol_variants.jsonl"
+      - "data/purrtocol_entropy_reference.json"
+      - "docs/purrtocol-entropy/reference.json"
+      - ".github/workflows/observe-schrodinger-purrtocol.yml"
+  pull_request:
+    paths:
+      - "data/purrtocol_schrodinger_contract.json"
+      - "data/purrtocol_schrodinger_observation.json"
+      - "scripts/observe_schrodinger_purrtocol.py"
+      - "docs/purrtocol-schrodinger/**"
+      - "data/purrtocol_variants.jsonl"
+      - "data/purrtocol_entropy_reference.json"
+      - "docs/purrtocol-entropy/reference.json"
+      - ".github/workflows/observe-schrodinger-purrtocol.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Observe sealed-box candidate set
+        run: |
+          python scripts/observe_schrodinger_purrtocol.py             --output /tmp/schrodinger-purrtocol.json
+
+      - name: Check pre-freeze structural invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/schrodinger-purrtocol.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "purrtocol-schrodinger-observation/v1"
+          assert r["classification"] == "deterministic_epistemic_toy_not_quantum_physics"
+          assert r["observation"]["quantum_physics_claim"] is False
+
+          candidates = r["box"]["candidates"]
+          assert len(candidates) == 2
+          assert {x["label"] for x in candidates} == {"A", "B"}
+          assert len({x["variant_id"] for x in candidates}) == 2
+          assert all(x["status"] == "concept" for x in candidates)
+          assert all(x["evidence_status"] == "concept" for x in candidates)
+
+          selected = r["observation"]["selected_candidate_variant_id"]
+          assert selected in {x["variant_id"] for x in candidates}
+          assert r["promotion_plan"]["implemented_variant_id"] == "PKV-SCHRODINGER-OBS-001"
+
+          # First run observes; it does not pre-freeze a winner in source.
+          print("Schrodinger Purrtocol structural observation: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schrodinger-purrtocol-observation
+          path: /tmp/schrodinger-purrtocol.json
