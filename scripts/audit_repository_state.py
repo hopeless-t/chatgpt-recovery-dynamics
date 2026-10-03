@@ -185,6 +185,44 @@ def main() -> int:
         "data schema and Pages schema must be byte-semantically identical",
     )
 
+    meta_improvement = read_jsonl(
+        ROOT / "data" / "meta_improvement_events.jsonl"
+    )
+    meta_schema = read_json(
+        ROOT / "data" / "meta_improvement_event_schema.json"
+    )
+    published_meta_schema = read_json(
+        ROOT
+        / "docs"
+        / "repository-observatory"
+        / "meta-improvement-event.schema.json"
+    )
+    check(
+        "meta.schema_mirror",
+        meta_schema == published_meta_schema,
+        "meta data schema and Pages schema must be identical",
+    )
+    meta_policy = read_json(
+        ROOT / "data" / "meta_improvement_loop_policy.json"
+    )
+    recursion = meta_policy["recursion_policy"]
+    check(
+        "meta.recursion_bounded",
+        recursion["automatic_control_depth"] == 2
+        and recursion["spawn_additional_controller_automatically"] is False,
+        repr(recursion),
+    )
+
+    preflight_routes = read_json(ROOT / "data" / "preflight_routes.json")
+    check(
+        "meta.preflight_observatory_always",
+        any(
+            row["route_id"] == "repository-observatory"
+            for row in preflight_routes["always"]
+        ),
+        "Repository Observatory must remain an always-on promotion-adjacent check",
+    )
+
     concept_ids = {row["event_id"] for row in concepts}
     promotion_by_concept = {row["concept_id"]: row for row in promotions}
     event_by_id = {row["event_id"]: row for row in events}
@@ -303,6 +341,14 @@ def main() -> int:
         "scripts/http_429_survival.py",
         "scripts/validate_http_429_survival.py",
         "IMPROVEMENT_LOOP.md",
+        "META_IMPROVEMENT_LOOP.md",
+        "data/meta_improvement_loop_policy.json",
+        "data/meta_improvement_loop_reference.json",
+        "data/meta_improvement_events.jsonl",
+        "docs/repository-observatory/meta-improvement-event.schema.json",
+        "docs/repository-observatory/critic-router.md",
+        "data/preflight_routes.json",
+        "scripts/preflight_router.py",
         "AGENTS.md",
         "docs/purrtocol-3d/AGENTS.md",
         "docs/purrtocol-variant-foundry/AGENTS.md",
@@ -325,6 +371,8 @@ def main() -> int:
         "docs/recovery-design.md",
         "docs/purrtocol-design-bible.md",
         "IMPROVEMENT_LOOP.md",
+        "META_IMPROVEMENT_LOOP.md",
+        "scripts/preflight_router.py",
         "scripts/audit_repository_state.py",
     ]
     missing_agent_pointers = [
@@ -387,6 +435,53 @@ def main() -> int:
             f"{ordered[0]['record_type']} -> {ordered[-1]['record_type']}",
         )
 
+    meta_cycle_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in meta_improvement:
+        meta_cycle_rows[row["meta_cycle_id"]].append(row)
+        check(
+            f"meta_ledger.{row['meta_cycle_id']}.{row['seq']}.source_commit",
+            bool(HEX40.fullmatch(row["source_commit"])),
+            row["source_commit"],
+        )
+        try:
+            datetime.fromisoformat(row["wall_time_utc"].replace("Z", "+00:00"))
+        except ValueError:
+            check(
+                f"meta_ledger.{row['meta_cycle_id']}.{row['seq']}.timestamp",
+                False,
+                row["wall_time_utc"],
+            )
+
+    open_meta_cycles = 0
+    for cycle_id, rows in sorted(meta_cycle_rows.items()):
+        ordered = sorted(rows, key=lambda row: row["seq"])
+        seqs = [row["seq"] for row in ordered]
+        check(
+            f"meta_ledger.{cycle_id}.sequence",
+            seqs == list(range(len(ordered))),
+            repr(seqs),
+        )
+        check(
+            f"meta_ledger.{cycle_id}.starts_correctly",
+            ordered[0]["record_type"] == "meta_cycle_start",
+            ordered[0]["record_type"],
+        )
+        if ordered[-1]["record_type"] == "meta_cycle_end":
+            check(
+                f"meta_ledger.{cycle_id}.closed_lifecycle",
+                any(row["record_type"] == "meta_verification" for row in ordered)
+                and any(row["record_type"] == "meta_promotion" for row in ordered),
+                "closed meta cycle must contain verification and promotion",
+            )
+        else:
+            open_meta_cycles += 1
+
+    check(
+        "meta.single_open_cycle",
+        open_meta_cycles <= 1,
+        f"open_meta_cycles={open_meta_cycles}",
+    )
+
     check(
         "observatory.north_star_present",
         bool(state.get("north_star")),
@@ -416,6 +511,9 @@ def main() -> int:
             "python_scripts": len(list((ROOT / "scripts").glob("*.py"))),
             "github_workflows": len(list((ROOT / ".github" / "workflows").glob("*.yml"))),
             "improvement_cycles": len(cycle_rows),
+            "meta_improvement_cycles": len(meta_cycle_rows),
+            "open_meta_improvement_cycles": open_meta_cycles,
+            "preflight_routes": len(preflight_routes["rules"]),
             "agent_instruction_files": len(list(ROOT.rglob("AGENTS.md"))),
             "root_agents_bytes": len(root_agents.encode("utf-8")),
         },
