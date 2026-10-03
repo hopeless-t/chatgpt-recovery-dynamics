@@ -1,6 +1,6 @@
 # Latent Timing Model Competition
 
-> Status: **DESIGN + EXECUTABLE MODEL COMPETITION / RESULT NOT YET PROMOTED**
+> Status: **OBSERVED WITHIN-CAPTURE RESULT / EXTERNAL VALIDITY NOT ESTABLISHED**
 
 The public recovery trace has a high-R² cycle law:
 
@@ -139,9 +139,82 @@ python scripts/latent_timing_model_competition.py \
   --output /tmp/latent-timing-models.json
 ```
 
-CI initially checks only structural invariants.
+The first CI run deliberately froze no winner before observation.
 
-**The winner is deliberately not frozen before the first observed CI result.**
+## Observed result
+
+Reference:
+
+`data/latent_timing_model_reference.json`
+
+Source CI:
+
+```text
+workflow run 37125194387
+head 5a93bf3edbc5dd53f0329ab2453054f133655749
+job 111208960634
+```
+
+### Same-sample BIC
+
+| Model | BIC | Mean NLL |
+|---|---:|---:|
+| 2-state Gaussian HMM | **-15.993** | -0.2734 |
+| AR(1) | -10.098 | -0.1576 |
+| observed A/B-conditioned Gaussian | 16.334 | -0.0549 |
+| IID Gaussian | 19.881 | 0.0058 |
+
+The HMM beats AR(1) by about **5.895 BIC points** on the pooled within-capture fit.
+
+Its two unnamed emission means are approximately:
+
+```text
+-0.336 s
++0.106 s
+```
+
+This is a compact statistical description, not evidence for two physical controller modes.
+
+### Cross-epoch prediction
+
+Lower held-out mean NLL is better.
+
+| Train -> test | AR(1) | HMM-2 | IID | observed A/B-conditioned |
+|---|---:|---:|---:|---:|
+| epoch 1 -> epoch 2 | **0.0191** | 0.3678 | 0.0773 | 4.2276 |
+| epoch 2 -> epoch 1 | **-0.2203** | -0.0337 | 0.0381 | 0.0363 |
+
+AR(1) is first in **both** held-out directions.
+
+### What changed
+
+The strongest compact statement is now:
+
+> **The pooled residuals admit a better same-sample two-state HMM fit, but continuous one-step AR(1) memory transfers better between the two active epochs.**
+
+That disagreement matters.
+
+It weakens the temptation to interpret the HMM's two latent states as a discovered physical two-mode controller. Under the tested scoring rules, the discrete model is more descriptive in-sample, while AR(1) is more portable across the only two independent active epochs available inside this capture.
+
+The observed A/B-conditioned control also loses badly enough that the remaining memory cannot be reduced to “Accessible and Blocked simply have different residual means/variances.”
+
+## Current evidentiary update
+
+Supported within this capture:
+
+- residual timing contains predictive structure beyond IID noise;
+- observed A/B conditioning alone is insufficient;
+- a two-state HMM compresses the pooled residuals strongly;
+- AR(1) gives the best tested cross-epoch predictive transfer in both directions.
+
+Not established:
+
+- that the physical system has exactly two hidden states;
+- that the AR state is a browser/client timer;
+- that either state representation corresponds to OpenAI internals;
+- that AR(1) remains best on an independent capture.
+
+The next decisive evidence is external replication, not more naming of the latent state.
 
 ## External validity
 
