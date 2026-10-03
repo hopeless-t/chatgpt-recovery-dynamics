@@ -1,0 +1,22 @@
+# 3D Purrtocol
+
+> First implemented 3D Purrtocol artifact and its recovery-state semantic contract.
+
+Current status:
+- PKE-106 concept has been promoted via implemented event PKE-033.
+- Runtime GLB exists and is CI-validated.
+- First Light is intentionally tiny/voxel-like and is not the final art target.
+- Visualization is not evidence of any production architecture.
+
+## Runtime
+
+- [3D First Light Markdown](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/index.md): Measurements, semantics, and next frontier.
+- [Interactive 3D preview](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/): Human viewer with animation controls.
+- [GLB asset](https://hopeless-t.github.io/chatgpt-recovery-dynamics/assets/purrtocol/purrtocol.glb): Portable glTF 2.0 binary.
+- [3D contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_3d_contract.json): Required node/animation names and First Light hash.
+- [Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md): Canonical character semantics.
+
+## Lineage
+
+- [Variant Foundry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Fork and derivative protocol.
+- [Canonical variant registry](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_variants.jsonl): PKV-CANONICAL root.
