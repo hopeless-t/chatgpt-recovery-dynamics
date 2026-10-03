@@ -19,3 +19,17 @@ The paper reads:
 No raw HAR is used.
 
 The generated PDF is rendered and text-validated in CI before being committed.
+
+
+## Candidate flow
+
+~~~text
+published JSON + builder
+  -> GitHub Actions
+  -> PDF + rendered-page previews
+  -> Actions artifact
+  -> human review
+  -> optional separate-branch commit / deliberate merge
+~~~
+
+Generated PDF bytes are not pushed to main automatically.
