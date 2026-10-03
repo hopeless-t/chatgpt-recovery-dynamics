@@ -25,6 +25,7 @@
 | [[FAQ]] | common questions and caveats |
 | [[Glossary]] | canonical terminology |
 | [[Purrtocol]] | regrettably, the mascot |
+| [[Purrtocol Expansion Dynamics]] | commit-backed mascot proliferation model; Earth saturation not yet observed |
 | [[Release Notes]] | release history |
 | [[The Recursive 429 Incident]] | the research conversation itself hit 429 |
 | [[The Trust-Level Paradox]] | trust-level promotion + temporary hold + iOS feature-post chronology |
@@ -65,6 +66,8 @@ many triggers
 - [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
 - [Recovery Helper / 復旧ヘルパー](https://hopeless-t.github.io/chatgpt-recovery-dynamics/recovery-helper/)
 - [Project portal](https://hopeless-t.github.io/chatgpt-recovery-dynamics/)
+- [Purrtocol Design Bible](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/)
+- [Purrtocol Expansion Dynamics](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/)
 
 > Visualization ≠ Evidence.  
 > The visual topology is a design explanation, not a claim about OpenAI internals.
