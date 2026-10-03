@@ -11,6 +11,9 @@ on:
       - "data/meta_improvement_event_schema.json"
       - "data/meta_improvement_events.jsonl"
       - "scripts/analyze_improvement_loop.py"
+      - "scripts/check_branch_convergence.py"
+      - "data/critic_router_v1_evaluation.json"
+      - "docs/repository-observatory/branch-convergence.md"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   pull_request:
@@ -37,6 +40,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -95,6 +100,38 @@ jobs:
           print("Critic Router invariants: PASS")
           PY
 
+      - name: Observe branch convergence risk
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"
+          python scripts/check_branch_convergence.py \
+            --base "$BASE_SHA" \
+            --head "$HEAD_SHA" \
+            --output /tmp/branch-convergence.json
+          python - <<'PY'
+          import json
+
+          with open("/tmp/branch-convergence.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "branch-convergence-report/v1"
+          assert r["classification"] == "early_integration_risk_diagnostic_not_conflict_proof"
+          assert r["status"] in {
+              "BASE_NOT_AHEAD",
+              "BASE_AHEAD_NO_PATH_OVERLAP",
+              "CONVERGENCE_RISK",
+          }
+          print(
+              "Branch convergence observation:",
+              r["status"],
+              "overlap_count=",
+              r["overlap_count"],
+          )
+          PY
+
       - name: Check second-order guardrails
         run: |
           python - <<'PY'
@@ -108,6 +145,10 @@ jobs:
           assert r["aggregate"]["completed_cycles"] >= 4
           assert r["aggregate"]["verified_before_promotion_ratio"] == 1.0
           assert r["interpretation"]["single_overall_score"] == "FORBIDDEN"
+          evaluation = r["first_tuning_evaluation"]
+          assert evaluation["tuning_id"] == "critic-router-v1"
+          assert evaluation["post_tuning"]["sample_count"] >= 3
+          assert evaluation["status"] in {"PASS", "FAIL_GUARDRAIL"}
           assert not r["violations"]
           assert all(
               cycle["verified_before_promotion"]
@@ -120,4 +161,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: meta-improvement-loop-report
-          path: /tmp/meta-loop.json
+          path: |
+            /tmp/meta-loop.json
+            /tmp/branch-convergence.json
