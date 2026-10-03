@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>用語解説 | ChatGPT Conversation Recovery Dynamics</title>
+<meta name="description" content="ChatGPT Conversation Recovery Dynamics の用語解説。B/E/H、single-flight、recovery hysteresis、retry amplification などを日本語で説明します。">
+<style>
+:root{
+  --bg:#07111f;--panel:#0d1b2d;--panel2:#10233a;--line:#294966;--text:#edf5ff;
+  --muted:#93a8bf;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44;--red:#ef5f6c;--blue:#658dff
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);font:16px/1.7 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(39,83,125,.48),transparent 36%),
+    linear-gradient(rgba(33,63,93,.13) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(33,63,93,.13) 1px,transparent 1px),
+    var(--bg);
+  background-size:auto,42px 42px,42px 42px,auto
+}
+a{color:var(--cyan)}
+.wrap{max-width:1120px;margin:auto;padding:0 22px}
+header{position:sticky;top:0;z-index:10;background:rgba(7,17,31,.84);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav{height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+nav a{text-decoration:none;color:var(--muted)}
+nav .brand{color:var(--text);font-weight:850}
+nav .links{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem}
+.hero{padding:68px 0 34px}
+.eyebrow{color:var(--cyan);font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(3rem,7vw,6.4rem);line-height:.92;letter-spacing:-.055em;margin:.2em 0}
+.lead{max-width:850px;color:var(--muted);font-size:1.1rem}
+.statebar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0}
+.state{
+  border:1px solid var(--line);border-radius:20px;padding:18px;background:rgba(13,27,45,.85)
+}
+.state b{display:block;font-size:2rem;line-height:1}
+.state small{color:var(--muted)}
+.state.b{border-color:rgba(239,95,108,.5)} .state.b b{color:var(--red)}
+.state.e{border-color:rgba(246,187,68,.5)} .state.e b{color:var(--amber)}
+.state.h{border-color:rgba(76,211,132,.5)} .state.h b{color:var(--green)}
+.callout{
+  border:1px solid rgba(246,187,68,.5);background:rgba(246,187,68,.065);border-radius:22px;padding:20px;margin:20px 0 34px
+}
+.callout h2{margin:.1rem 0 .5rem;color:var(--amber)}
+.code{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#07101c;border:1px solid var(--line);
+  border-radius:14px;padding:14px;overflow:auto
+}
+.section{padding:22px 0}
+.section h2{font-size:2rem;letter-spacing:-.03em;margin:.1rem 0 .9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.term{
+  border:1px solid var(--line);border-radius:20px;background:rgba(13,27,45,.84);padding:18px
+}
+.term h3{margin:.1rem 0 .5rem;font-size:1.08rem}
+.term p{margin:.4rem 0;color:var(--muted)}
+.term .plain{color:var(--text);font-weight:700}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:.72rem;color:var(--muted);margin-bottom:8px}
+.director{
+  margin-top:10px;border-left:4px solid var(--red);padding:8px 10px;background:rgba(239,95,108,.06);font-size:.9rem
+}
+.map{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:stretch;margin-top:14px
+}
+.map div{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:rgba(13,27,45,.7)}
+.arrow{display:grid!important;place-items:center;border:0!important;background:transparent!important;color:var(--muted);font-weight:900}
+.footer{
+  margin:38px 0 60px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
+}
+@media(max-width:760px){
+  .statebar{grid-template-columns:1fr}.map{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.links{display:none!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="../">Recovery Dynamics</a>
+      <div class="links">
+        <a href="#states">B / E / H</a>
+        <a href="#recovery">Recovery</a>
+        <a href="#models">Models</a>
+        <a href="../cm/">パケニャCM</a>
+        <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/GLOSSARY.md">Canonical Glossary</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<section class="hero">
+  <div class="eyebrow">Glossary / 用語解説</div>
+  <h1>何の話を<br>してるんにゃ？</h1>
+  <p class="lead">このページは、研究repo内で頻出する略語・状態名・回復設計用語を日本語で説明する入口です。厳密な定義の正本は <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/GLOSSARY.md">GLOSSARY.md</a> と各設計文書です。</p>
+</section>
+
+<section id="states" class="section">
+  <div class="eyebrow">Core states</div>
+  <h2>まず B / E / H だけ覚える</h2>
+  <div class="statebar">
+    <div class="state b"><b>B</b><strong>Blocked</strong><small>失敗・遮断側の観測状態</small></div>
+    <div class="state e"><b>E</b><strong>Excursion / Recovering</strong><small>Blocked直後の最初のAccessible。暫定回復</small></div>
+    <div class="state h"><b>H</b><strong>Healthy</strong><small>安定確認後のEstablished Accessible</small></div>
+  </div>
+
+  <div class="callout">
+    <h2>なぜ Recovering なのに R じゃなくて E？</h2>
+    <p><b>Eの分析上の由来は “Accessible excursion after Blocked” にゃ。</b> もともと履歴付きモデルで、Blocked直後に一回だけ現れるAccessible状態を通常のAccessibleと分けるために E として切り出した。その後、回復設計ではこの状態を人間向けに <b>Recovering / provisional recovery</b> と呼んでいる。</p>
+    <div class="code">B / Blocked --success--&gt; E / Excursion (Recovering)
+E / Recovering --stable confirmation--&gt; H / Healthy
+E / Recovering --failure--&gt; B / Blocked</div>
+    <div class="director">🎬 監督「まだE！！ “一回開いた” と “安定復旧した” は別！！」</div>
+  </div>
+</section>
+
+<section id="recovery" class="section">
+  <div class="eyebrow">Recovery terms</div>
+  <h2>復旧設計の言葉</h2>
+  <div class="grid">
+    <article class="term"><span class="tag">state</span><h3>A / Accessible</h3><p>stream-status と conversation snapshot の関連観測が両方ともaccessibleだったペア観測。</p><p class="plain">雑に言うと：その観測では読めた。</p></article>
+    <article class="term"><span class="tag">state</span><h3>B / Blocked</h3><p>公開traceでblocked regimeを表すペア観測。</p><p class="plain">雑に言うと：その観測ではダメだった。</p></article>
+    <article class="term"><span class="tag">state</span><h3>E / Recovering / provisional recovery</h3><p>Blocked直後の最初のAccessible観測。established Accessibleとは次状態挙動が異なったため別状態として扱う。</p><p class="plain">雑に言うと：一回開いた。でもまだ信用するな。</p></article>
+    <article class="term"><span class="tag">state</span><h3>H / Healthy</h3><p>stable confirmation後のEstablished Accessible状態。</p><p class="plain">雑に言うと：ようやく安定復旧扱い。</p></article>
+    <article class="term"><span class="tag">control</span><h3>Recovery hysteresis</h3><p>一回成功しただけではfailure historyをリセットせず、stable recoveryを宣言しないルール。</p><p class="plain">雑に言うと：成功一発で浮かれない。</p></article>
+    <article class="term"><span class="tag">control</span><h3>Single-flight</h3><p>多数のローカル復旧triggerを、一つの論理的network recovery ownerへまとめること。</p><p class="plain">雑に言うと：復旧係は一匹だけ。</p></article>
+    <article class="term"><span class="tag">observation</span><h3>Cheap observation</h3><p>高価なsnapshot materializationより先に使う、小さなstate/version確認という概念。</p><p class="plain">雑に言うと：いきなり全部取りに行かず、まず小さく見る。</p></article>
+    <article class="term"><span class="tag">materialization</span><h3>Snapshot materialization</h3><p>UI reconcileに必要な、読めるconversation representationを取得・構築すること。</p><p class="plain">雑に言うと：会話本体をちゃんと持ってくる重い処理。</p></article>
+    <article class="term"><span class="tag">retry</span><h3>Start-anchored retry</h3><p>start-to-start間隔を基準にretryを予定し、fast failureが次retryを自動的に早めないようにする方式。</p><p class="plain">雑に言うと：429が速く返ったからって次を早押ししない。</p></article>
+    <article class="term"><span class="tag">load</span><h3>Retry amplification</h3><p>論理的な復旧需要に対して、network recovery attemptがどれだけ増えたか。</p><div class="code">network recovery attempts / logical recovery demand</div></article>
+    <article class="term"><span class="tag">architecture</span><h3>Transport Survival Plane</h3><p>transport attemptやconnectionが変わってもdurable application stateを生き残らせる、という復旧原則。</p><p class="plain">雑に言うと：線が切れても仕事そのものまで死んだことにしない。</p></article>
+    <article class="term"><span class="tag">architecture</span><h3>Provider-friendly recovery</h3><p>利用者の回復を助けつつ、不要なduplicate work・retry・bytes・queue growth・materialization costを減らそうとする設計。</p><p class="plain">雑に言うと：自分も鯖も殴らない復旧。</p></article>
+  </div>
+</section>
+
+<section id="models" class="section">
+  <div class="eyebrow">Model & validation terms</div>
+  <h2>分析・数理モデルの言葉</h2>
+  <div class="grid">
+    <article class="term"><h3>Pressure knee</h3><p>負荷、latency、rejection、recovery behaviorなどが急に変化し始める領域。</p></article>
+    <article class="term"><h3>ρ / utilization</h3><p>ローカルcongestion simulationで、recovery traffic追加前の exogenous foreground offered work / nominal service capacity。</p></article>
+    <article class="term"><h3>Trace-preserving replay</h3><p>観測済みstate sequenceを固定したまま、何をmaterialize/transferしたかだけ変えるcounterfactual accounting。production causalityの推定ではない。</p></article>
+    <article class="term"><h3>Posterior predictive check</h3><p>fitted modelの下で、観測パターンがどれくらい起こりそうかを見るBayesian check。</p></article>
+    <article class="term"><h3>Change point</h3><p>時系列の平均などの性質が変わる位置を統計的に選ぶ考え方。</p></article>
+    <article class="term"><h3>AR(1)</h3><p>直前のresidualが次のresidualに影響するone-step autoregressive model。</p><div class="code">u_n = phi * u_(n-1) + epsilon_n</div></article>
+    <article class="term"><h3>DCS / dissociated control state</h3><p>部分的に独立したsubsystemが、同時に異なるoperational stateを取り得るというsystems-engineering framing。</p></article>
+    <article class="term"><h3>Visualization ≠ Evidence</h3><p>repo全体の原則。図やアニメーションは説明用であり、それ自体がhypothesisをobserved factへ格上げすることはない。</p><div class="director">🎬 美術「それ昨日CSSで作ったやつです。」</div></article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="eyebrow">How to read the project</div>
+  <h2>迷ったらこの順</h2>
+  <div class="map">
+    <div><b>1. Glossary</b><br><small>単語を知る</small></div><div class="arrow">→</div>
+    <div><b>2. Evidence Ledger</b><br><small>何が事実か知る</small></div><div class="arrow">→</div>
+    <div><b>3. Recovery Architecture</b><br><small>設計を読む</small></div>
+  </div>
+</section>
+
+<div class="footer">
+  <span>Canonical terminology: GLOSSARY.md · Visualization ≠ Evidence</span>
+  <span><a href="../">Project Portal</a> · <a href="../cm/">パケニャCM</a> · <a href="https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki">Wiki</a></span>
+</div>
+</main>
+</body>
+</html>
