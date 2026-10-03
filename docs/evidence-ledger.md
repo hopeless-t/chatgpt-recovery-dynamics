@@ -279,3 +279,38 @@ Repository:
 https://github.com/hopeless-t/chatgpt-recovery-dynamics
 
 > **Temporal adjacency != causation.**
+
+
+## Satirical side-study — Purrtocol Expansion Dynamics
+
+Purrtocol mascot proliferation is analyzed separately from the primary recovery evidence base.
+
+~~~text
+selected Purrtocol-related Git commit timestamps:
+  repository-observed
+
+parent/child lineage:
+  editorial project archaeology; not causal proof
+
+adjacent_ideas_generated marks:
+  author annotation; not a measured branching process
+
+exponential growth fit / Hawkes fit:
+  descriptive models over a short, curated, bursty event window
+
+quadratic finite-time singularity:
+  illustrative scenario; coupling parameter not fitted
+
+Sam/Tibo observation hazard:
+  illustrative scenario; not instrumented
+
+Earth saturation:
+  NOT YET OBSERVED
+
+forecast of planetary Purrtocol coverage:
+  NOT ESTABLISHED
+~~~
+
+The selected 10-event sequence currently gives a descriptive exponential doubling time of about **3.758 hours** and a grid-fit Hawkes branching ratio of about **0.85**, classified as **subcritical**. The manually annotated adjacent-idea mark averages **3.3 ideas/event**; that number is not a Hawkes branching ratio.
+
+The joke is allowed to outrun common sense. It is not allowed to outrun the evidence boundary.
