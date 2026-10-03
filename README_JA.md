@@ -1,3 +1,23 @@
+## 自己言及429事件
+
+このリポジトリを制作・議論している最中に、**作者自身がこの制作会話で429 / Too Many Requestsを実際に踏みました。**
+
+これは元の108 paired observationsへ混ぜず、統計値の再計算にも使用しない
+**作者申告の同時代的meta-observation**として別枠で記録します。
+
+~~~text
+研究テーマ:
+  ChatGPT conversation recovery / 429
+
+研究を作っていた会話:
+  429を踏む
+~~~
+
+完全に自己言及型研究になりました。
+
+> **Meta-observation ≠ primary dataset.**
+
+
 # ChatGPT Conversation Recovery Dynamics — 日本語概要
 
 これは、ChatGPTで「既存会話が開けない / 429になる / recoveryが完了しない」現象を、匿名化したHAR由来のイベント列から調べる独立ケーススタディです。
