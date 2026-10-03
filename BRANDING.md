@@ -103,3 +103,21 @@ Canonical slogan:
 The local-TV mode is intentionally uncool.
 
 That is considered a feature.
+
+
+## Canonical Purrtocol design bible
+
+Future character, narrative, and 3D work should use:
+
+- `docs/purrtocol-design-bible.md`
+- https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
+
+The canonical character function is:
+
+> **An anthropomorphic error model for recovery systems.**
+
+Canonical production rule:
+
+> **The joke may be sloppy; the footnote may not be sloppy.**
+
+A future 3D model should preserve B/E/H state legibility, tiny-observation vs heavy-snapshot semantics, and the rule that Purrtocol is an observer/recovery-side character rather than an omniscient backend mascot.
