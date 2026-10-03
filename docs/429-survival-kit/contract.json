@@ -1,0 +1,81 @@
+{
+  "schema": "http-429-survival-contract/v1",
+  "snapshot_date": "2026-10-03",
+  "purpose": "Reduce retry amplification and ambiguous re-execution while preserving server-directed backpressure.",
+  "standards": [
+    {
+      "id": "RFC6585-429",
+      "maturity": "RFC",
+      "status": "stable",
+      "title": "429 Too Many Requests",
+      "url": "https://www.rfc-editor.org/rfc/rfc6585.html#section-4",
+      "repository_rule": "Treat 429 as backpressure. Do not infer limiter scope or root cause."
+    },
+    {
+      "id": "RFC9110-Retry-After",
+      "maturity": "RFC",
+      "status": "stable",
+      "title": "Retry-After",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3",
+      "repository_rule": "A valid Retry-After value is a lower-bound timing signal. Never jitter earlier than it."
+    },
+    {
+      "id": "RFC9457-Problem-Details",
+      "maturity": "RFC",
+      "status": "stable",
+      "title": "Problem Details for HTTP APIs",
+      "url": "https://www.rfc-editor.org/rfc/rfc9457.html",
+      "repository_rule": "Use structured members for machine behavior. Do not scrape human detail text for retry logic."
+    },
+    {
+      "id": "draft-ietf-httpapi-ratelimit-headers-11",
+      "maturity": "Internet-Draft",
+      "status": "active_draft_not_rfc",
+      "title": "RateLimit header fields for HTTP",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/",
+      "repository_rule": "May provide experimental quota/window hints. Keep draft semantics isolated from stable RFC behavior."
+    },
+    {
+      "id": "draft-ietf-httpapi-idempotency-key-header-07",
+      "maturity": "Internet-Draft",
+      "status": "expired",
+      "title": "The Idempotency-Key HTTP Header Field",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/",
+      "repository_rule": "Do not assume universal Idempotency-Key semantics from this expired draft. Require an application/provider contract."
+    }
+  ],
+  "invariants": [
+    "429 must never shorten start-to-start spacing.",
+    "Retry-After is a floor; jitter may delay beyond it but never pull a retry earlier.",
+    "One logical recovery operation has one retry owner.",
+    "operation_id remains stable across retry attempts; attempt_id changes.",
+    "UNKNOWN operation outcome is not permission to re-execute.",
+    "Non-idempotent operations require explicit application/provider idempotency semantics before automatic re-execution.",
+    "Retry budgets are bounded.",
+    "First success after Blocked enters Recovering, not automatically Healthy.",
+    "Problem Details human-readable detail is not a machine control channel.",
+    "Draft RateLimit hints never override stronger stable server timing signals."
+  ],
+  "scheduler": {
+    "formula": "next_start = max(previous_start + minimum_period, now + retry_after_floor, now + local_backoff) + nonnegative_herd_jitter",
+    "retry_after_precedence": "floor",
+    "jitter_direction": "nonnegative",
+    "default_minimum_period_seconds": 10,
+    "default_local_base_seconds": 2,
+    "default_local_cap_seconds": 60,
+    "default_herd_jitter_fraction": 0.2,
+    "default_retry_budget": 6
+  },
+  "operation_policy": {
+    "ambiguous_non_idempotent": "REOBSERVE",
+    "known_applied": "STOP_DUPLICATE",
+    "known_not_applied": "RETRY_IF_BUDGET_AND_TIMING_ALLOW",
+    "read_only_observation": "RETRY_IF_BUDGET_AND_TIMING_ALLOW"
+  },
+  "draft_rate_limit_support": {
+    "mode": "simple_hint_only",
+    "accepted_shape": "RateLimit: \"policy\";r=0;t=<non-negative-integer>",
+    "behavior": "When r=0 and no stronger Retry-After is present, t may be used as an experimental minimum-delay hint.",
+    "limitation": "This is not a complete Structured Fields parser and does not claim RFC stability."
+  }
+}
