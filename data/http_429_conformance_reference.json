@@ -1,0 +1,603 @@
+{
+  "classification": "loopback_only_conformance_not_production_evidence",
+  "network_scope": "127.0.0.1 ephemeral local server only",
+  "results": [
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-floor:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "detail": "human prose is not timing control",
+            "title": "slow down",
+            "type": "about:blank"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-floor",
+          "ratelimit": null,
+          "retry_after": "5",
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-floor:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 4,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.6343649481277632,
+            "local_backoff_s": 0.5,
+            "next_start_s": 5.684364948127763,
+            "operation_id": "lab-read-floor",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 5,
+            "standards_used": [
+              "RFC6585-429",
+              "RFC9110-Retry-After"
+            ]
+          },
+          "service_s": 0.05,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-floor:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "ok": true
+          },
+          "decision": "SUCCESS",
+          "operation_id": "lab-read-floor",
+          "ratelimit": null,
+          "retry_after": null,
+          "service_s": 0.2,
+          "start_s": 5.684364948127763,
+          "status": 200,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-floor",
+      "pass": true,
+      "scenario_id": "retry-after-floor",
+      "server_requests": 2,
+      "start_gaps_s": [
+        5.684364948127763
+      ],
+      "start_times_s": [
+        0,
+        5.684364948127763
+      ],
+      "terminal": "SUCCESS"
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-fast-fail:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "error": "fast"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-fast-fail",
+          "ratelimit": null,
+          "retry_after": null,
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-fast-fail:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 5,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.5728815530033404,
+            "local_backoff_s": 0.5,
+            "next_start_s": 3.5728815530033406,
+            "operation_id": "lab-read-fast-fail",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 0,
+            "standards_used": [
+              "RFC6585-429"
+            ]
+          },
+          "service_s": 0.02,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-fast-fail:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "error": "fast"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-fast-fail",
+          "ratelimit": null,
+          "retry_after": null,
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-fast-fail:attempt:2",
+            "attempt_number": 2,
+            "budget_remaining_after_attempt": 4,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.38914758466700466,
+            "local_backoff_s": 1,
+            "next_start_s": 6.962029137670346,
+            "operation_id": "lab-read-fast-fail",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 0,
+            "standards_used": [
+              "RFC6585-429"
+            ]
+          },
+          "service_s": 0.02,
+          "start_s": 3.5728815530033406,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-fast-fail:attempt:3",
+          "attempt_number": 3,
+          "body": {
+            "error": "fast"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-fast-fail",
+          "ratelimit": null,
+          "retry_after": null,
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-fast-fail:attempt:3",
+            "attempt_number": 3,
+            "budget_remaining_after_attempt": 3,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.48943361944777003,
+            "local_backoff_s": 2,
+            "next_start_s": 10.451462757118115,
+            "operation_id": "lab-read-fast-fail",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 0,
+            "standards_used": [
+              "RFC6585-429"
+            ]
+          },
+          "service_s": 0.02,
+          "start_s": 6.962029137670346,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-fast-fail:attempt:4",
+          "attempt_number": 4,
+          "body": {
+            "ok": true
+          },
+          "decision": "SUCCESS",
+          "operation_id": "lab-read-fast-fail",
+          "ratelimit": null,
+          "retry_after": null,
+          "service_s": 0.1,
+          "start_s": 10.451462757118115,
+          "status": 200,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-fast-fail",
+      "pass": true,
+      "scenario_id": "fast-fail-anchor",
+      "server_requests": 4,
+      "start_gaps_s": [
+        3.5728815530033406,
+        3.389147584667005,
+        3.4894336194477695
+      ],
+      "start_times_s": [
+        0,
+        3.5728815530033406,
+        6.962029137670346,
+        10.451462757118115
+      ],
+      "terminal": "SUCCESS"
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-draft:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "error": "quota"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-draft",
+          "ratelimit": "\"default\";r=0;t=4",
+          "retry_after": null,
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-draft:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 4,
+            "draft_ratelimit_floor_s": 4,
+            "herd_jitter_s": 0.1639270722610018,
+            "local_backoff_s": 0.5,
+            "next_start_s": 4.213927072261002,
+            "operation_id": "lab-read-draft",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 0,
+            "standards_used": [
+              "RFC6585-429",
+              "draft-ietf-httpapi-ratelimit-headers-11"
+            ]
+          },
+          "service_s": 0.05,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-draft:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "ok": true
+          },
+          "decision": "SUCCESS",
+          "operation_id": "lab-read-draft",
+          "ratelimit": null,
+          "retry_after": null,
+          "service_s": 0.1,
+          "start_s": 4.213927072261002,
+          "status": 200,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-draft",
+      "pass": true,
+      "scenario_id": "draft-zero-window",
+      "server_requests": 2,
+      "start_gaps_s": [
+        4.213927072261002
+      ],
+      "start_times_s": [
+        0,
+        4.213927072261002
+      ],
+      "terminal": "SUCCESS"
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-precedence:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "error": "quota"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-precedence",
+          "ratelimit": "\"default\";r=0;t=2",
+          "retry_after": "6",
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-precedence:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 4,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.27006820533740766,
+            "local_backoff_s": 0.5,
+            "next_start_s": 6.3200682053374075,
+            "operation_id": "lab-read-precedence",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 6,
+            "standards_used": [
+              "RFC6585-429",
+              "RFC9110-Retry-After"
+            ]
+          },
+          "service_s": 0.05,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-precedence:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "ok": true
+          },
+          "decision": "SUCCESS",
+          "operation_id": "lab-read-precedence",
+          "ratelimit": null,
+          "retry_after": null,
+          "service_s": 0.1,
+          "start_s": 6.3200682053374075,
+          "status": 200,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-precedence",
+      "pass": true,
+      "scenario_id": "retry-after-dominates-draft",
+      "server_requests": 2,
+      "start_gaps_s": [
+        6.3200682053374075
+      ],
+      "start_times_s": [
+        0,
+        6.3200682053374075
+      ],
+      "terminal": "SUCCESS"
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-problem-detail:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "detail": "Retry immediately! This sentence is intentionally untrusted human text.",
+            "title": "quota",
+            "type": "https://example.invalid/problem/demo"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-problem-detail",
+          "ratelimit": null,
+          "retry_after": "4",
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-problem-detail:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 4,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0.3057236226545428,
+            "local_backoff_s": 0.25,
+            "next_start_s": 4.355723622654542,
+            "operation_id": "lab-read-problem-detail",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 4,
+            "standards_used": [
+              "RFC6585-429",
+              "RFC9110-Retry-After"
+            ]
+          },
+          "service_s": 0.05,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-problem-detail:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "ok": true
+          },
+          "decision": "SUCCESS",
+          "operation_id": "lab-read-problem-detail",
+          "ratelimit": null,
+          "retry_after": null,
+          "service_s": 0.1,
+          "start_s": 4.355723622654542,
+          "status": 200,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-problem-detail",
+      "pass": true,
+      "scenario_id": "problem-detail-is-not-control",
+      "server_requests": 2,
+      "start_gaps_s": [
+        4.355723622654542
+      ],
+      "start_times_s": [
+        0,
+        4.355723622654542
+      ],
+      "terminal": "SUCCESS"
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "lab-read-budget:attempt:1",
+          "attempt_number": 1,
+          "body": {
+            "error": "again"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-budget",
+          "ratelimit": null,
+          "retry_after": "1",
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-budget:attempt:1",
+            "attempt_number": 1,
+            "budget_remaining_after_attempt": 2,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0,
+            "local_backoff_s": 0.25,
+            "next_start_s": 1.01,
+            "operation_id": "lab-read-budget",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 1,
+            "standards_used": [
+              "RFC6585-429",
+              "RFC9110-Retry-After"
+            ]
+          },
+          "service_s": 0.01,
+          "start_s": 0,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-budget:attempt:2",
+          "attempt_number": 2,
+          "body": {
+            "error": "again"
+          },
+          "decision": "WAIT_THEN_RETRY",
+          "operation_id": "lab-read-budget",
+          "ratelimit": null,
+          "retry_after": "1",
+          "retry_decision": {
+            "action": "WAIT_THEN_RETRY",
+            "attempt_id": "lab-read-budget:attempt:2",
+            "attempt_number": 2,
+            "budget_remaining_after_attempt": 1,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0,
+            "local_backoff_s": 0.5,
+            "next_start_s": 2.02,
+            "operation_id": "lab-read-budget",
+            "reason": "operation state permits a timed retry",
+            "retry_after_floor_s": 1,
+            "standards_used": [
+              "RFC6585-429",
+              "RFC9110-Retry-After"
+            ]
+          },
+          "service_s": 0.01,
+          "start_s": 1.01,
+          "status": 429,
+          "transport_error": null
+        },
+        {
+          "attempt_id": "lab-read-budget:attempt:3",
+          "attempt_number": 3,
+          "body": {
+            "error": "again"
+          },
+          "decision": "STOP_BUDGET",
+          "operation_id": "lab-read-budget",
+          "ratelimit": null,
+          "retry_after": "1",
+          "retry_decision": {
+            "action": "STOP_BUDGET",
+            "attempt_id": "lab-read-budget:attempt:3",
+            "attempt_number": 3,
+            "budget_remaining_after_attempt": 0,
+            "draft_ratelimit_floor_s": 0,
+            "herd_jitter_s": 0,
+            "local_backoff_s": 0,
+            "next_start_s": null,
+            "operation_id": "lab-read-budget",
+            "reason": "retry budget exhausted",
+            "retry_after_floor_s": 0,
+            "standards_used": []
+          },
+          "service_s": 0.01,
+          "start_s": 2.02,
+          "status": 429,
+          "transport_error": null
+        }
+      ],
+      "classification": "loopback_real_http_virtual_time",
+      "operation_id": "lab-read-budget",
+      "pass": true,
+      "scenario_id": "budget-stop",
+      "server_requests": 3,
+      "start_gaps_s": [
+        1.01,
+        1.01
+      ],
+      "start_times_s": [
+        0,
+        1.01,
+        2.02
+      ],
+      "terminal": "STOP_BUDGET"
+    },
+    {
+      "classification": "loopback_ambiguous_non_idempotent",
+      "decision": {
+        "action": "REOBSERVE",
+        "attempt_id": "lab-write-unknown:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 3,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0,
+        "local_backoff_s": 0,
+        "next_start_s": null,
+        "operation_id": "lab-write-unknown",
+        "reason": "unknown non-idempotent outcome without explicit idempotency contract",
+        "retry_after_floor_s": 0,
+        "standards_used": [
+          "RFC9110-idempotent-method-semantics"
+        ]
+      },
+      "pass": true,
+      "post_requests": 1,
+      "reobserved_state": {
+        "ambiguous_effects": 1,
+        "ambiguous_post_requests": 1,
+        "idempotent_effects": 0,
+        "idempotent_post_requests": 0
+      },
+      "scenario_id": "unknown-post-reobserve",
+      "side_effects": 1,
+      "transport_error": "RemoteDisconnected"
+    },
+    {
+      "attempt_ids": [
+        "lab-write-contract:attempt:1",
+        "lab-write-contract:attempt:2"
+      ],
+      "classification": "loopback_explicit_application_idempotency",
+      "first_decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "lab-write-contract:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 3,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0.07258596550415239,
+        "local_backoff_s": 0.25,
+        "next_start_s": 1.0725859655041523,
+        "operation_id": "lab-write-contract",
+        "reason": "unknown non-idempotent outcome covered by explicit application/provider idempotency contract",
+        "retry_after_floor_s": 0,
+        "standards_used": []
+      },
+      "first_transport_error": "RemoteDisconnected",
+      "operation_id": "lab-write-contract",
+      "pass": true,
+      "post_requests": 2,
+      "response": {
+        "deduplicated": true,
+        "effect_number": 1,
+        "ok": true,
+        "operation_id": "lab-write-contract"
+      },
+      "scenario_id": "explicit-contract-deduplicates",
+      "server_attempt_ids": [
+        "lab-write-contract:attempt:1",
+        "lab-write-contract:attempt:2"
+      ],
+      "server_operation_ids": [
+        "lab-write-contract",
+        "lab-write-contract"
+      ],
+      "side_effects": 1,
+      "terminal": "SUCCESS"
+    }
+  ],
+  "safety": {
+    "production_traffic": false,
+    "rate_limit_evasion": false,
+    "remote_target_input": false
+  },
+  "schema": "http-429-local-conformance-report/v1",
+  "standards_boundary": {
+    "experimental": [
+      "draft-ietf-httpapi-ratelimit-headers-11 simple r=0;t hint"
+    ],
+    "not_assumed": [
+      "universal Idempotency-Key semantics"
+    ],
+    "stable": [
+      "RFC6585-429",
+      "RFC9110-Retry-After",
+      "RFC9457-Problem-Details"
+    ]
+  },
+  "summary": {
+    "failed": 0,
+    "passed": 8,
+    "scenarios": 8
+  }
+}
