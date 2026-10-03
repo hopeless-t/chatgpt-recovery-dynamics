@@ -31,3 +31,10 @@ Prefer passive observation of naturally occurring failures and local simulation.
 
 Recover. Don't amplify.
 Visualization != Evidence.
+
+
+## Purrtocol side-study
+Purrtocol is the project's Recovery Cat and an anthropomorphic error model for recovery systems.
+Canonical design bible: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
+Expansion side-study: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/
+The expansion analysis is deliberately separate from the primary evidence base. Current selected commit-event fit: doubling time about 3.758 h; Hawkes branching ratio about 0.85 (subcritical); Earth saturation NOT YET OBSERVED.
