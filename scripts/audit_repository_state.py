@@ -87,6 +87,15 @@ def main() -> int:
     variants = read_jsonl(ROOT / "data" / "purrtocol_variants.jsonl")
     improvement = read_jsonl(ROOT / "data" / "improvement_events.jsonl")
     state = read_json(ROOT / "docs" / "repository-observatory" / "state.json")
+    improvement_schema = read_json(ROOT / "data" / "improvement_event_schema.json")
+    published_improvement_schema = read_json(
+        ROOT / "docs" / "repository-observatory" / "improvement-event.schema.json"
+    )
+    check(
+        "observatory.schema_mirror",
+        improvement_schema == published_improvement_schema,
+        "data schema and Pages schema must be byte-semantically identical",
+    )
 
     concept_ids = {row["event_id"] for row in concepts}
     promotion_by_concept = {row["concept_id"]: row for row in promotions}
