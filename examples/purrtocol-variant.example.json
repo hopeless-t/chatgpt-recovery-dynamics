@@ -1,0 +1,28 @@
+{
+  "schema": "purrtocol-variant/v1",
+  "variant_id": "PKV-YOURHANDLE-001",
+  "name": "Your Purrtocol Variant",
+  "status": "external",
+  "parent_variant_id": "PKV-CANONICAL",
+  "origin": {
+    "repository_url": "https://github.com/YOU/YOUR-FORK",
+    "commit": null,
+    "submitted_by": "your-handle",
+    "pull_request_url": null
+  },
+  "mutations": [
+    "Describe the visual, narrative, educational, or protocol-facing mutation.",
+    "Keep the change legible enough that another agent can summarize it."
+  ],
+  "preserved_invariants": [
+    "recover_dont_amplify",
+    "visualization_not_evidence",
+    "observer_side_not_omniscient_backend",
+    "concept_not_implemented"
+  ],
+  "evidence_status": "implemented_artifact",
+  "license": "MIT",
+  "homepage": null,
+  "assets": [],
+  "notes": "Delete this note and replace placeholders before submitting."
+}
