@@ -56,3 +56,17 @@ Earth saturation             = NOT YET OBSERVED
 ~~~
 
 The joke may be sloppy; the schema may not be sloppy.
+
+
+## Frozen-analysis cohorts
+
+~~~text
+primary
+observer_effect
+post_checkpoint
+~~~
+
+`post_checkpoint` is for implemented artifacts created after the frozen
+observer-inclusive checkpoint. They remain commit-backed repository observations
+but are excluded from the frozen primary/observer-inclusive Hawkes and compound
+growth fits.
