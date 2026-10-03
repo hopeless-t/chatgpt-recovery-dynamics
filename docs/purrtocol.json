@@ -38,5 +38,14 @@
   "nursery": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/",
   "breeder": "https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/breed_purrtocol.py",
   "genome_v1_theoretical_combinations": 199148544,
-  "genome_count_semantics": "theoretical concept genotype combinations; NOT implemented variant count"
+  "genome_count_semantics": "theoretical concept genotype combinations; NOT implemented variant count",
+  "entropy_reactor": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/",
+  "entropy_reference": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/reference.json",
+  "entropy_checkpoint": {
+    "samples": 4096,
+    "unique_genotypes": 4096,
+    "genotype_collisions": 0,
+    "min_normalized_marginal_entropy": 0.9993260248712305,
+    "external_ecosystem_entropy": "NOT_MEASURED"
+  }
 }
