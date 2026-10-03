@@ -1,0 +1,25 @@
+# Schrodinger's Purrtocol Observatory
+
+> Deterministic epistemic observation toy. Explicitly NOT quantum physics.
+
+First observed result:
+- selected label: A
+- selected concept: PKV-SEED-D9966B702AFA
+- selected name: ObserverPaw / seeded Purrtocol concept
+- observation digest: 12910a8094ff0096d403b08f321ce8033572d25686e80547ae46aad524cd7ca2
+- implementation target: PKV-SCHRODINGER-OBS-001
+
+Candidate B remains a concept and is not promoted.
+
+Interpretation:
+- candidate set != implemented population
+- deterministic observation != quantum measurement
+- observed selection != external human attention
+- selected concept != implemented artifact until explicit promotion
+
+## Surfaces
+- [Observation guide](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-schrodinger/index.md)
+- [Interactive observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-schrodinger/)
+- [Observation JSON](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-schrodinger/observation.json)
+- [Observation contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/purrtocol_schrodinger_contract.json)
+- [Observer script](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/observe_schrodinger_purrtocol.py)
