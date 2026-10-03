@@ -19,9 +19,10 @@ Purrtocol is an anthropomorphic error model for recovery systems.
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md)
 - [Variant Foundry](./purrtocol-variant-foundry/index.md)
 - [Machine discovery manifest](./purrtocol.json)
-- [3D preflight](./purrtocol-3d/README.md)
+- [3D First Light](./purrtocol-3d/index.md)
+- [3D contract](./purrtocol-3d/README.md)
 
-Current 3D status: **PKE-106 is PREPRODUCTION; no runtime 3D model has been promoted yet.**
+Current 3D status: **PKE-106 → PKE-033 IMPLEMENTED FIRST LIGHT**. A 7,672-byte GLB with six semantic animations is live and CI-validated.
 
 ## Evidence boundary
 
