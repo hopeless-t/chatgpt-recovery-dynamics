@@ -164,7 +164,7 @@ def main() -> None:
     assert schrodinger["status"] == "implemented"
     assert schrodinger["parent_variant_id"] == "PKV-CANONICAL"
     assert schrodinger["evidence_status"] == "implemented_artifact"
-    assert schrodinger["origin"]["commit"] == "c98d4ca005955a72c482cf5ce286cd18293d273b"
+    assert schrodinger["origin"]["commit"] == "8016a326c0b324dfd2884926c070228b5f44d36c"
     assert "docs/purrtocol-schrodinger/index.html" in schrodinger["assets"]
 
     schrodinger_observation = json.loads(
