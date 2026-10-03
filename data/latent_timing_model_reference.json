@@ -1,0 +1,100 @@
+{
+  "schema": "latent-timing-model-reference/v1",
+  "source": {
+    "workflow_run_id": 37125194387,
+    "head_sha": "5a93bf3edbc5dd53f0329ab2453054f133655749",
+    "job_id": 111208960634,
+    "note": "Existing sanitized public trace only; no production traffic generated."
+  },
+  "sample": {
+    "within_epoch_transitions": 106,
+    "active_epochs": 2,
+    "external_validity": "NOT_ESTABLISHED"
+  },
+  "within_capture_bic": {
+    "ranking": [
+      {
+        "model": "hmm2_latent_gaussian",
+        "bic": -15.992867705153117,
+        "mean_nll": -0.2734142431705741
+      },
+      {
+        "model": "ar1",
+        "bic": -10.09819258872573,
+        "mean_nll": -0.1576197549966324
+      },
+      {
+        "model": "observed_ab_conditioned",
+        "bic": 16.33372852425014,
+        "mean_nll": -0.05493823603972764
+      },
+      {
+        "model": "iid_gaussian",
+        "bic": 19.881234453341342,
+        "mean_nll": 0.00578999092874092
+      }
+    ],
+    "delta_bic_hmm_minus_ar1": -5.894675116427387,
+    "ar1_phi": 0.523888977206365,
+    "hmm_emission_means": [
+      -0.3362617679988803,
+      0.10644482004450027
+    ],
+    "hmm_transition": [
+      [
+        0.8215852965771514,
+        0.17841470342284863
+      ],
+      [
+        0.03248788923721641,
+        0.9675121107627835
+      ]
+    ]
+  },
+  "cross_epoch_prediction": {
+    "train_epoch1_test_epoch2": {
+      "n_train": 65,
+      "n_test": 41,
+      "test_mean_nll": {
+        "ar1": 0.01914944378953253,
+        "iid_gaussian": 0.07734293940506452,
+        "hmm2_latent_gaussian": 0.36780177560718785,
+        "observed_ab_conditioned": 4.227597265932646
+      },
+      "ranking": [
+        "ar1",
+        "iid_gaussian",
+        "hmm2_latent_gaussian",
+        "observed_ab_conditioned"
+      ]
+    },
+    "train_epoch2_test_epoch1": {
+      "n_train": 41,
+      "n_test": 65,
+      "test_mean_nll": {
+        "ar1": -0.22028552036768373,
+        "hmm2_latent_gaussian": -0.033691772178066876,
+        "observed_ab_conditioned": 0.036326733942338846,
+        "iid_gaussian": 0.03807297601712536
+      },
+      "ranking": [
+        "ar1",
+        "hmm2_latent_gaussian",
+        "observed_ab_conditioned",
+        "iid_gaussian"
+      ]
+    }
+  },
+  "interpretation": {
+    "within_capture": "The two-state HMM has the best penalized same-sample fit among the tested candidates.",
+    "predictive": "AR(1) has the best held-out mean NLL in both cross-epoch directions.",
+    "current_best_compact_statement": "Within this capture, a two-state latent regime compresses the pooled residuals well, but continuous one-step AR(1) memory transfers better between the two active epochs.",
+    "mechanism_identification": "NOT_ESTABLISHED",
+    "guardrails": [
+      "The HMM states are statistical labels, not named physical controller states.",
+      "AR(1) portability does not identify the source of memory.",
+      "Only two active epochs from one capture are available.",
+      "Observed A/B conditioning does not explain the residual dependence as well as AR(1)."
+    ]
+  }
+}
