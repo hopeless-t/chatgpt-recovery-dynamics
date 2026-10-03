@@ -47,3 +47,17 @@ Canonical local-TV line:
 > **あわてず・ふやさず・パケニャ！**
 
 This does not change its technical responsibilities.
+
+
+## Design bible and future 3D
+
+Canonical setting source:
+
+- [Purrtocol Design Bible](purrtocol-design-bible.md)
+- https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
+
+The Bible defines the character as an **anthropomorphic error model for recovery systems** and specifies turnaround, expression, rig, prop-socket, and animation requirements for a future 3D asset.
+
+Expansion side-study:
+
+https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/
