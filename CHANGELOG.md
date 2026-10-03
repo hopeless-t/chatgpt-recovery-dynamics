@@ -7,6 +7,7 @@ The format loosely follows Keep a Changelog, but this is a research repository r
 ## [Unreleased]
 
 ### Added
+- Trust-Level Paradox project archaeology: records the author-reported chronology of an iOS ChatGPT feature-improvement post, a temporary Community account hold shortly afterward, and the later trust-level promotion / hold UI juxtaposition; no causal claim is made.
 - Self-referential 429 meta-observation: the author encountered a 429 in the ChatGPT conversation used to build this repository; explicitly excluded from the primary quantitative dataset.
 - Paper-style reproducible PDF build.
 - ADR and RFC directories.
