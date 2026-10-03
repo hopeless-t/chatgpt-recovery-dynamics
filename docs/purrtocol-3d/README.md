@@ -1,12 +1,27 @@
-# Purrtocol 3D Preflight / 3Dパケニャ投入前契約
+# Purrtocol 3D Contract / 3Dパケニャ契約
 
-Status: **PREPRODUCTION / concept remains PKE-106**
+Status: **IMPLEMENTED FIRST LIGHT / PKE-106 → PKE-033**
 
-The 3D model is the only remaining registered Purrtocol concept that has not been promoted to an implemented artifact. This document prepares the pipeline without pretending the model already exists.
+The original PKE-106 concept is now promoted to implemented event PKE-033. The historical concept row remains unchanged as provenance. First Light is a deliberately tiny procedural voxel implementation that proves the runtime, animation, preview, promotion, and CI pipeline.
 
 > **Concept != implemented artifact.**
 >
 > **Visualization != Evidence.**
+
+## First Light reference implementation
+
+```text
+asset       docs/assets/purrtocol/purrtocol.glb
+format      glTF 2.0 / GLB
+bytes       7,672
+sha256      fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467
+nodes       21
+animations  6
+textures    0
+viewer      docs/purrtocol-3d/index.html
+```
+
+This reference is intentionally minimal. It is a semantic/pipeline baseline, not final character art.
 
 ## Why 3D exists
 
@@ -117,7 +132,7 @@ Budgets should be set from those measurements and target devices, not invented i
 
 ## Promotion gate
 
-PKE-106 remains a concept until one implementation change contains all of:
+PKE-106 was promoted only after the implementation contained all of:
 
 1. a runtime GLB at `docs/assets/purrtocol/purrtocol.glb`;
 2. a runtime preview at `docs/purrtocol-3d/index.html`;
@@ -125,7 +140,7 @@ PKE-106 remains a concept until one implementation change contains all of:
 4. CI validation of the runtime asset and required semantic names;
 5. a commit-backed implemented event separate from the historical concept record.
 
-The concept record itself remains immutable historical provenance.
+The concept record itself remains immutable historical provenance. Promotion is recorded separately in `data/pakenya_promotions.jsonl`.
 
 ## CI behavior
 
