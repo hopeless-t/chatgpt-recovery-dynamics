@@ -56,3 +56,24 @@ The repository now runs a closed improvement loop:
 - [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl)
 
 The observatory is itself part of the system and may create CI/maintenance load. That observer effect is explicit.
+
+
+## Meta Improvement Loop
+
+The repository now measures the improvement loop itself.
+
+First four-cycle checkpoint:
+
+```text
+median cycle                    631.5 s
+observation -> first change     488.0 s
+last change -> verification      41.5 s
+verification -> promotion        32.5 s
+```
+
+The first selected tuning is a [Critic Router](./repository-observatory/critic-router.md):
+changed paths are routed to cheap source-proximate diagnostics before the full promotion gates.
+
+- [Meta Improvement Loop](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/META_IMPROVEMENT_LOOP.md)
+- [Meta Loop Reference](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_loop_reference.json)
+- [Repository Observatory](./repository-observatory/)
