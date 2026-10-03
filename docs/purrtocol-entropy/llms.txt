@@ -1,0 +1,31 @@
+# Purrtocol Entropy Reactor
+
+> Deterministic breeder diversity diagnostic. Concept-space cardinality is kept separate from real indexed lineage.
+
+Observed fixed cohort:
+- 4,096 seeds
+- 4,096 unique variant IDs
+- 4,096 unique genotypes
+- 0 genotype collisions
+- worst normalized marginal gene entropy: ~0.999326
+- maximum relative per-gene deviation from uniform: ~7.96%
+
+Genome v1:
+- 199,148,544 theoretical genotype combinations
+- idealized uniform combinatorial capacity: ~27.56927 bits
+
+Canonical registry:
+- 1 real indexed variant at the observation checkpoint
+
+Interpretation:
+- Entropy collapse is NOT OBSERVED in the fixed breeder probe.
+- This does not measure external ecosystem entropy or adoption.
+- Theoretical genotype count is not implemented population.
+
+## Surfaces
+
+- [Human/agent guide](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/index.md)
+- [Interactive reactor](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/)
+- [Reference JSON](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/reference.json)
+- [Analyzer](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/analyze_purrtocol_entropy.py)
+- [Genome](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-genome.json)
