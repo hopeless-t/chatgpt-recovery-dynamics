@@ -107,7 +107,7 @@ That is considered a feature.
 
 ## Canonical Purrtocol design bible
 
-Future character, narrative, and 3D work should use:
+Character, narrative, and 3D work should use:
 
 - `docs/purrtocol-design-bible.md`
 - https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
@@ -120,4 +120,9 @@ Canonical production rule:
 
 > **The joke may be sloppy; the footnote may not be sloppy.**
 
-A future 3D model should preserve B/E/H state legibility, tiny-observation vs heavy-snapshot semantics, and the rule that Purrtocol is an observer/recovery-side character rather than an omniscient backend mascot.
+The canonical 3D First Light asset now preserves B/E/H state legibility, tiny-observation vs heavy-snapshot semantics, and the rule that Purrtocol is an observer/recovery-side character rather than an omniscient backend mascot. Future rigs and visual refinements inherit that semantic contract.
+
+3D First Light:
+- `docs/assets/purrtocol/purrtocol.glb`
+- `docs/purrtocol-3d/index.html`
+- 7,672 bytes / 21 nodes / 6 named semantic animation clips
