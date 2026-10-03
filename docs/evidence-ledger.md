@@ -235,3 +235,47 @@ self-referential, but it does not upgrade or alter the evidentiary status of the
 original capture.
 
 > **Meta-observation != primary dataset.**
+
+
+## Meta-observation: community trust promotion and temporary hold
+
+The author reports that an OpenAI Developer Community account was placed on a
+temporary hold shortly after the author posted a feature-improvement suggestion
+about the iOS ChatGPT app.
+
+Later, the Community UI displayed a system message promoting the account's
+trust level and encouraging further participation, while a related message in
+the same interface read:
+
+~~~text
+Account temporarily on hold
+~~~
+
+Classification:
+
+~~~text
+source:
+  contemporaneous author report + community UI screenshot
+
+recorded fact:
+  temporal ordering and simultaneous UI presentation
+
+causal claim that the iOS feature-improvement post caused the hold:
+  not established
+
+included in the primary 108-pair dataset:
+  no
+
+evidence of shared backend mechanism:
+  no
+~~~
+
+This is retained as project archaeology and a UI-state dissociation anecdote.
+
+See the Wiki page:
+https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki/The-Trust-Level-Paradox
+
+Repository:
+https://github.com/hopeless-t/chatgpt-recovery-dynamics
+
+> **Temporal adjacency != causation.**
