@@ -65,7 +65,60 @@ jobs:
           print("Schrodinger Purrtocol structural observation: PASS")
           PY
 
+      - name: Compare frozen observation and implemented derivative
+        run: |
+          python - <<'PY'
+          import json
+
+          def load(path):
+              with open(path, "r", encoding="utf-8") as f:
+                  return json.load(f)
+
+          observed = load("/tmp/schrodinger-purrtocol.json")
+          frozen = load("data/purrtocol_schrodinger_observation.json")
+          pages_observation = load("docs/purrtocol-schrodinger/observation.json")
+
+          # Source metadata is appended only when the first observation is frozen.
+          frozen_core = {k: v for k, v in frozen.items() if k != "source"}
+          assert observed == frozen_core
+          assert pages_observation == frozen
+
+          registry = [
+              json.loads(line)
+              for line in open("data/purrtocol_variants.jsonl", encoding="utf-8")
+              if line.strip()
+          ]
+          by_id = {row["variant_id"]: row for row in registry}
+          implemented = by_id["PKV-SCHRODINGER-OBS-001"]
+
+          selected_id = frozen["observation"]["selected_candidate_variant_id"]
+          selected_genome = frozen["observation"]["selected_genome"]
+          candidates = {
+              row["label"]: row
+              for row in frozen["box"]["candidates"]
+          }
+
+          assert frozen["observation"]["selected_label"] == "A"
+          assert selected_id == candidates["A"]["variant_id"]
+          assert candidates["B"]["variant_id"] not in by_id
+
+          assert implemented["status"] == "implemented"
+          assert implemented["evidence_status"] == "implemented_artifact"
+          assert implemented["parent_variant_id"] == "PKV-CANONICAL"
+          assert implemented["genome"] == selected_genome
+          assert implemented["origin"]["commit"] == "c98d4ca005955a72c482cf5ce286cd18293d273b"
+
+          variant_page = load("docs/purrtocol-schrodinger/variant.json")
+          assert variant_page == implemented
+
+          assert frozen["observation"]["quantum_physics_claim"] is False
+          print("Schrodinger observation -> implementation lineage: PASS")
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: schrodinger-purrtocol-observation
-          path: /tmp/schrodinger-purrtocol.json
+          path: |
+            /tmp/schrodinger-purrtocol.json
+            data/purrtocol_schrodinger_observation.json
+            docs/purrtocol-schrodinger/variant.json
