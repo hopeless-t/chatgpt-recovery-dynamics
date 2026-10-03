@@ -84,6 +84,9 @@ Current canonical sets:
 - Incident Investigation Board
 - Agent Retry Academy
 - Museum / archive
+- Purrtocol Constitution
+- Failure Field Guide
+- Purrtocol Observatory
 
 Permitted future adjacent sets:
 
