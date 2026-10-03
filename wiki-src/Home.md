@@ -27,6 +27,7 @@
 | [[Purrtocol]] | regrettably, the mascot |
 | [[Release Notes]] | release history |
 | [[The Recursive 429 Incident]] | the research conversation itself hit 429 |
+| [[The Trust-Level Paradox]] | trust-level promotion + temporary hold + iOS feature-post chronology |
 
 ## Core model
 
