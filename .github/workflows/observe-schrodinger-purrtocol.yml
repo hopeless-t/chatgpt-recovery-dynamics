@@ -106,7 +106,7 @@ jobs:
           assert implemented["evidence_status"] == "implemented_artifact"
           assert implemented["parent_variant_id"] == "PKV-CANONICAL"
           assert implemented["genome"] == selected_genome
-          assert implemented["origin"]["commit"] == "c98d4ca005955a72c482cf5ce286cd18293d273b"
+          assert implemented["origin"]["commit"] == "8016a326c0b324dfd2884926c070228b5f44d36c"
 
           variant_page = load("docs/purrtocol-schrodinger/variant.json")
           assert variant_page == implemented
