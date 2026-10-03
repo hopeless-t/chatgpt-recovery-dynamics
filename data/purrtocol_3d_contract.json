@@ -1,6 +1,6 @@
 {
   "schema": "purrtocol-3d-contract/v1",
-  "status": "preproduction_concept",
+  "status": "implemented_first_light",
   "concept_event_id": "PKE-106",
   "canonical_source": "docs/purrtocol-design-bible.md",
   "preflight_document": "docs/purrtocol-3d/README.md",
@@ -24,19 +24,30 @@
   "semantic_states": {
     "B_blocked": {
       "color": "red",
-      "non_color_cues": ["left_ear_down", "blocked_pose"]
+      "non_color_cues": [
+        "left_ear_down",
+        "blocked_pose"
+      ]
     },
     "E_recovering": {
       "color": "amber",
-      "non_color_cues": ["amber_goggles", "cautious_forward_step"]
+      "non_color_cues": [
+        "amber_goggles",
+        "cautious_forward_step"
+      ]
     },
     "H_healthy": {
       "color": "green",
-      "non_color_cues": ["green_tail_tip", "single_snapshot_carried"]
+      "non_color_cues": [
+        "green_tail_tip",
+        "single_snapshot_carried"
+      ]
     },
     "observe": {
       "color": "cyan",
-      "non_color_cues": ["tiny_packet_prop"]
+      "non_color_cues": [
+        "tiny_packet_prop"
+      ]
     }
   },
   "required_nodes": [
@@ -95,6 +106,20 @@
     "memory_conscious": true,
     "fixed_triangle_budget": null,
     "fixed_texture_budget": null,
-    "rule": "Declare measured runtime size, geometry, texture, and memory budgets in the implementation PR; do not invent them during preproduction."
+    "rule": "Declare measured runtime size, geometry, texture, and memory budgets in the implementation PR; do not invent them during preproduction.",
+    "first_light_measured_asset_bytes": 7672,
+    "first_light_textures": 0,
+    "next_budget_rule": "Future revisions must report deltas against First Light and justify large regressions."
+  },
+  "first_light": {
+    "implemented_event_id": "PKE-033",
+    "asset_bytes": 7672,
+    "sha256": "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467",
+    "scene_nodes": 21,
+    "animation_clips": 6,
+    "textures": 0,
+    "construction": "procedural voxel / shared cube topology",
+    "viewer": "model-viewer 4.3.1",
+    "note": "Reference implementation for semantic and pipeline validation; not final character art."
   }
 }
