@@ -154,6 +154,29 @@ a{color:inherit}
   display:inline-block;border:5px solid var(--red);color:var(--red);padding:5px 9px;border-radius:9px;
   transform:rotate(-5deg);font-size:.9rem
 }
+.blooper-reel{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.blooper{
+  position:relative;background:#fff;border:5px solid #111;border-radius:18px;padding:16px 16px 18px;
+  box-shadow:7px 7px 0 var(--red);overflow:hidden
+}
+.blooper:before{
+  content:"NG";position:absolute;right:-14px;top:10px;background:var(--red);color:white;
+  font-size:1.05rem;padding:5px 20px;transform:rotate(12deg);border:3px solid #111
+}
+.blooper .take{font-size:.78rem;color:#6d7480;letter-spacing:.08em;font-weight:900}
+.blooper h3{margin:.25rem 0 .45rem;font-size:1.12rem}
+.blooper p{font-family:system-ui,sans-serif;font-weight:650;line-height:1.55;margin:.35rem 0}
+.blooper .director{margin-top:10px;background:#101820;color:#fff;border-radius:10px;padding:8px 10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.83rem}
+.clapper{
+  display:inline-grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;
+  background:#111;color:#fff;border:5px solid #111;border-radius:14px;padding:8px 12px;
+  box-shadow:6px 6px 0 #f1c232;transform:rotate(-1deg);margin-bottom:16px
+}
+.clapper b{font-size:1.05rem}.clapper span{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#ffe34f}
+.outtake{
+  margin-top:14px;border:5px dashed var(--red);background:#fff4f4;border-radius:18px;
+  padding:14px 16px;font-family:system-ui,sans-serif;font-weight:700
+}
 @media(max-width:820px){
   .hero{min-height:680px}.mascot{width:62%;right:-6%;bottom:8px}.burst{width:210px;height:210px;left:3%;bottom:120px}
   .emergency,.offer{grid-template-columns:1fr}.commandments{grid-template-columns:1fr 1fr}.offer img{max-width:220px;margin:auto}
@@ -253,6 +276,51 @@ a{color:inherit}
 <span class="time">00:26</span> <span class="voice">提供読み：</span>「この番組は、Visualization ≠ Evidence の精神でお送りしました。」<br>
 <span class="time">00:30</span> <span class="note">［Retry 0回増量中！ ※増やしていません］</span>
       </div>
+    </section>
+
+    <section class="section alt">
+      <h2 class="headline">CM撮影NGシーン集</h2>
+      <div class="clapper"><b>🎬 パケニャ撮影所</b><span>TAKE 429 / CAMERA 1 / RETRY 0</span></div>
+      <div class="blooper-reel">
+        <article class="blooper">
+          <div class="take">TAKE 01</div>
+          <h3>「とりあえず連打するにゃ！」</h3>
+          <p>勢いよく台本を読み始めたパケニャ、開始3秒で研究方針を破る。</p>
+          <div class="director">監督「カット！！それを止めるCMだよ！！」</div>
+        </article>
+        <article class="blooper">
+          <div class="take">TAKE 08</div>
+          <h3>EをHと言ってしまう</h3>
+          <p>「開いたにゃ！完全復旧にゃ！」と言った瞬間、スタッフ全員から赤札。</p>
+          <div class="director">監督「E！それまだE！！Hじゃない！！」</div>
+        </article>
+        <article class="blooper">
+          <div class="take">TAKE 18</div>
+          <h3>snapshotを抱えすぎる</h3>
+          <p>演出用に8個の巨大snapshotを一度に持たされ、パケニャが画面外へ沈む。</p>
+          <div class="director">美術「一回だけ運ぶ設定でしたよね？」</div>
+        </article>
+        <article class="blooper">
+          <div class="take">TAKE 33</div>
+          <h3>UNKNOWNなのに走り出す</h3>
+          <p>通信が切れた瞬間、勝手に再実行しようとして助監督に首根っこを掴まれる。</p>
+          <div class="director">助監督「UNKNOWN ≠ retry permission！！」</div>
+        </article>
+        <article class="blooper">
+          <div class="take">TAKE 108</div>
+          <h3>VisualizationをEvidenceと言う</h3>
+          <p>光るネットワークを指差して「これが内部構造にゃ！」と言い切り、現場が凍る。</p>
+          <div class="director">全員「Visualization ≠ Evidence！！！！」</div>
+        </article>
+        <article class="blooper">
+          <div class="take">TAKE 429</div>
+          <h3>撮影そのものが429</h3>
+          <p>「会話が開かない！そんな時こそ——」の途中で撮影用会話まで429になり、本日の収録終了。</p>
+          <div class="director">制作「……このNGだけ妙に実話っぽいな」</div>
+        </article>
+      </div>
+      <div class="outtake">🎞️ <b>未公開テイク：</b> パケニャが「Retry less. Observe more.」を噛み続け、最終的に「リトライ……オブ……もう日本語でいいにゃ！」となったためお蔵入り。</div>
+      <p class="kome">※もちろん再現演出です。NGシーンは研究データではありません。Meta-humor ≠ primary dataset.</p>
     </section>
 
     <section class="section white">
