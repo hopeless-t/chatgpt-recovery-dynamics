@@ -33,3 +33,16 @@ Raw authenticated HARs are not public.
 **Recover. Don't amplify.**
 
 **Visualization != Evidence.**
+
+
+## Repository Observatory
+
+The repository now runs a closed improvement loop:
+
+`observe -> biopsy -> smallest reversible change -> verify -> promote -> re-observe`
+
+- [Repository Observatory](./repository-observatory/index.md)
+- [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md)
+- [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl)
+
+The observatory is itself part of the system and may create CI/maintenance load. That observer effect is explicit.
