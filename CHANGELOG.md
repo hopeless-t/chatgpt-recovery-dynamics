@@ -7,6 +7,7 @@ The format loosely follows Keep a Changelog, but this is a research repository r
 ## [Unreleased]
 
 ### Added
+- Self-referential 429 meta-observation: the author encountered a 429 in the ChatGPT conversation used to build this repository; explicitly excluded from the primary quantitative dataset.
 - Paper-style reproducible PDF build.
 - ADR and RFC directories.
 - FAQ and glossary.
