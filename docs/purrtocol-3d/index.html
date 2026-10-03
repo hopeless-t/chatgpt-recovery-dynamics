@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>3D Purrtocol First Light | 3Dパケニャ</title>
+<meta name="description" content="The first implemented 3D Purrtocol: a tiny animated GLB architecture mascot for recovery-state semantics.">
+<link rel="canonical" href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-3d/">
+<link rel="alternate" type="text/markdown" href="./index.md">
+<link rel="describedby" href="./llms.txt">
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"></script>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--line:#294966;--text:#edf5ff;--muted:#95aac1;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44;--red:#ef5f6c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 65% -10%,rgba(76,218,235,.12),transparent 35%),var(--bg);color:var(--text);font:16px/1.65 system-ui,sans-serif}
+main{max-width:1120px;margin:auto;padding:42px 22px 80px}.ey{color:var(--cyan);font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(3rem,8vw,7rem);line-height:.9;letter-spacing:-.06em;margin:.12em 0}.lead{font-size:1.15rem;color:var(--muted);max-width:780px}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:16px;margin-top:26px}
+.card{border:1px solid var(--line);border-radius:22px;background:rgba(13,27,45,.9);padding:18px}
+model-viewer{width:100%;height:min(66vh,620px);min-height:420px;background:linear-gradient(#0b1e31,#07111f);border-radius:16px;--poster-color:transparent}
+.buttons{display:grid;gap:8px}.buttons button{border:1px solid var(--line);background:#081827;color:var(--text);border-radius:12px;padding:10px;text-align:left;cursor:pointer;font:inherit}.buttons button:hover{border-color:var(--cyan)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.badge{border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:.8rem}.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.c{color:var(--cyan)}
+.code{font-family:ui-monospace,monospace;background:#050c15;border:1px solid var(--line);border-radius:14px;padding:12px;white-space:pre-wrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.metric{border:1px solid var(--line);border-radius:16px;padding:14px;background:#091827}.metric b{display:block;font-size:1.6rem}
+a{color:var(--cyan)}footer{margin-top:28px;color:var(--muted)}
+@media(max-width:800px){.stage{grid-template-columns:1fr}.grid{grid-template-columns:1fr}model-viewer{min-height:360px}}
+</style>
+</head>
+<body>
+<main>
+<div class="ey">PKE-106 promoted · First Light</div>
+<h1>3Dパケニャ<br>起動にゃ。</h1>
+<p class="lead">7.5KiB級のprocedural voxel GLB。装飾より先に、Blocked / Recovering / Healthy、tiny observation、heavy snapshot、duplicate retryの意味が動きで読めることを優先した。</p>
+
+<div class="badges">
+<span class="badge c">Observe = cyan packet</span>
+<span class="badge r">B = red / blocked</span>
+<span class="badge a">E = amber / provisional</span>
+<span class="badge g">H = green / stable</span>
+</div>
+
+<div class="stage">
+<section class="card">
+<model-viewer id="pakenya"
+ src="../assets/purrtocol/purrtocol.glb"
+ alt="Low-poly 3D Purrtocol recovery cat"
+ camera-controls
+ touch-action="pan-y"
+ camera-orbit="35deg 72deg 4.2m"
+ shadow-intensity="1"
+ exposure="1.05">
+</model-viewer>
+</section>
+
+<aside class="card">
+<h2>Animation console</h2>
+<p id="status">Loading GLB…</p>
+<div class="buttons" id="buttons">
+<button data-animation="idle_observe">📡 idle_observe — tiny probe bob</button>
+<button data-animation="blocked_429">🛑 blocked_429 — head drops</button>
+<button data-animation="provisional_step_E">🟠 provisional_step_E — one cautious step</button>
+<button data-animation="stable_snapshot_carry_H">🟢 stable_snapshot_carry_H — carry exactly one snapshot</button>
+<button data-animation="duplicate_retry_attempt">💥 duplicate_retry_attempt — packet tries to run again</button>
+<button data-animation="director_neck_scruff_stop">🎬 director_neck_scruff_stop — retry police arrive</button>
+</div>
+<h3>Evidence boundary</h3>
+<div class="code">3D model = implemented visualization
+3D model ≠ production topology
+animation ≠ causal proof
+cute cat ≠ privileged backend access</div>
+</aside>
+</div>
+
+<div class="grid">
+<div class="metric"><span>GLB size</span><b>7,672 B</b><small>sha256 fc667ad3…6467</small></div>
+<div class="metric"><span>Scene nodes</span><b>21</b><small>17 contract-required names + props/body/lamp</small></div>
+<div class="metric"><span>Animation clips</span><b>6</b><small>all contract-required clips present</small></div>
+</div>
+
+<section class="card" style="margin-top:16px">
+<h2>Why it looks like this</h2>
+<p>First Lightは「完成キャラクター造形」ではなく、3D pipelineとsemantic contractを実際に通す最小実装。cube geometryを再利用し、materialとnode transformで猫・packet・snapshotを構成している。</p>
+<p>次の世代ではsilhouette、表情、rig、turnaround、Blender source、mobile runtime memoryを改善できる。ただし <b>PKV-CANONICAL の意味論はassetより上位</b> に残る。</p>
+<p><a href="./index.md">Machine-readable notes</a> · <a href="./README.md">3D contract</a> · <a href="../purrtocol-variant-foundry/">Variant Foundry</a></p>
+</section>
+
+<footer>Visualization != Evidence. · Recover. Don't amplify. · The joke may be sloppy; the footnote may not be sloppy.</footer>
+</main>
+<script>
+const viewer=document.getElementById('pakenya');
+const status=document.getElementById('status');
+viewer.addEventListener('load',()=>{
+  status.textContent='GLB loaded · '+viewer.availableAnimations.length+' animations';
+  if(viewer.availableAnimations.includes('idle_observe')){
+    viewer.animationName='idle_observe';
+    viewer.play();
+  }
+});
+document.getElementById('buttons').addEventListener('click',e=>{
+  const name=e.target?.dataset?.animation;
+  if(!name)return;
+  if(!viewer.availableAnimations.includes(name)){
+    status.textContent='Missing animation: '+name;
+    return;
+  }
+  viewer.pause();
+  viewer.animationName=name;
+  viewer.currentTime=0;
+  viewer.play();
+  status.textContent='Playing: '+name;
+});
+</script>
+</body>
+</html>
