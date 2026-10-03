@@ -133,6 +133,48 @@ def main() -> int:
         survival_contract["scheduler"]["formula"],
     )
 
+    entropy_reference = read_json(
+        ROOT / "data" / "purrtocol_entropy_reference.json"
+    )
+    entropy_pages_reference = read_json(
+        ROOT / "docs" / "purrtocol-entropy" / "reference.json"
+    )
+    check(
+        "variants.entropy_reference_mirror",
+        entropy_reference == entropy_pages_reference,
+        "data entropy reference and Pages entropy reference must be identical",
+    )
+    entropy_probe = entropy_reference["fixed_seed_breeder_probe"]
+    entropy_gene_min = min(
+        row["normalized_entropy"]
+        for row in entropy_reference["genes"].values()
+    )
+    check(
+        "variants.entropy_probe_unique",
+        entropy_probe["unique_genotypes"] == 4096
+        and entropy_probe["genotype_collisions"] == 0,
+        (
+            f"unique={entropy_probe['unique_genotypes']} "
+            f"collisions={entropy_probe['genotype_collisions']}"
+        ),
+    )
+    check(
+        "variants.entropy_probe_marginals",
+        entropy_gene_min > 0.999,
+        f"minimum normalized marginal entropy={entropy_gene_min}",
+    )
+    check(
+        "variants.entropy_space_boundary",
+        entropy_reference["theoretical_space"]["genotype_combinations"]
+        == theoretical_genotypes
+        and entropy_reference["registered_lineage"]["registry_variants"]
+        == len(variants),
+        (
+            f"theoretical={theoretical_genotypes} "
+            f"registered={len(variants)}"
+        ),
+    )
+
     improvement_schema = read_json(ROOT / "data" / "improvement_event_schema.json")
     published_improvement_schema = read_json(
         ROOT / "docs" / "repository-observatory" / "improvement-event.schema.json"
@@ -248,6 +290,9 @@ def main() -> int:
         "docs/purrtocol-variant-foundry/llms.txt",
         "docs/purrtocol-nursery/index.md",
         "docs/purrtocol-nursery/llms.txt",
+        "docs/purrtocol-entropy/index.md",
+        "docs/purrtocol-entropy/llms.txt",
+        "docs/purrtocol-entropy/reference.json",
         "docs/purrtocol-genome.json",
         "scripts/breed_purrtocol.py",
         "docs/purrtocol-3d/llms.txt",
@@ -361,6 +406,9 @@ def main() -> int:
             "promotions": len(promotions),
             "registered_variants": len(variants),
             "theoretical_genotype_combinations": theoretical_genotypes,
+            "entropy_probe_unique_genotypes": entropy_probe["unique_genotypes"],
+            "entropy_probe_collisions": entropy_probe["genotype_collisions"],
+            "entropy_probe_min_normalized_marginal": entropy_gene_min,
         },
         "repository": {
             "html_index_pages": len(list(docs_dir.rglob("index.html"))),
@@ -432,6 +480,7 @@ def main() -> int:
         f"- concept promotions: {metrics['purrtocol']['promotions']}/{metrics['purrtocol']['concept_origins']}",
         f"- registered variants: {metrics['purrtocol']['registered_variants']}",
         f"- theoretical genome combinations: {metrics['purrtocol']['theoretical_genotype_combinations']} (concept space, not artifacts)",
+        f"- entropy probe: {metrics['purrtocol']['entropy_probe_unique_genotypes']} unique / collisions={metrics['purrtocol']['entropy_probe_collisions']} / min normalized marginal={metrics['purrtocol']['entropy_probe_min_normalized_marginal']:.6f}",
         f"- HTML index pages: {metrics['repository']['html_index_pages']}",
         f"- improvement cycles: {metrics['repository']['improvement_cycles']}",
         f"- 3D GLB: {metrics['3d']['asset_bytes']} bytes / {metrics['3d']['nodes']} nodes / {metrics['3d']['animations']} animations",
