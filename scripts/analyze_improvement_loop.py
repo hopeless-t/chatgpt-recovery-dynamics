@@ -114,6 +114,7 @@ def main() -> None:
             {
                 "cycle_id": cycle_id,
                 "target": start["target"],
+                "post_tuning_sample": start.get("details", {}).get("post_tuning_sample"),
                 "duration_s": seconds(start, end),
                 "duration_included_in_latency_aggregate": not promotion_censored,
                 "observation_to_first_change_s": seconds(observation, first_change),
@@ -276,6 +277,95 @@ def main() -> None:
     if aggregate["verified_before_promotion_ratio"] != 1.0:
         violations.append("not every promotion had prior verification")
 
+    tuning = policy["first_tuning_evaluation"]
+    baseline_reference = json.loads(
+        (ROOT / tuning["baseline_reference"]).read_text(encoding="utf-8")
+    )
+    baseline_diagnosis_s = baseline_reference["aggregate"][
+        "median_observation_to_first_change_s"
+    ]
+    post_tuning_cycles = [
+        cycle
+        for cycle in cycles
+        if cycle["post_tuning_sample"] == tuning["tuning_id"]
+    ]
+    post_tuning_diagnosis = [
+        cycle["observation_to_first_change_s"]
+        for cycle in post_tuning_cycles
+    ]
+    post_tuning_median = median_or_none(post_tuning_diagnosis)
+    minimum_samples = tuning["minimum_post_tuning_ril_cycles"]
+
+    observer_within_budget = (
+        len(workflows) <= budget["github_workflows_warning_above"]
+        and observatory_python_bytes
+        <= budget["observatory_python_bytes_warning_above"]
+    )
+    post_tuning_verified_ratio = (
+        sum(cycle["verified_before_promotion"] for cycle in post_tuning_cycles)
+        / len(post_tuning_cycles)
+        if post_tuning_cycles
+        else None
+    )
+    enough_samples = len(post_tuning_cycles) >= minimum_samples
+    latency_improved = (
+        post_tuning_median is not None
+        and post_tuning_median < baseline_diagnosis_s
+    )
+    post_tuning_integrity = post_tuning_verified_ratio == 1.0
+    no_critical_violations = not violations
+
+    if not enough_samples:
+        tuning_status = "INSUFFICIENT_SAMPLES"
+    elif (
+        latency_improved
+        and post_tuning_integrity
+        and observer_within_budget
+        and no_critical_violations
+    ):
+        tuning_status = "PASS"
+    else:
+        tuning_status = "FAIL_GUARDRAIL"
+
+    tuning_evaluation = {
+        "tuning_id": tuning["tuning_id"],
+        "status": tuning_status,
+        "baseline": {
+            "sample_cycles": baseline_reference["aggregate"]["completed_cycles"],
+            "median_observation_to_first_change_s": baseline_diagnosis_s,
+        },
+        "post_tuning": {
+            "cycle_ids": [cycle["cycle_id"] for cycle in post_tuning_cycles],
+            "sample_count": len(post_tuning_cycles),
+            "minimum_required": minimum_samples,
+            "observation_to_first_change_s": post_tuning_diagnosis,
+            "median_observation_to_first_change_s": post_tuning_median,
+            "verified_before_promotion_ratio": post_tuning_verified_ratio,
+        },
+        "guardrails": {
+            "enough_samples": enough_samples,
+            "latency_improved": latency_improved,
+            "verification_integrity_preserved": post_tuning_integrity,
+            "observer_footprint_within_soft_budget": observer_within_budget,
+            "no_critical_violations": no_critical_violations,
+        },
+        "observer_footprint": {
+            "github_workflows": len(workflows),
+            "github_workflows_warning_above": budget[
+                "github_workflows_warning_above"
+            ],
+            "observatory_python_bytes": observatory_python_bytes,
+            "observatory_python_bytes_warning_above": budget[
+                "observatory_python_bytes_warning_above"
+            ],
+        },
+        "interpretation": (
+            "PASS means the explicitly tagged post-tuning sample satisfies the "
+            "predeclared latency and guardrail criteria. It is repository-process "
+            "evidence for this tuning, not a universal performance law."
+        ),
+    }
+
     result = {
         "schema": "meta-improvement-loop-report/v1",
         "classification": "repository_process_telemetry_not_quality_score",
@@ -286,6 +376,7 @@ def main() -> None:
             "observatory_python_bytes": observatory_python_bytes,
         },
         "triggered_tuning_signals": signals,
+        "first_tuning_evaluation": tuning_evaluation,
         "violations": violations,
         "anti_goodhart": policy["anti_goodhart"],
         "interpretation": {
