@@ -1,0 +1,38 @@
+name: Validate Purrtocol variants
+
+on:
+  push:
+    paths:
+      - "PURRTOCOL_VARIANTS.md"
+      - "data/purrtocol_variant_schema.json"
+      - "data/purrtocol_variants.jsonl"
+      - "examples/purrtocol-variant.example.json"
+      - "docs/purrtocol.json"
+      - "docs/llms.txt"
+      - "docs/index.md"
+      - "docs/purrtocol-variant-foundry/**"
+      - "scripts/validate_purrtocol_variants.py"
+      - ".github/workflows/validate-purrtocol-variants.yml"
+  pull_request:
+    paths:
+      - "PURRTOCOL_VARIANTS.md"
+      - "data/purrtocol_variant_schema.json"
+      - "data/purrtocol_variants.jsonl"
+      - "examples/purrtocol-variant.example.json"
+      - "docs/purrtocol.json"
+      - "docs/llms.txt"
+      - "docs/index.md"
+      - "docs/purrtocol-variant-foundry/**"
+      - "scripts/validate_purrtocol_variants.py"
+      - ".github/workflows/validate-purrtocol-variants.yml"
+
+jobs:
+  lineage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate variant lineage and crawler surfaces
+        run: python scripts/validate_purrtocol_variants.py
