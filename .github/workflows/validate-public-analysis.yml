@@ -611,3 +611,61 @@ jobs:
 
           print("repository surface invariants: PASS")
           PY
+
+
+  purrtocol-expansion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Recompute Purrtocol expansion side-study
+        run: |
+          python scripts/analyze_pakenya_expansion.py \
+            --output /tmp/pakenya-expansion.json
+
+      - name: Check Purrtocol evidence boundary and reference invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          with open("/tmp/pakenya-expansion.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+          with open("data/pakenya_expansion_reference.json", "r", encoding="utf-8") as f:
+              ref = json.load(f)
+
+          assert s["schema"] == "purrtocol-expansion-analysis/v1"
+          assert s["event_log"]["events_total"] == 10
+          assert s["event_log"]["implemented_timestamped_events"] == 10
+          assert s["event_log"]["pairwise_contact_surface"] == 45
+          assert abs(s["event_log"]["mean_adjacent_ideas_generated_mark"] - 3.3) < 1e-12
+          assert 3.7 < s["exponential_growth_fit"]["doubling_time_hours"] < 3.9
+          assert s["hawkes_fit"]["fit_status"] == "descriptive_grid_fit"
+          assert abs(s["hawkes_fit"]["branching_ratio_n"] - 0.85) < 1e-12
+          assert s["hawkes_fit"]["classification"] == "subcritical"
+          assert s["earth_saturation"]["status"] == "NOT_YET_OBSERVED"
+          assert s["earth_saturation"]["forecast"] == "NOT_ESTABLISHED"
+          assert s["event_log"] == ref["event_log"]
+          assert abs(s["exponential_growth_fit"]["r_per_hour"] - ref["exponential_growth_fit"]["r_per_hour"]) < 1e-12
+
+          page = Path("docs/purrtocol-expansion/index.html").read_text(encoding="utf-8")
+          assert "3.758 h" in page
+          assert "n ≈ 0.85" in page
+          assert "NOT YET" in page
+          assert "supercritical growth は証明できていない" in page
+
+          bible = Path("docs/purrtocol-design-bible.md").read_text(encoding="utf-8")
+          assert "anthropomorphic error model" in bible
+          assert "The joke may be sloppy; the footnote may not be sloppy." in bible
+
+          print("Purrtocol expansion invariants: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-expansion-reference
+          path: /tmp/pakenya-expansion.json
