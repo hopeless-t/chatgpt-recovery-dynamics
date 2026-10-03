@@ -1,0 +1,102 @@
+name: Validate HTTP 429 Local Conformance Lab
+
+on:
+  push:
+    paths:
+      - "data/http_429_conformance_scenarios.json"
+      - "data/http_429_conformance_reference.json"
+      - "data/preflight_routes.json"
+      - "scripts/http_429_conformance_lab.py"
+      - "scripts/http_429_survival.py"
+      - "docs/429-conformance-lab/**"
+      - ".github/workflows/validate-http-429-conformance.yml"
+  pull_request:
+    paths:
+      - "data/http_429_conformance_scenarios.json"
+      - "data/http_429_conformance_reference.json"
+      - "data/preflight_routes.json"
+      - "scripts/http_429_conformance_lab.py"
+      - "scripts/http_429_survival.py"
+      - "docs/429-conformance-lab/**"
+      - ".github/workflows/validate-http-429-conformance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  loopback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run loopback-only conformance fire drill
+        run: |
+          python scripts/http_429_conformance_lab.py \
+            --output /tmp/http-429-conformance.json
+
+      - name: Check local-network and recovery invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/http-429-conformance.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "http-429-local-conformance-report/v1"
+          assert r["classification"] == "loopback_only_conformance_not_production_evidence"
+          assert r["network_scope"].startswith("127.0.0.1")
+          assert r["safety"] == {
+              "production_traffic": False,
+              "rate_limit_evasion": False,
+              "remote_target_input": False,
+          }
+          assert r["summary"]["scenarios"] == 8
+          assert r["summary"]["passed"] == 8
+          assert r["summary"]["failed"] == 0
+
+          by_id = {row["scenario_id"]: row for row in r["results"]}
+
+          floor = by_id["retry-after-floor"]
+          assert floor["start_times_s"][1] >= 5.05
+
+          fast = by_id["fast-fail-anchor"]
+          assert min(fast["start_gaps_s"]) >= 3.0
+
+          draft = by_id["draft-zero-window"]
+          assert draft["attempts"][0]["retry_decision"]["draft_ratelimit_floor_s"] == 4.0
+
+          precedence = by_id["retry-after-dominates-draft"]
+          assert precedence["attempts"][0]["retry_decision"]["retry_after_floor_s"] == 6.0
+          assert precedence["attempts"][0]["retry_decision"]["draft_ratelimit_floor_s"] == 0.0
+
+          problem = by_id["problem-detail-is-not-control"]
+          assert "Retry immediately!" in problem["attempts"][0]["body"]["detail"]
+          assert problem["start_times_s"][1] >= 4.05
+
+          budget = by_id["budget-stop"]
+          assert budget["terminal"] == "STOP_BUDGET"
+          assert budget["server_requests"] == 3
+
+          unknown = by_id["unknown-post-reobserve"]
+          assert unknown["decision"]["action"] == "REOBSERVE"
+          assert unknown["post_requests"] == 1
+          assert unknown["side_effects"] == 1
+          assert unknown["reobserved_state"]["ambiguous_effects"] == 1
+
+          explicit = by_id["explicit-contract-deduplicates"]
+          assert explicit["first_decision"]["action"] == "WAIT_THEN_RETRY"
+          assert explicit["post_requests"] == 2
+          assert explicit["side_effects"] == 1
+          assert len(set(explicit["server_operation_ids"])) == 1
+          assert len(set(explicit["server_attempt_ids"])) == 2
+
+          print("HTTP 429 loopback conformance: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: http-429-local-conformance
+          path: /tmp/http-429-conformance.json
