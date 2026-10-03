@@ -15,7 +15,7 @@ Interactive preview: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purr
 ```text
 format      GLB / glTF 2.0
 bytes       7,672
-sha256      fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467
+sha256      c3d2a82aaf14af5219f5236fcb22b296bd8b736fd9c2bb639d5450a3f000e3db
 nodes       21
 animations  6
 textures    0
