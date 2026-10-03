@@ -49,3 +49,15 @@ A fork does not need upstream approval to exist. Upstream indexing records
 provenance; it does not imply endorsement, ranking, or empirical validation.
 
 Please keep lineage and third-party asset licensing explicit.
+
+
+## Coding agents
+
+Start with [AGENTS.md](AGENTS.md).
+
+It is intentionally a short map rather than a full manual. Follow the task-specific
+documents it points to, and obey any nearer nested `AGENTS.md` in the directory
+you are editing.
+
+A failing invariant check is a diagnostic specimen, not permission to weaken the
+check.

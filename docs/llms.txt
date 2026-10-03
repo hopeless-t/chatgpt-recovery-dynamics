@@ -69,6 +69,10 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [Doomsday toy model](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/): Illustrative sensitivity model; planetary saturation is NOT ESTABLISHED.
 
 
+## Agent contribution map
+
+- [AGENTS.md](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/AGENTS.md): Concise task-routing, invariants, and validation map for coding agents.
+
 ## Repository improvement loop
 
 - [Repository Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/index.md): Closed-loop self-audit and active frontiers.

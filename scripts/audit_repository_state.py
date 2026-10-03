@@ -203,12 +203,37 @@ def main() -> int:
         "docs/purrtocol-3d/llms.txt",
         "docs/repository-observatory/state.json",
         "IMPROVEMENT_LOOP.md",
+        "AGENTS.md",
+        "docs/purrtocol-3d/AGENTS.md",
+        "docs/purrtocol-variant-foundry/AGENTS.md",
     ]
     missing_surfaces = [p for p in machine_surfaces if not (ROOT / p).exists()]
     check(
         "discovery.machine_surfaces",
         not missing_surfaces,
         "missing=" + repr(missing_surfaces),
+    )
+
+    root_agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    check(
+        "agents.root_is_map_not_manual",
+        len(root_agents.encode("utf-8")) <= 12000,
+        f"{len(root_agents.encode('utf-8'))} bytes",
+    )
+    required_agent_pointers = [
+        "docs/evidence-ledger.md",
+        "docs/recovery-design.md",
+        "docs/purrtocol-design-bible.md",
+        "IMPROVEMENT_LOOP.md",
+        "scripts/audit_repository_state.py",
+    ]
+    missing_agent_pointers = [
+        item for item in required_agent_pointers if item not in root_agents
+    ]
+    check(
+        "agents.root_has_task_maps",
+        not missing_agent_pointers,
+        "missing=" + repr(missing_agent_pointers),
     )
 
     public_roots = [ROOT / "docs", ROOT / "README.md", ROOT / "BRANDING.md"]
@@ -287,6 +312,8 @@ def main() -> int:
             "python_scripts": len(list((ROOT / "scripts").glob("*.py"))),
             "github_workflows": len(list((ROOT / ".github" / "workflows").glob("*.yml"))),
             "improvement_cycles": len(cycle_rows),
+            "agent_instruction_files": len(list(ROOT.rglob("AGENTS.md"))),
+            "root_agents_bytes": len(root_agents.encode("utf-8")),
         },
         "3d": {
             "asset_bytes": len(glb_bytes),
