@@ -1,0 +1,204 @@
+{
+  "contract": "data/http_429_survival_contract.json",
+  "results": [
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-001:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 5,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 6.637587111697337,
+        "local_backoff_s": 2,
+        "next_start_s": 226.93758711169735,
+        "operation_id": "op-read-001",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 120,
+        "standards_used": [
+          "RFC6585-429",
+          "RFC9110-Retry-After"
+        ]
+      },
+      "description": "429 with Retry-After seconds cannot retry before server floor.",
+      "scenario_id": "retry-after-seconds"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-002:attempt:2",
+        "attempt_number": 2,
+        "budget_remaining_after_attempt": 4,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 16.996731190912858,
+        "local_backoff_s": 4,
+        "next_start_s": 337.09673119091286,
+        "operation_id": "op-read-002",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 120,
+        "standards_used": [
+          "RFC6585-429",
+          "RFC9110-Retry-After"
+        ]
+      },
+      "description": "HTTP-date Retry-After is parsed as a lower-bound delay.",
+      "scenario_id": "retry-after-http-date"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-003:attempt:3",
+        "attempt_number": 3,
+        "budget_remaining_after_attempt": 3,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0.9803359662721389,
+        "local_backoff_s": 8,
+        "next_start_s": 310.98033596627215,
+        "operation_id": "op-read-003",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 0,
+        "standards_used": [
+          "RFC6585-429"
+        ]
+      },
+      "description": "Fast 429 without server timing still cannot shorten start-to-start spacing.",
+      "scenario_id": "fast-fail-no-server-delay"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-004:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 5,
+        "draft_ratelimit_floor_s": 30,
+        "herd_jitter_s": 2.0794187830303867,
+        "local_backoff_s": 2,
+        "next_start_s": 432.2794187830304,
+        "operation_id": "op-read-004",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 0,
+        "standards_used": [
+          "RFC6585-429",
+          "draft-ietf-httpapi-ratelimit-headers-11"
+        ]
+      },
+      "description": "Active RateLimit draft may supply a conservative hint only when Retry-After is absent.",
+      "scenario_id": "draft-ratelimit-zero"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-005:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 5,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 16.217513988349232,
+        "local_backoff_s": 2,
+        "next_start_s": 606.4175139883492,
+        "operation_id": "op-read-005",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 90,
+        "standards_used": [
+          "RFC6585-429",
+          "RFC9110-Retry-After"
+        ]
+      },
+      "description": "Stable Retry-After floor takes precedence over draft quota timing.",
+      "scenario_id": "retry-after-dominates-draft"
+    },
+    {
+      "decision": {
+        "action": "REOBSERVE",
+        "attempt_id": "op-write-001:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 5,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0,
+        "local_backoff_s": 0,
+        "next_start_s": null,
+        "operation_id": "op-write-001",
+        "reason": "unknown non-idempotent outcome without explicit idempotency contract",
+        "retry_after_floor_s": 0,
+        "standards_used": [
+          "RFC9110-idempotent-method-semantics"
+        ]
+      },
+      "description": "Unknown POST outcome without provider idempotency contract re-observes instead of re-executing.",
+      "scenario_id": "ambiguous-post"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-write-002:attempt:1",
+        "attempt_number": 1,
+        "budget_remaining_after_attempt": 5,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 1.7089837712198561,
+        "local_backoff_s": 2,
+        "next_start_s": 711.7089837712199,
+        "operation_id": "op-write-002",
+        "reason": "unknown non-idempotent outcome covered by explicit application/provider idempotency contract",
+        "retry_after_floor_s": 0,
+        "standards_used": []
+      },
+      "description": "Unknown POST outcome can enter timed retry only with explicit application/provider idempotency contract.",
+      "scenario_id": "ambiguous-post-explicit-contract"
+    },
+    {
+      "decision": {
+        "action": "STOP_DUPLICATE",
+        "attempt_id": "op-write-003:attempt:2",
+        "attempt_number": 2,
+        "budget_remaining_after_attempt": 4,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0,
+        "local_backoff_s": 0,
+        "next_start_s": null,
+        "operation_id": "op-write-003",
+        "reason": "operation already known applied",
+        "retry_after_floor_s": 0,
+        "standards_used": []
+      },
+      "description": "Known applied operation never schedules a duplicate retry.",
+      "scenario_id": "known-applied"
+    },
+    {
+      "decision": {
+        "action": "STOP_BUDGET",
+        "attempt_id": "op-read-006:attempt:6",
+        "attempt_number": 6,
+        "budget_remaining_after_attempt": 0,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 0,
+        "local_backoff_s": 0,
+        "next_start_s": null,
+        "operation_id": "op-read-006",
+        "reason": "retry budget exhausted",
+        "retry_after_floor_s": 0,
+        "standards_used": []
+      },
+      "description": "Bounded retry budget stops further timed attempts.",
+      "scenario_id": "budget-exhausted"
+    },
+    {
+      "decision": {
+        "action": "WAIT_THEN_RETRY",
+        "attempt_id": "op-read-007:attempt:2",
+        "attempt_number": 2,
+        "budget_remaining_after_attempt": 4,
+        "draft_ratelimit_floor_s": 0,
+        "herd_jitter_s": 1.358161399990037,
+        "local_backoff_s": 4,
+        "next_start_s": 1011.3581613999901,
+        "operation_id": "op-read-007",
+        "reason": "operation state permits a timed retry",
+        "retry_after_floor_s": 0,
+        "standards_used": [
+          "RFC6585-429"
+        ]
+      },
+      "description": "Malformed Retry-After is ignored; local timing and start anchor remain active.",
+      "scenario_id": "malformed-retry-after"
+    }
+  ],
+  "schema": "http-429-survival-reference/v1"
+}
