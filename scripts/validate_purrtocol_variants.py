@@ -96,7 +96,7 @@ def main() -> None:
     assert discovery["current_frontier"]["implemented"] is True
     assert discovery["current_frontier"]["status"] == "IMPLEMENTED_FIRST_LIGHT"
     assert discovery["current_frontier"]["implemented_event_id"] == "PKE-033"
-    assert discovery["current_frontier"]["sha256"] == "fc667ad30bd69fb794a876ec0acbb9e9efdbdd9c3a3d3f056c1769f4579c6467"
+    assert discovery["current_frontier"]["sha256"] == "c3d2a82aaf14af5219f5236fcb22b296bd8b736fd9c2bb639d5450a3f000e3db"
     assert "docs/assets/purrtocol/purrtocol.glb" in by_id["PKV-CANONICAL"]["assets"]
     horizon = discovery["observer_horizon_story"]
     assert horizon["sam"] == "NOT_OBSERVED"
