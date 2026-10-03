@@ -167,6 +167,41 @@ def main() -> None:
         assert d.draft_ratelimit_floor_s == 0.0
         assert d.herd_jitter_s >= 0.0
 
+    reference = json.loads(
+        (ROOT / "data" / "http_429_survival_reference.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert reference["schema"] == "http-429-survival-reference/v1"
+    reference_by_id = {
+        row["scenario_id"]: row["decision"]
+        for row in reference["results"]
+    }
+    assert set(reference_by_id) == set(results)
+    for scenario_id, decision in results.items():
+        expected = reference_by_id[scenario_id]
+        assert decision["action"] == expected["action"], scenario_id
+        assert decision["operation_id"] == expected["operation_id"], scenario_id
+        assert decision["attempt_id"] == expected["attempt_id"], scenario_id
+        for key in (
+            "next_start_s",
+            "retry_after_floor_s",
+            "draft_ratelimit_floor_s",
+            "local_backoff_s",
+            "herd_jitter_s",
+        ):
+            actual_value = decision[key]
+            expected_value = expected[key]
+            if actual_value is None or expected_value is None:
+                assert actual_value is expected_value, (scenario_id, key)
+            else:
+                assert abs(actual_value - expected_value) < 1e-12, (
+                    scenario_id,
+                    key,
+                    actual_value,
+                    expected_value,
+                )
+
     print(
         json.dumps(
             {
