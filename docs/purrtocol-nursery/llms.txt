@@ -1,0 +1,18 @@
+# Purrtocol Genome Nursery
+
+> Deterministic concept-space generator for forkable Purrtocol descendants.
+
+Interpretation:
+- 199,148,544 is the theoretical genotype combination count for genome v1.
+- It is NOT the number of implemented variants.
+- Generated manifests are concepts only until a fork creates a real artifact.
+- Same seed + genome version deterministically selects the same genes.
+
+## Surfaces
+
+- [Nursery Markdown](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/index.md): Algorithm, lifecycle, and evidence boundary.
+- [Interactive Nursery](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/): Browser concept breeder.
+- [Genome JSON](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-genome.json): Canonical gene options.
+- [Python breeder](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/breed_purrtocol.py): Reproducible CLI implementation.
+- [Variant schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant.schema.json): Genome-aware lineage manifest contract.
+- [Variant Foundry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Implementation/fork/indexing path.

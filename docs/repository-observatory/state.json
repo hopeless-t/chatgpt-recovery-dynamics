@@ -22,7 +22,8 @@
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
     "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
     "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only",
-    "agent_entrypoints": "root AGENTS.md plus local 3D/variant maps; size and task-routing invariants audited"
+    "agent_entrypoints": "root AGENTS.md plus local 3D/variant maps; size and task-routing invariants audited",
+    "variant_breeding": "Genome Nursery v1 provides 199,148,544 deterministic theoretical genotypes while the canonical registry still counts only real indexed variants"
   },
   "frontiers": [
     {
@@ -50,8 +51,8 @@
       "id": "VAR-EXT-001",
       "lane": "ecosystem",
       "status": "open",
-      "target": "Make the first external Purrtocol descendant trivial to fork, validate, and index.",
-      "promotion_gate": "lineage manifest + explicit provenance + invariant declaration"
+      "target": "Obtain the first real external Purrtocol descendant using the Nursery or a hand-designed manifest, then index it without conflating concept generation with implementation.",
+      "promotion_gate": "external repository/artifact + lineage manifest + explicit provenance + invariant declaration"
     },
     {
       "id": "CRAWL-001",

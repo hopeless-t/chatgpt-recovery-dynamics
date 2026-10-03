@@ -18,34 +18,72 @@
     "license"
   ],
   "properties": {
-    "schema": {"const": "purrtocol-variant/v1"},
+    "schema": {
+      "const": "purrtocol-variant/v1"
+    },
     "variant_id": {
       "type": "string",
       "pattern": "^PKV-[A-Z0-9][A-Z0-9._-]*$"
     },
-    "name": {"type": "string", "minLength": 1, "maxLength": 120},
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
     "status": {
       "type": "string",
-      "enum": ["canonical", "concept", "implemented", "external"]
+      "enum": [
+        "canonical",
+        "concept",
+        "implemented",
+        "external"
+      ]
     },
     "parent_variant_id": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "pattern": "^PKV-[A-Z0-9][A-Z0-9._-]*$"
     },
     "origin": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository_url", "commit", "submitted_by"],
+      "required": [
+        "repository_url",
+        "commit",
+        "submitted_by"
+      ],
       "properties": {
-        "repository_url": {"type": "string", "format": "uri"},
-        "commit": {"type": ["string", "null"]},
-        "submitted_by": {"type": "string", "minLength": 1},
-        "pull_request_url": {"type": ["string", "null"], "format": "uri"}
+        "repository_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "commit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "submitted_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pull_request_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        }
       }
     },
     "mutations": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "maxItems": 64
     },
     "preserved_invariants": {
@@ -67,15 +105,76 @@
     },
     "evidence_status": {
       "type": "string",
-      "enum": ["story", "concept", "implemented_artifact", "observed_repository_history"]
+      "enum": [
+        "story",
+        "concept",
+        "implemented_artifact",
+        "observed_repository_history"
+      ]
     },
-    "license": {"type": "string", "minLength": 1},
-    "homepage": {"type": ["string", "null"], "format": "uri"},
+    "license": {
+      "type": "string",
+      "minLength": 1
+    },
+    "homepage": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
     "assets": {
       "type": "array",
-      "items": {"type": "string"},
+      "items": {
+        "type": "string"
+      },
       "maxItems": 64
     },
-    "notes": {"type": "string", "maxLength": 4000}
+    "notes": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "seed",
+        "genome_schema",
+        "genome_sha256"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seed": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "genome_schema": {
+          "const": "purrtocol-genome/v1"
+        },
+        "genome_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "genome": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minProperties": 1,
+      "maxProperties": 32
+    }
   }
 }

@@ -1,0 +1,134 @@
+{
+  "schema": "purrtocol-genome/v1",
+  "version": 1,
+  "selection_algorithm": "sha256(seed + ':' + gene_name), first 64 bits big-endian modulo option_count",
+  "variant_id_algorithm": "PKV-SEED- + first 12 uppercase hex chars of sha256(seed)",
+  "invariant_policy": "Generated nursery output preserves all canonical invariants by default. A fork may explicitly change them later under the variant protocol.",
+  "genes": {
+    "medium": [
+      "voxel_glb",
+      "svg_operator",
+      "terminal_ascii",
+      "paper_cutout",
+      "web_component",
+      "pixel_sprite"
+    ],
+    "silhouette": [
+      "recovery_cat",
+      "packet_fox",
+      "queue_raccoon",
+      "router_otter",
+      "observatory_owl",
+      "retry_tanuki",
+      "protocol_axolotl"
+    ],
+    "habitat": [
+      "recovery_lab",
+      "purrtocol_university",
+      "evidence_court",
+      "queueing_restaurant",
+      "incident_board",
+      "observatory",
+      "lunar_relay",
+      "submarine_queue"
+    ],
+    "blocked_cue": [
+      "left_ear_drop",
+      "red_stop_sign",
+      "frozen_packet",
+      "queue_gate_closed",
+      "tail_static",
+      "router_alarm"
+    ],
+    "recovering_cue": [
+      "amber_goggles",
+      "cautious_step",
+      "blinking_ring",
+      "half_open_gate",
+      "warming_tail",
+      "single_probe_orbit"
+    ],
+    "healthy_cue": [
+      "green_tail_tip",
+      "stable_snapshot",
+      "open_gate",
+      "steady_orbit",
+      "router_green",
+      "quiet_paws"
+    ],
+    "observation_prop": [
+      "tiny_cyan_packet",
+      "probe_lantern",
+      "mini_trace_scope",
+      "one_byte_scroll",
+      "cyan_ping_orb",
+      "tiny_router_map",
+      "observation_teacup"
+    ],
+    "temperament": [
+      "patient_operator",
+      "skeptical_archivist",
+      "overexcited_retrier",
+      "quiet_calibrator",
+      "courtroom_stickler",
+      "queue_chef",
+      "museum_curator"
+    ],
+    "narrative_job": [
+      "recovery_engineer",
+      "evidence_bailiff",
+      "queue_waiter",
+      "incident_detective",
+      "agent_instructor",
+      "museum_guide",
+      "transport_mechanic",
+      "crawler_librarian"
+    ],
+    "mutation_class": [
+      "visual_strain",
+      "protocol_strain",
+      "education_strain",
+      "localization_strain",
+      "tool_strain",
+      "cross_project_strain",
+      "chaos_negative_example"
+    ]
+  },
+  "name_prefixes": [
+    "Packet",
+    "Amber",
+    "Cyan",
+    "Queue",
+    "Retry",
+    "Trace",
+    "Stable",
+    "Observer",
+    "Router",
+    "Evidence",
+    "Purr",
+    "Mochi"
+  ],
+  "name_suffixes": [
+    "Nya",
+    "Mew",
+    "Paw",
+    "Byte",
+    "Ping",
+    "Tail",
+    "Scope",
+    "Gate",
+    "Loop",
+    "Cat",
+    "Fox",
+    "Tanuki"
+  ],
+  "canonical_invariants": [
+    "recover_dont_amplify",
+    "visualization_not_evidence",
+    "unknown_not_retry_permission",
+    "observer_side_not_omniscient_backend",
+    "concept_not_implemented",
+    "first_success_not_necessarily_healthy",
+    "observe_before_materialize"
+  ]
+}

@@ -18,6 +18,7 @@ Purrtocol is an anthropomorphic error model for recovery systems.
 - [Purrtocol Expansion Dynamics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-expansion/PAPER.md)
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md)
 - [Variant Foundry](./purrtocol-variant-foundry/index.md)
+- [Genome Nursery](./purrtocol-nursery/index.md) — deterministic concept breeding; theoretical genotype space is not artifact count
 - [Machine discovery manifest](./purrtocol.json)
 - [3D First Light](./purrtocol-3d/index.md)
 - [3D contract](./purrtocol-3d/README.md)

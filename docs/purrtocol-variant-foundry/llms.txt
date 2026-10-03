@@ -11,6 +11,8 @@ Interpretation:
 
 ## Variant workflow
 
+- [Genome Nursery](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/index.md): Deterministically generate a concept seed before implementation.
+
 - [Foundry Markdown](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Human/agent-readable fork instructions.
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md): Canonical lineage and invariant rules.
 - [Variant JSON Schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant.schema.json): Machine-readable `purrtocol-variant/v1` schema.

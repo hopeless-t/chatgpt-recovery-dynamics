@@ -97,3 +97,35 @@ The repository is MIT licensed. Keep upstream attribution where required by the 
 A variant can be weird.
 
 Its provenance should not be.
+
+
+## Deterministic concept breeding
+
+The [Purrtocol Genome Nursery](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/)
+can generate a deterministic **concept** from a seed.
+
+CLI equivalent:
+
+```bash
+python scripts/breed_purrtocol.py \
+  --seed your-seed \
+  --origin-repository https://github.com/YOU/YOUR-FORK \
+  --submitted-by your-handle
+```
+
+Genome v1 contains 199,148,544 theoretical genotype combinations.
+
+That is a **concept-space cardinality**, not an implemented population count.
+
+Nursery output remains:
+
+```text
+status = concept
+evidence_status = concept
+```
+
+until somebody implements an artifact and binds real provenance.
+
+The seed/generator/genome fields are optional provenance extensions in
+`purrtocol-variant/v1`. A hand-designed variant does not need to use the
+breeder.

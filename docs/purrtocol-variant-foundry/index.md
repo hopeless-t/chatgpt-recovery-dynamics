@@ -2,6 +2,10 @@
 
 > Fork the cat. Keep the lineage. Preserve the evidence boundary.
 
+## Genome Nursery
+
+Want a starting mutation instead of a blank manifest? Use the [Purrtocol Genome Nursery](../purrtocol-nursery/index.md). Same seed + genome version gives the same concept genotype. Generated != implemented.
+
 ## What this is
 
 A public entry point for creating and indexing Purrtocol derivatives.

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import struct
 from collections import defaultdict
@@ -87,6 +88,21 @@ def main() -> int:
     variants = read_jsonl(ROOT / "data" / "purrtocol_variants.jsonl")
     improvement = read_jsonl(ROOT / "data" / "improvement_events.jsonl")
     state = read_json(ROOT / "docs" / "repository-observatory" / "state.json")
+    genome_data = read_json(ROOT / "data" / "purrtocol_genome.json")
+    genome_pages = read_json(ROOT / "docs" / "purrtocol-genome.json")
+    check(
+        "variants.genome_mirror",
+        genome_data == genome_pages,
+        "data genome and Pages genome must be identical",
+    )
+    theoretical_genotypes = math.prod(
+        len(options) for options in genome_data["genes"].values()
+    )
+    check(
+        "variants.genotype_space_semantics",
+        theoretical_genotypes == 199_148_544,
+        f"{theoretical_genotypes} theoretical concept genotypes; not artifact count",
+    )
     improvement_schema = read_json(ROOT / "data" / "improvement_event_schema.json")
     published_improvement_schema = read_json(
         ROOT / "docs" / "repository-observatory" / "improvement-event.schema.json"
@@ -200,6 +216,10 @@ def main() -> int:
         "docs/purrtocol.json",
         "docs/purrtocol-variant.schema.json",
         "docs/purrtocol-variant-foundry/llms.txt",
+        "docs/purrtocol-nursery/index.md",
+        "docs/purrtocol-nursery/llms.txt",
+        "docs/purrtocol-genome.json",
+        "scripts/breed_purrtocol.py",
         "docs/purrtocol-3d/llms.txt",
         "docs/repository-observatory/state.json",
         "IMPROVEMENT_LOOP.md",
@@ -305,6 +325,7 @@ def main() -> int:
             "concept_origins": len(concepts),
             "promotions": len(promotions),
             "registered_variants": len(variants),
+            "theoretical_genotype_combinations": theoretical_genotypes,
         },
         "repository": {
             "html_index_pages": len(list(docs_dir.rglob("index.html"))),
@@ -358,6 +379,7 @@ def main() -> int:
         f"- implemented Purrtocol events: {metrics['purrtocol']['implemented_events']}",
         f"- concept promotions: {metrics['purrtocol']['promotions']}/{metrics['purrtocol']['concept_origins']}",
         f"- registered variants: {metrics['purrtocol']['registered_variants']}",
+        f"- theoretical genome combinations: {metrics['purrtocol']['theoretical_genotype_combinations']} (concept space, not artifacts)",
         f"- HTML index pages: {metrics['repository']['html_index_pages']}",
         f"- improvement cycles: {metrics['repository']['improvement_cycles']}",
         f"- 3D GLB: {metrics['3d']['asset_bytes']} bytes / {metrics['3d']['nodes']} nodes / {metrics['3d']['animations']} animations",

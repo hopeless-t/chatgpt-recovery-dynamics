@@ -33,5 +33,10 @@
     "UNKNOWN != retry permission.",
     "Concept != implemented artifact."
   ],
-  "next_frontier": "expressive 3D rig, organic silhouette, editable authoring source, and state-preserving variant rigs"
+  "next_frontier": "expressive 3D rig, organic silhouette, editable authoring source, and state-preserving variant rigs",
+  "genome": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-genome.json",
+  "nursery": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/",
+  "breeder": "https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/breed_purrtocol.py",
+  "genome_v1_theoretical_combinations": 199148544,
+  "genome_count_semantics": "theoretical concept genotype combinations; NOT implemented variant count"
 }
