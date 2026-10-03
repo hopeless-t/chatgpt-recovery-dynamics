@@ -772,7 +772,29 @@ AR(3)                  -311.24
 AR(4)                  -306.53
 ~~~
 
-The best tested residual model is therefore AR(1).
+Among AR orders 0–4, the best tested residual model is AR(1).
+
+A later competition against a qualitatively different two-state Gaussian HMM
+changes the interpretation without overturning the one-step-memory result:
+
+~~~text
+same-sample BIC:
+  HMM-2  ~= -15.99
+  AR(1)  ~= -10.10
+
+held-out epoch prediction:
+  epoch 1 -> 2: AR(1) mean NLL ~=  0.0191
+                HMM-2 mean NLL ~=  0.3678
+
+  epoch 2 -> 1: AR(1) mean NLL ~= -0.2203
+                HMM-2 mean NLL ~= -0.0337
+~~~
+
+Thus the HMM is a stronger pooled descriptive fit, but AR(1) is the stronger
+tested portable predictive representation across the two active epochs.
+
+The correct update is **not** “the system has two hidden modes.” The HMM labels
+remain unnamed statistical states.
 
 Directly analyzing post-completion wait:
 
