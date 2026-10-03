@@ -10,6 +10,14 @@
 - [Provider-friendly congestion design](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/server-friendly-congestion-control.md): retry amplification, bounded admission, and graceful degradation.
 - [Public reproduction](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/analyze_public_data.py): standard-library reconstruction from sanitized derivatives.
 
+## 429 Survival Kit
+
+- [Interactive rescue console](./429-survival-kit/)
+- [Technical guide](./429-survival-kit/index.md)
+- [Machine contract](./429-survival-kit/contract.json)
+
+Core rule: **Retry-After is a floor; jitter must not pull a client earlier.**
+
 ## Purrtocol
 
 Purrtocol is an anthropomorphic error model for recovery systems.
