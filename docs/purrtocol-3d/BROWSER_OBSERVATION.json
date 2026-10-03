@@ -1,0 +1,43 @@
+{
+  "schema": "purrtocol-3d-browser-observation/v1",
+  "observed_head_sha": "c152e880c8ee7cc7a8a516fef59724320524e4c4",
+  "workflow_run_id": 37147123715,
+  "workflow_name": "Observe Purrtocol 3D Browser",
+  "observations": {
+    "live_render": {
+      "job_id": 111273270340,
+      "conclusion": "success",
+      "dom_marker": "data-purrtocol3d=\"loaded\"",
+      "status_text": "GLB loaded · 6 animations · interactive 3D active",
+      "screenshot_artifact": "purrtocol-3d-live-browser",
+      "screenshot_observed": true
+    },
+    "forced_runtime_failure": {
+      "job_id": 111273270406,
+      "conclusion": "success",
+      "dom_marker": "data-viewer-runtime=\"fallback\"",
+      "status_text": "Interactive 3D did not become ready in 8s · poster fallback remains visible",
+      "screenshot_artifact": "purrtocol-3d-fallback-browser",
+      "screenshot_observed": true
+    }
+  },
+  "geometry_biopsy": {
+    "glb_bytes": 7672,
+    "triangles": 12,
+    "outward_triangles": 12,
+    "geometric_normal_agreement": 12,
+    "world_bounds_m": {
+      "x": 2.02,
+      "y": 1.9107240863916137,
+      "z": 0.93
+    },
+    "declared_camera_radius_m": 4.2,
+    "conclusion": "canonical GLB geometry is non-degenerate and front-face visible"
+  },
+  "interpretation": {
+    "live_browser_result": "INTERACTIVE_3D_OBSERVED",
+    "fallback_result": "DARK_BOX_FAILURE_MODE_MITIGATED",
+    "production_device_claim": "NOT_ESTABLISHED",
+    "note": "The browser observation is from GitHub Actions Chrome/SwiftShader. Device-specific behavior, including a ChatGPT iOS in-app browser, must still be observed separately."
+  }
+}

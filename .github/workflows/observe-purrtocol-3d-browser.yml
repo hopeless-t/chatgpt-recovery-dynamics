@@ -1,0 +1,101 @@
+name: Observe Purrtocol 3D Browser
+
+on:
+  push:
+    paths:
+      - "docs/purrtocol-3d/**"
+      - "docs/assets/purrtocol/**"
+      - "scripts/validate_purrtocol_3d.py"
+      - ".github/workflows/observe-purrtocol-3d-browser.yml"
+  pull_request:
+    paths:
+      - "docs/purrtocol-3d/**"
+      - "docs/assets/purrtocol/**"
+      - "scripts/validate_purrtocol_3d.py"
+      - ".github/workflows/observe-purrtocol-3d-browser.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fallback-visible:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Start local Pages server
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory docs >/tmp/purrtocol-http.log 2>&1 &
+          echo $! > /tmp/purrtocol-http.pid
+          sleep 1
+
+      - name: Verify poster survives viewer CDN failure
+        run: |
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME"
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --disable-gpu             --host-resolver-rules="MAP ajax.googleapis.com 127.0.0.1, MAP cdnjs.cloudflare.com 127.0.0.1"             --virtual-time-budget=10000             --dump-dom             http://127.0.0.1:8765/purrtocol-3d/             > /tmp/purrtocol-3d-fallback-dom.html
+
+          grep -q 'id="pakenyaPoster"' /tmp/purrtocol-3d-fallback-dom.html
+          grep -q 'purrtocol-poster.svg' /tmp/purrtocol-3d-fallback-dom.html
+          grep -q 'poster fallback remains visible' /tmp/purrtocol-3d-fallback-dom.html
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --disable-gpu             --host-resolver-rules="MAP ajax.googleapis.com 127.0.0.1, MAP cdnjs.cloudflare.com 127.0.0.1"             --virtual-time-budget=10000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-fallback.png             http://127.0.0.1:8765/purrtocol-3d/
+
+          test -s /tmp/purrtocol-3d-fallback.png
+          echo "Purrtocol 3D fallback visibility: PASS"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-3d-fallback-browser
+          path: |
+            /tmp/purrtocol-3d-fallback-dom.html
+            /tmp/purrtocol-3d-fallback.png
+            /tmp/purrtocol-http.log
+
+  live-render-observation:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Start local Pages server
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory docs >/tmp/purrtocol-http-live.log 2>&1 &
+          echo $! > /tmp/purrtocol-http-live.pid
+          sleep 1
+
+      - name: Observe real model-viewer load in Chrome
+        run: |
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME"
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=15000             --dump-dom             http://127.0.0.1:8765/purrtocol-3d/             > /tmp/purrtocol-3d-live-dom.html
+
+          if grep -q 'data-purrtocol3d="loaded"' /tmp/purrtocol-3d-live-dom.html; then
+            echo "LIVE_RENDER_STATUS=GLB_LOADED"
+          else
+            echo "LIVE_RENDER_STATUS=NOT_LOADED"
+            grep -o 'Runtime diagnostics:[^<]*\|3D load error:[^<]*\|Interactive 3D did not become ready[^<]*'               /tmp/purrtocol-3d-live-dom.html || true
+            exit 1
+          fi
+
+          grep -q 'interactive 3D active' /tmp/purrtocol-3d-live-dom.html
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=15000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-live.png             http://127.0.0.1:8765/purrtocol-3d/
+
+          test -s /tmp/purrtocol-3d-live.png
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: purrtocol-3d-live-browser
+          path: |
+            /tmp/purrtocol-3d-live-dom.html
+            /tmp/purrtocol-3d-live.png
+            /tmp/purrtocol-http-live.log

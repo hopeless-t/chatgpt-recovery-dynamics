@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" role="img" aria-labelledby="title desc">
+<title id="title">3D Purrtocol First Light fallback poster</title>
+<desc id="desc">Isometric voxel-style Purrtocol recovery cat derived from the First Light semantic model.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1e31"/><stop offset="1" stop-color="#07111f"/></linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".45"/></filter>
+</defs>
+<rect width="900" height="760" rx="34" fill="url(#bg)"/>
+<ellipse cx="452" cy="645" rx="260" ry="42" fill="#02070c" opacity=".62"/>
+<g filter="url(#shadow)">
+  <!-- body -->
+  <polygon points="319,334 535,298 634,370 418,410" fill="#4cdaeb"/>
+  <polygon points="418,410 634,370 634,531 418,574" fill="#2da9bc"/>
+  <polygon points="319,334 418,410 418,574 319,493" fill="#277f94"/>
+  <!-- head -->
+  <polygon points="330,187 525,157 611,215 416,251" fill="#63e5f1"/>
+  <polygon points="416,251 611,215 611,349 416,386" fill="#38b4c7"/>
+  <polygon points="330,187 416,251 416,386 330,316" fill="#2a879d"/>
+  <!-- ears -->
+  <polygon points="354,183 385,109 422,175" fill="#ef5f6c"/>
+  <polygon points="516,159 548,85 583,153" fill="#4cd384"/>
+  <!-- goggles -->
+  <rect x="391" y="264" width="70" height="34" rx="12" fill="#f6bb44" transform="rotate(-7 391 264)"/>
+  <rect x="500" y="245" width="70" height="34" rx="12" fill="#f6bb44" transform="rotate(-7 500 245)"/>
+  <path d="M458 273 L503 264" stroke="#f6bb44" stroke-width="14" stroke-linecap="round"/>
+  <!-- eyes -->
+  <circle cx="426" cy="279" r="8" fill="#07111f"/><circle cx="533" cy="260" r="8" fill="#07111f"/>
+  <!-- mouth -->
+  <path d="M466 326 Q486 338 506 320" fill="none" stroke="#07111f" stroke-width="8" stroke-linecap="round"/>
+  <!-- paws -->
+  <g>
+    <polygon points="287,526 356,514 386,540 316,555" fill="#4cdaeb"/>
+    <polygon points="316,555 386,540 386,614 316,629" fill="#2da9bc"/>
+    <polygon points="481,492 548,480 580,503 511,517" fill="#4cdaeb"/>
+    <polygon points="511,517 580,503 580,578 511,592" fill="#2da9bc"/>
+    <polygon points="371,548 438,536 469,560 401,574" fill="#4cd384"/>
+    <polygon points="401,574 469,560 469,632 401,646" fill="#38a865"/>
+    <polygon points="566,507 633,495 662,518 595,532" fill="#4cd384"/>
+    <polygon points="595,532 662,518 662,589 595,603" fill="#38a865"/>
+  </g>
+  <!-- tail -->
+  <path d="M622 423 C735 386 768 452 717 503 C678 540 721 574 785 548" fill="none" stroke="#4cd384" stroke-width="35" stroke-linecap="round"/>
+  <!-- tiny packet -->
+  <g filter="url(#glow)">
+    <polygon points="195,373 243,365 268,384 220,393" fill="#7af2fb"/>
+    <polygon points="220,393 268,384 268,429 220,438" fill="#4cdaeb"/>
+    <path d="M178 405 H127" stroke="#4cdaeb" stroke-width="8" stroke-linecap="round" stroke-dasharray="10 12"/>
+  </g>
+  <!-- snapshot -->
+  <g>
+    <polygon points="659,326 755,308 806,344 710,363" fill="#f3f8ff"/>
+    <polygon points="710,363 806,344 806,418 710,438" fill="#cbd8e8"/>
+    <polygon points="659,326 710,363 710,438 659,400" fill="#aebed1"/>
+  </g>
+  <!-- transport lamp -->
+  <circle cx="451" cy="461" r="19" fill="#658dff" filter="url(#glow)"/>
+</g>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <text x="42" y="54" fill="#edf5ff" font-size="25" font-weight="700">3D Purrtocol · First Light</text>
+  <text x="42" y="86" fill="#95aac1" font-size="17">poster fallback · interactive GLB loads above this surface</text>
+  <text x="42" y="714" fill="#4cdaeb" font-size="16">Observe cyan · B red · E amber · H green · Visualization ≠ Evidence</text>
+</g>
+</svg>
