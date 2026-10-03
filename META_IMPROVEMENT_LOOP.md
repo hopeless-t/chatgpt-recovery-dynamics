@@ -79,15 +79,103 @@ Allowed tuning includes:
 - lower observer duplication;
 - better frontier scheduling.
 
-## First question
+## First observed checkpoint
 
-The first meta-loop run intentionally freezes no conclusion.
+The first Meta Improvement Loop run observed four completed RIL cycles:
 
-It asks:
+```text
+completed cycles                         4
+median total cycle duration             631.5 s
+median observation -> first change      488.0 s
+median last change -> verification       41.5 s
+median verification -> promotion         32.5 s
+verified-before-promotion ratio           1.0
+cycles with multiple changes              0.25
+GitHub workflows                            11
+observatory Python footprint            29,332 bytes
+```
 
-> **Across the recorded RIL cycles, which stage currently dominates wall-clock friction?**
+Two tuning signals fired:
 
-Only after observing the report should the repository choose its first loop-level tuning.
+```text
+diagnosis_dominates
+rework_signal
+```
+
+The important asymmetry is:
+
+```text
+488 s diagnosis/localization
+vs
+74 s median downstream verification+promotion
+```
+
+So the first tuning is **not** “make CI weaker/faster.”
+
+It is:
+
+> **make the first useful diagnosis arrive closer to the changed source.**
+
+## First tuning — Critic Router v1
+
+The repository now has:
+
+- `data/preflight_routes.json`
+- `scripts/preflight_router.py`
+- `docs/repository-observatory/critic-router.md`
+
+Changed paths are routed to the cheapest relevant local diagnostic before full CI.
+
+Examples:
+
+```text
+GLB change
+  -> validate_purrtocol_3d.py
+  -> full 3D promotion gate still required
+
+429 scheduler change
+  -> validate_http_429_survival.py
+  -> full 429 + observatory + public gates still required
+
+meta-loop change
+  -> analyze_improvement_loop.py
+  -> full Meta Improvement Loop gate still required
+```
+
+Repository Observatory is always included.
+
+### Evaluation gate
+
+Critic Router v1 is **not yet declared successful** merely because it exists.
+
+After at least three new RIL cycles, compare the post-tuning
+observation-to-first-change median with the frozen baseline:
+
+```text
+baseline = 488.0 s
+```
+
+Success additionally requires:
+
+- verification-before-promotion remains 1.0;
+- no critical guardrail is weakened;
+- observer footprint remains under soft design warnings.
+
+One fast cycle is not evidence that the loop improved.
+
+## Bounded recursion
+
+Automatic control depth is fixed at two levels:
+
+```text
+1. Repository Improvement Loop
+2. Meta Improvement Loop
+```
+
+The meta loop observes its own footprint instead of automatically creating a
+third controller.
+
+No automatic turtles all the way down.
 
 ## Anti-Goodhart law
 
