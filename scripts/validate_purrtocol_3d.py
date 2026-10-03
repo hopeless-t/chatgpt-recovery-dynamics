@@ -84,7 +84,10 @@ def main() -> None:
     expected = contract["first_light"]
     data = asset.read_bytes()
     assert len(data) == expected["asset_bytes"]
-    assert hashlib.sha256(data).hexdigest() == expected["sha256"]
+    actual_sha256 = hashlib.sha256(data).hexdigest()
+    assert actual_sha256 == expected["sha256"], (
+        f"GLB sha256 mismatch: actual={actual_sha256} expected={expected['sha256']}"
+    )
 
     gltf = parse_glb_json(asset)
     assert gltf.get("asset", {}).get("version") == "2.0"
