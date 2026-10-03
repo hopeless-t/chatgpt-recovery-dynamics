@@ -241,6 +241,33 @@ def main() -> None:
     assert "3D Purrtocol" in poster_text
     assert "Visualization ≠ Evidence" in poster_text
 
+    browser_observation = json.loads(
+        (
+            ROOT / "docs" / "purrtocol-3d" / "BROWSER_OBSERVATION.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert browser_observation["schema"] == "purrtocol-3d-browser-observation/v1"
+    assert (
+        browser_observation["observations"]["live_render"]["conclusion"]
+        == "success"
+    )
+    assert (
+        browser_observation["observations"]["forced_runtime_failure"]["conclusion"]
+        == "success"
+    )
+    assert (
+        browser_observation["interpretation"]["live_browser_result"]
+        == "INTERACTIVE_3D_OBSERVED"
+    )
+    assert (
+        browser_observation["interpretation"]["fallback_result"]
+        == "DARK_BOX_FAILURE_MODE_MITIGATED"
+    )
+    assert (
+        browser_observation["interpretation"]["production_device_claim"]
+        == "NOT_ESTABLISHED"
+    )
+
     html = preview.read_text(encoding="utf-8")
     assert 'src="../assets/purrtocol/purrtocol.glb"' in html
     assert "ajax.googleapis.com/ajax/libs/model-viewer/4.3.1" in html
@@ -267,6 +294,9 @@ def main() -> None:
                 "render_geometry": render_geometry,
                 "poster_fallback": "docs/assets/purrtocol/purrtocol-poster.svg",
                 "viewer_runtime_sources": 2,
+                "browser_observation_run": browser_observation["workflow_run_id"],
+                "interactive_3d_observed": True,
+                "dark_box_fallback_observed": True,
             },
             ensure_ascii=False,
             indent=2,
