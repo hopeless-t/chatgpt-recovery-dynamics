@@ -23,9 +23,10 @@
     "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
     "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only",
     "agent_entrypoints": "root AGENTS.md plus local 3D/variant maps; size and task-routing invariants audited",
-    "variant_breeding": "Genome Nursery v1 provides 199,148,544 deterministic theoretical genotypes while the canonical registry still counts only real indexed variants",
+    "variant_breeding": "Genome Nursery v1: 199,148,544 theoretical genotypes; fixed 4,096-seed entropy probe produced 4,096 unique genotypes, zero collisions, and minimum normalized marginal entropy 0.999326; real registry count remains separate",
     "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified",
-    "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation"
+    "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
+    "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED"
   },
   "frontiers": [
     {
@@ -76,6 +77,13 @@
       "status": "baseline_implemented",
       "target": "Port the 429 Survival Plane into independent client libraries/services and compare retry amplification without production load testing.",
       "promotion_gate": "independent local/mock implementation reproduces floor/budget/authorization invariants and reports provider-specific differences separately"
+    },
+    {
+      "id": "ENTROPY-001",
+      "lane": "ecosystem",
+      "status": "fixed_seed_baseline_implemented",
+      "target": "Preserve breeder diversity under future genome/generator changes and separately measure real external descendant diversity when external variants exist.",
+      "promotion_gate": "fixed-seed entropy/collision regression stays healthy; external diversity claims require actual external lineage observations"
     }
   ],
   "cross_repo_imports": [

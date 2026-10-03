@@ -1,0 +1,205 @@
+{
+  "classification": "deterministic_breeder_quality_diagnostic",
+  "fixed_seed_breeder_probe": {
+    "collision_pairs": 0,
+    "genotype_collisions": 0,
+    "idealized_uniform_expected_collision_pairs": 0.04211208292840946,
+    "note": "Sum of marginal entropies is not measured joint ecosystem entropy.",
+    "sum_of_marginal_gene_entropies_bits": 27.557662964052806,
+    "unique_genotypes": 4096,
+    "unique_variant_ids": 4096
+  },
+  "genes": {
+    "blocked_cue": {
+      "all_options_observed": true,
+      "counts": {
+        "frozen_packet": 687,
+        "left_ear_drop": 702,
+        "queue_gate_closed": 651,
+        "red_stop_sign": 714,
+        "router_alarm": 657,
+        "tail_static": 685
+      },
+      "entropy_bits": 2.5841763474519,
+      "max_abs_relative_deviation_from_uniform": 0.046386718749999944,
+      "max_entropy_bits": 2.584962500721156,
+      "normalized_entropy": 0.9996958744008717,
+      "option_count": 6
+    },
+    "habitat": {
+      "all_options_observed": true,
+      "counts": {
+        "evidence_court": 535,
+        "incident_board": 510,
+        "lunar_relay": 473,
+        "observatory": 505,
+        "purrtocol_university": 519,
+        "queueing_restaurant": 476,
+        "recovery_lab": 534,
+        "submarine_queue": 544
+      },
+      "entropy_bits": 2.998282776099039,
+      "max_abs_relative_deviation_from_uniform": 0.076171875,
+      "max_entropy_bits": 3,
+      "normalized_entropy": 0.999427592033013,
+      "option_count": 8
+    },
+    "healthy_cue": {
+      "all_options_observed": true,
+      "counts": {
+        "green_tail_tip": 666,
+        "open_gate": 664,
+        "quiet_paws": 653,
+        "router_green": 722,
+        "stable_snapshot": 654,
+        "steady_orbit": 737
+      },
+      "entropy_bits": 2.583220300286868,
+      "max_abs_relative_deviation_from_uniform": 0.07958984375000006,
+      "max_entropy_bits": 2.584962500721156,
+      "normalized_entropy": 0.9993260248712305,
+      "option_count": 6
+    },
+    "medium": {
+      "all_options_observed": true,
+      "counts": {
+        "paper_cutout": 708,
+        "pixel_sprite": 677,
+        "svg_operator": 696,
+        "terminal_ascii": 660,
+        "voxel_glb": 697,
+        "web_component": 658
+      },
+      "entropy_bits": 2.5843995227978347,
+      "max_abs_relative_deviation_from_uniform": 0.037109375000000056,
+      "max_entropy_bits": 2.584962500721156,
+      "normalized_entropy": 0.9997822104099521,
+      "option_count": 6
+    },
+    "mutation_class": {
+      "all_options_observed": true,
+      "counts": {
+        "chaos_negative_example": 569,
+        "cross_project_strain": 619,
+        "education_strain": 601,
+        "localization_strain": 571,
+        "protocol_strain": 585,
+        "tool_strain": 576,
+        "visual_strain": 575
+      },
+      "entropy_bits": 2.806745089835181,
+      "max_abs_relative_deviation_from_uniform": 0.057861328125000056,
+      "max_entropy_bits": 2.807354922057604,
+      "normalized_entropy": 0.9997827733794428,
+      "option_count": 7
+    },
+    "narrative_job": {
+      "all_options_observed": true,
+      "counts": {
+        "agent_instructor": 483,
+        "crawler_librarian": 529,
+        "evidence_bailiff": 531,
+        "incident_detective": 508,
+        "museum_guide": 527,
+        "queue_waiter": 513,
+        "recovery_engineer": 506,
+        "transport_mechanic": 499
+      },
+      "entropy_bits": 2.9993305476755103,
+      "max_abs_relative_deviation_from_uniform": 0.056640625,
+      "max_entropy_bits": 3,
+      "normalized_entropy": 0.9997768492251701,
+      "option_count": 8
+    },
+    "observation_prop": {
+      "all_options_observed": true,
+      "counts": {
+        "cyan_ping_orb": 567,
+        "mini_trace_scope": 581,
+        "observation_teacup": 618,
+        "one_byte_scroll": 622,
+        "probe_lantern": 563,
+        "tiny_cyan_packet": 594,
+        "tiny_router_map": 551
+      },
+      "entropy_bits": 2.805999261690443,
+      "max_abs_relative_deviation_from_uniform": 0.06298828125000006,
+      "max_entropy_bits": 2.807354922057604,
+      "normalized_entropy": 0.9995171040339397,
+      "option_count": 7
+    },
+    "recovering_cue": {
+      "all_options_observed": true,
+      "counts": {
+        "amber_goggles": 707,
+        "blinking_ring": 652,
+        "cautious_step": 675,
+        "half_open_gate": 723,
+        "single_probe_orbit": 632,
+        "warming_tail": 707
+      },
+      "entropy_bits": 2.583308116215571,
+      "max_abs_relative_deviation_from_uniform": 0.07421874999999994,
+      "max_entropy_bits": 2.584962500721156,
+      "normalized_entropy": 0.9993599967097692,
+      "option_count": 6
+    },
+    "silhouette": {
+      "all_options_observed": true,
+      "counts": {
+        "observatory_owl": 569,
+        "packet_fox": 550,
+        "protocol_axolotl": 554,
+        "queue_raccoon": 605,
+        "recovery_cat": 608,
+        "retry_tanuki": 627,
+        "router_otter": 583
+      },
+      "entropy_bits": 2.8058100252771583,
+      "max_abs_relative_deviation_from_uniform": 0.07153320312500006,
+      "max_entropy_bits": 2.807354922057604,
+      "normalized_entropy": 0.9994496966634652,
+      "option_count": 7
+    },
+    "temperament": {
+      "all_options_observed": true,
+      "counts": {
+        "courtroom_stickler": 595,
+        "museum_curator": 591,
+        "overexcited_retrier": 567,
+        "patient_operator": 550,
+        "queue_chef": 584,
+        "quiet_calibrator": 585,
+        "skeptical_archivist": 624
+      },
+      "entropy_bits": 2.8063909767233017,
+      "max_abs_relative_deviation_from_uniform": 0.06640625000000006,
+      "max_entropy_bits": 2.807354922057604,
+      "normalized_entropy": 0.9996566357439423,
+      "option_count": 7
+    }
+  },
+  "interpretation_rules": [
+    "199,148,544 theoretical genotypes do not mean 199,148,544 implemented cats.",
+    "This fixed-seed cohort measures deterministic breeder diversity, not external adoption.",
+    "Per-gene Shannon entropy is a marginal implementation diagnostic.",
+    "A collision is not automatically a bug; sustained collapse or missing options would be a regression signal.",
+    "The registry remains the authority for real indexed variants."
+  ],
+  "registered_lineage": {
+    "note": "Registry count is real indexed lineage; theoretical space is not population.",
+    "occupancy_fraction_of_theoretical_space": 5.02137740961842e-9,
+    "occupancy_percent_of_theoretical_space": 5.02137740961842e-7,
+    "registry_variants": 1
+  },
+  "schema": "purrtocol-entropy-report/v1",
+  "seed_cohort": {
+    "prefix": "entropy-probe-",
+    "samples": 4096
+  },
+  "theoretical_space": {
+    "gene_count": 10,
+    "genotype_combinations": 199148544,
+    "idealized_uniform_max_entropy_bits": 27.569269691115043
+  }
+}
