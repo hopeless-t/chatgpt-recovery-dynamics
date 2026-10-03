@@ -4,15 +4,21 @@ on:
   push:
     paths:
       - "data/pakenya_events.jsonl"
+      - "data/pakenya_concepts.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
+      - "docs/purrtocol-doomsday/index.html"
+      - "docs/purrtocol-expansion/concepts/index.html"
   pull_request:
     paths:
       - "data/pakenya_events.jsonl"
+      - "data/pakenya_concepts.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
+      - "docs/purrtocol-doomsday/index.html"
+      - "docs/purrtocol-expansion/concepts/index.html"
 
 jobs:
   validate:
@@ -23,3 +29,16 @@ jobs:
         with:
           python-version: "3.13"
       - run: python scripts/validate_pakenya_events.py
+      - name: Validate Purrtocol doomsday evidence boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("docs/purrtocol-doomsday/index.html").read_text(encoding="utf-8")
+          assert "TOY MODEL" in p.upper()
+          assert "NOT ESTABLISHED" in p
+          assert "MODEL FALSIFIED BY CONTINUED PLANETARY EXISTENCE" in p
+          c=Path("docs/purrtocol-expansion/concepts/index.html").read_text(encoding="utf-8")
+          assert "Concept ≠ implemented artifact" in c
+          assert c.count("CONCEPT") >= 7
+          print("Purrtocol doomsday/concept surfaces: PASS")
+          PY

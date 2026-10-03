@@ -1,0 +1,7 @@
+{"event_id":"PKE-100","timestamp_utc":null,"title":"Purrtocol University","parent_event_id":"PKE-010","domain":"education","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-101","timestamp_utc":null,"title":"Evidence Court","parent_event_id":"PKE-010","domain":"epistemology","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-102","timestamp_utc":null,"title":"Incident Investigation Board","parent_event_id":"PKE-010","domain":"incident_response","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-103","timestamp_utc":null,"title":"Queueing Restaurant","parent_event_id":"PKE-010","domain":"queueing_theory","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-104","timestamp_utc":null,"title":"Agent Retry Academy","parent_event_id":"PKE-010","domain":"agent_systems","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-105","timestamp_utc":null,"title":"Purrtocol Museum","parent_event_id":"PKE-015","domain":"archive","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}
+{"event_id":"PKE-106","timestamp_utc":null,"title":"Future 3D Purrtocol Model","parent_event_id":"PKE-015","domain":"3d","artifact_type":"concept","status":"concept","source_commit":null,"adjacent_ideas_generated":0}

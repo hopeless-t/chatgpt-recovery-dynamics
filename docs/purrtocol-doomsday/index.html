@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Purrtocol Doomsday Control Room</title>
+<meta name="description" content="パケニャ有限時間特異点のtoy modelを操作する終末予測ダッシュボード。予測ではなく、数理モデルの感度とfalsificationを遊びながら見るページ。">
+<style>
+:root{--b:#060b12;--p:#111c2a;--l:#30485e;--t:#f4f7fb;--m:#9aabba;--c:#4cdaeb;--g:#4cd384;--a:#f6bb44;--r:#ef5f6c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#48212a 0,var(--b) 42%);color:var(--t);font:16px/1.65 system-ui,sans-serif}.w{max-width:1080px;margin:auto;padding:44px 20px 70px}.ey{font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--r)}h1{font-size:clamp(3rem,8vw,7rem);line-height:.88;letter-spacing:-.06em;margin:.2em 0}.lead{color:var(--m);max-width:860px}.alarm{border:2px solid var(--r);background:rgba(239,95,108,.08);border-radius:24px;padding:18px;margin:24px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}.card{border:1px solid var(--l);background:rgba(17,28,42,.92);border-radius:20px;padding:18px}.big{font-size:clamp(1.65rem,4vw,2.6rem);font-weight:950;letter-spacing:-.04em}.muted{color:var(--m)}label{display:block;font-weight:800;margin:.3rem 0}.control{margin:22px 0;padding:18px;border:1px solid var(--l);border-radius:20px;background:var(--p)}input[type=range]{width:100%}select{width:100%;background:#08111d;color:var(--t);border:1px solid var(--l);border-radius:10px;padding:10px}.eq{font:700 .95rem ui-monospace,monospace;white-space:pre-wrap;background:#04080e;border:1px solid var(--l);border-radius:14px;padding:13px}.status{font-weight:950;font-size:clamp(1.6rem,4vw,3.3rem);line-height:1.05}.safe{color:var(--g)}.warn{color:var(--a)}.danger{color:var(--r)}.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.btn{border:1px solid var(--l);border-radius:999px;padding:9px 14px;text-decoration:none;color:var(--t)}small{color:var(--m)}.meter{height:18px;border-radius:999px;border:1px solid var(--l);overflow:hidden;background:#08111d}.meter>div{height:100%;width:0;background:linear-gradient(90deg,var(--g),var(--a),var(--r));transition:width .2s}
+</style></head><body><main class="w">
+<div class="ey">Toy-model emergency console</div>
+<h1>パケニャ<br>終末予測室</h1>
+<p class="lead">二次成長項を軽率に入れると世界が終わる、という教育用ページにゃ。ここに表示される「地球滅亡時刻」は<strong>実測予測ではない</strong>。感度分析とfalsificationを楽しむためのtoy model。</p>
+<div class="alarm"><strong>Evidence boundary:</strong> b と observation-hazard s はillustrative parameter。Sam/Tibo観測hazardは未計測。Planetary Purrtocol coverageは未計測。<b>Earth saturation forecast: NOT ESTABLISHED.</b></div>
+
+<div class="grid">
+  <div class="card"><div class="muted">Model cohort</div><div class="big" id="cohortName">Primary</div><small id="cohortDetail">10-event frozen primary fit</small></div>
+  <div class="card"><div class="muted">Growth rate r</div><div class="big" id="rOut">0.1844 /h</div><small>descriptive fit</small></div>
+  <div class="card"><div class="muted">Doubling time</div><div class="big" id="doubleOut">3.758 h</div><small>forecastではない</small></div>
+  <div class="card"><div class="muted">Quadratic coupling b</div><div class="big" id="bOut">0.0200</div><small>illustrative only</small></div>
+</div>
+
+<div class="control">
+<label for="cohort">どの記述fitを使うにゃ？</label>
+<select id="cohort"><option value="primary">Primary: pre-measurement, n≈0.85</option><option value="inclusive">Observer-inclusive checkpoint, n≈1.00</option></select>
+<label for="b">二次接触係数 b = <span id="bLabel">0.0200</span> / event·hour</label>
+<input id="b" type="range" min="0" max="0.05" step="0.0005" value="0.02">
+<small>b=0なら有限時間特異点は消える。bはデータから推定していない。</small>
+</div>
+
+<div class="card">
+<div class="muted">Toy singularity time</div>
+<div class="status danger" id="doomWhen">calculating…</div>
+<div class="big" id="countdown">calculating…</div>
+<div class="meter"><div id="meterFill"></div></div>
+<p id="verdict" class="muted"></p>
+</div>
+
+<div class="control">
+<label for="s">Illustrative observation coefficient s = <span id="sLabel">0.020</span> / event·hour</label>
+<input id="s" type="range" min="0.001" max="0.1" step="0.001" value="0.02">
+<div class="grid" style="margin-top:14px">
+  <div class="card"><div class="muted">E[P at observation], h₀=0</div><div class="big" id="expectedP">—</div></div>
+  <div class="card"><div class="muted">Illustrative observation probability by now</div><div class="big" id="obsProb">—</div><small>not Sam/Tibo measurement</small></div>
+</div>
+</div>
+
+<h2>式</h2>
+<div class="eq">dP/dt = rP + bP²
+t* = (1/r) ln(1 + r/(bP₀))
+
+h(P) = sP   [h₀ = 0 scenario]
+E[P_observed] = P₀ + r/s
+
+Earth saturation = NOT YET OBSERVED
+Forecast = NOT ESTABLISHED</div>
+
+<div class="alarm"><strong>Falsification rule:</strong> toy singularity timeを過ぎても地球とGitHub Pagesが存在していれば、そのparameterizationは文字通りの地球滅亡予測として反証された扱い。モデルを救うために現実を消してはいけないにゃ。</div>
+
+<div class="links"><a class="btn" href="../purrtocol-expansion/">膨張力学</a><a class="btn" href="../purrtocol-expansion/concepts/">未実装宇宙</a><a class="btn" href="../purrtocol/">設定資料館</a><a class="btn" href="../">研究所正面</a></div>
+</main>
+<script>
+const cohorts={
+ primary:{name:"Primary",detail:"10-event frozen primary fit",r:0.1844454507266308,p0:2.1636434551836197,d:3.7580063798226635,n:0.85},
+ inclusive:{name:"Observer-inclusive",detail:"22-event frozen checkpoint",r:0.24728808589402398,p0:1.9890915491547099,d:2.802994645107955,n:1.0}
+};
+const origin=new Date("2026-10-02T23:48:10Z");
+const $=id=>document.getElementById(id);
+function fmtDuration(ms){
+ const neg=ms<0; ms=Math.abs(ms); const s=Math.floor(ms/1000)%60,m=Math.floor(ms/60000)%60,h=Math.floor(ms/3600000)%24,d=Math.floor(ms/86400000);
+ return (neg?"−":"")+(d?d+"d ":"")+String(h).padStart(2,"0")+"h "+String(m).padStart(2,"0")+"m "+String(s).padStart(2,"0")+"s";
+}
+function update(){
+ const c=cohorts[$("cohort").value], b=+$("b").value, s=+$("s").value;
+ $("cohortName").textContent=c.name; $("cohortDetail").textContent=c.detail;
+ $("rOut").textContent=c.r.toFixed(4)+" /h"; $("doubleOut").textContent=c.d.toFixed(3)+" h";
+ $("bOut").textContent=b.toFixed(4); $("bLabel").textContent=b.toFixed(4); $("sLabel").textContent=s.toFixed(3);
+ $("expectedP").textContent=(c.p0+c.r/s).toFixed(2)+" cats";
+
+ if(b===0){
+   $("doomWhen").textContent="NO FINITE SINGULARITY";
+   $("doomWhen").className="status safe"; $("countdown").textContent="∞";
+   $("verdict").textContent="b=0: このquadratic toy modelでは有限時間特異点なし。指数成長baselineのみ。";
+   $("meterFill").style.width="0%";
+ }else{
+   const tstar=Math.log(1+c.r/(b*c.p0))/c.r;
+   const target=new Date(origin.getTime()+tstar*3600000);
+   const remain=target-Date.now();
+   $("doomWhen").textContent=target.toLocaleString();
+   $("countdown").textContent=(remain>=0?"TIME REMAINING: ":"PAST TOY SINGULARITY: ")+fmtDuration(remain);
+   if(remain<0){
+     $("doomWhen").className="status safe";
+     $("verdict").textContent="MODEL FALSIFIED BY CONTINUED PLANETARY EXISTENCE — 少なくとも文字通りの終末予測としては外れたにゃ。";
+     $("meterFill").style.width="100%";
+   }else{
+     const hours=remain/3600000;
+     $("doomWhen").className="status "+(hours<1?"danger":hours<24?"warn":"safe");
+     $("verdict").textContent=hours<1?"監督『parameterizationが攻めすぎ！！』":hours<24?"Toy model says: 今日中。Evidence says: NOT ESTABLISHED.":"まだ猶予あり。ただし全部toy model。";
+     $("meterFill").style.width=Math.max(2,Math.min(100,100/(1+hours/6)))+"%";
+   }
+ }
+ const elapsed=Math.max(0,(Date.now()-origin.getTime())/3600000);
+ const expo=Math.min(700,c.r*elapsed);
+ const hazard=(s*c.p0/c.r)*(Math.exp(expo)-1);
+ const prob=1-Math.exp(-Math.min(700,hazard));
+ $("obsProb").textContent=(prob*100).toFixed(4)+"%";
+}
+["cohort","b","s"].forEach(id=>$(id).addEventListener("input",update));
+setInterval(update,1000);update();
+</script></body></html>

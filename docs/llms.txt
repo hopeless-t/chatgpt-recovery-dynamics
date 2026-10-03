@@ -38,3 +38,8 @@ Purrtocol is the project's Recovery Cat and an anthropomorphic error model for r
 Canonical design bible: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/
 Expansion side-study: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/
 The expansion analysis is deliberately separate from the primary evidence base. Current selected commit-event fit: doubling time about 3.758 h; Hawkes branching ratio about 0.85 (subcritical); Earth saturation NOT YET OBSERVED.
+
+Doomsday toy-model dashboard: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/
+Purrtocol concept registry: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/concepts/
+The doomsday page is a sensitivity/falsification toy model. Quadratic coupling and observation-hazard parameters are illustrative; planetary saturation forecast is NOT ESTABLISHED.
+Concept-registry entries have status=concept with null timestamp/source_commit and are excluded from commit-time growth/Hawkes fits.
