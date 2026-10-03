@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/event.schema.json",
   "title": "Purrtocol Expansion Event",
-  "description": "Commit-backed implemented artifacts and future concept-only nodes, with optional analysis-cohort metadata.",
+  "description": "Commit-backed implemented artifacts and future concept-only nodes, with frozen-analysis cohort metadata.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -67,7 +67,8 @@
       "type": "string",
       "enum": [
         "primary",
-        "observer_effect"
+        "observer_effect",
+        "post_checkpoint"
       ]
     },
     "measurement_associated": {
