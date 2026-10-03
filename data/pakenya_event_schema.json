@@ -2,22 +2,82 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/event.schema.json",
   "title": "Purrtocol Expansion Event",
-  "description": "Commit-backed implemented artifacts and future concept-only nodes.",
+  "description": "Commit-backed implemented artifacts and future concept-only nodes, with optional analysis-cohort metadata.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "event_id","timestamp_utc","title","parent_event_id","domain",
-    "artifact_type","status","source_commit","adjacent_ideas_generated"
+    "event_id",
+    "timestamp_utc",
+    "title",
+    "parent_event_id",
+    "domain",
+    "artifact_type",
+    "status",
+    "source_commit",
+    "adjacent_ideas_generated"
   ],
   "properties": {
-    "event_id": {"type":"string","pattern":"^PKE-[0-9]{3,}$"},
-    "timestamp_utc": {"type":["string","null"],"format":"date-time"},
-    "title": {"type":"string","minLength":1},
-    "parent_event_id": {"type":["string","null"]},
-    "domain": {"type":"string","minLength":1},
-    "artifact_type": {"type":"string","minLength":1},
-    "status": {"type":"string","enum":["implemented","concept"]},
-    "source_commit": {"type":["string","null"]},
-    "adjacent_ideas_generated": {"type":"integer","minimum":0}
+    "event_id": {
+      "type": "string",
+      "pattern": "^PKE-[0-9]{3,}$"
+    },
+    "timestamp_utc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parent_event_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "implemented",
+        "concept"
+      ]
+    },
+    "source_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "adjacent_ideas_generated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fit_cohort": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "observer_effect"
+      ]
+    },
+    "measurement_associated": {
+      "type": "boolean"
+    },
+    "timestamp_basis": {
+      "type": "string"
+    },
+    "lineage_basis": {
+      "type": "string"
+    }
   }
 }
