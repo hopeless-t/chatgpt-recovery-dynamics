@@ -20,6 +20,21 @@ This is a **side-study of repository evolution**, not part of the ChatGPT recove
 
 The recorder is data/pakenya_events.jsonl. Each selected implemented event has a commit-backed timestamp. parent_event_id is a curated conceptual lineage, not causal proof. adjacent_ideas_generated is an author annotation, not a measured branching process.
 
+## Event schema
+
+Machine-readable contract:
+
+~~~text
+data/pakenya_event_schema.json
+~~~
+
+Human-readable contract: [SCHEMA.md](SCHEMA.md).
+
+`implemented` nodes require commit-backed time/provenance and are eligible for
+event-time fits. `concept` nodes are allowed for future adjacent ideas but
+remain outside the compound-growth and Hawkes event-time fits until they are
+actually implemented.
+
 ## Compound-growth baseline
 
 ~~~text
