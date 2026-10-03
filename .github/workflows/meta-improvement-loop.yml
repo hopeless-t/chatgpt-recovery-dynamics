@@ -17,7 +17,12 @@ on:
     paths:
       - "data/improvement_events.jsonl"
       - "data/meta_improvement_loop_policy.json"
+      - "data/meta_improvement_events.jsonl"
+      - "data/meta_improvement_event_schema.json"
+      - "data/preflight_routes.json"
       - "scripts/analyze_improvement_loop.py"
+      - "scripts/preflight_router.py"
+      - "docs/repository-observatory/critic-router.md"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   workflow_dispatch:
