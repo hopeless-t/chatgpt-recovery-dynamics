@@ -14,18 +14,18 @@
   },
   "event_log": {
     "distinct_parents": 14,
-    "edges": 31,
-    "events_total": 32,
-    "implemented_timestamped_events": 32,
+    "edges": 32,
+    "events_total": 33,
+    "implemented_timestamped_events": 33,
     "measurement_associated_events": 12,
     "measurement_burst_seconds": 183,
-    "pairwise_contact_surface": 496,
+    "pairwise_contact_surface": 528,
     "primary_fit_events": 10,
     "primary_mean_adjacent_ideas_generated_mark": 3.3,
     "roots": 1,
     "span_hours": 7.911388888888889,
     "checkpoint_events": 22,
-    "post_checkpoint_events": 10,
+    "post_checkpoint_events": 11,
     "checkpoint_pairwise_contact_surface": 231
   },
   "evidence_class": "satirical_side-study_with_commit-backed_event_times",
@@ -125,7 +125,7 @@
   },
   "schema": "purrtocol-expansion-analysis/v2",
   "post_checkpoint_registry": {
-    "count": 10,
+    "count": 11,
     "excluded_from_frozen_fits": true,
     "fit_cohort": "post_checkpoint",
     "note": "Later Purrtocol artifacts remain recorded without mutating the frozen primary/observer-inclusive checkpoint."
