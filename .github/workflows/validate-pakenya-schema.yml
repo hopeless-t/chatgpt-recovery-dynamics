@@ -14,6 +14,9 @@ on:
       - "docs/purrtocol-university/index.html"
       - "docs/evidence-court/index.html"
       - "docs/queueing-restaurant/index.html"
+      - "docs/purrtocol-museum/index.html"
+      - "docs/agent-retry-academy/index.html"
+      - "docs/incident-board/index.html"
   pull_request:
     paths:
       - "data/pakenya_events.jsonl"
@@ -59,7 +62,13 @@ jobs:
           assert "NOT ESTABLISHED" in court
 
           food=Path("docs/queueing-restaurant/index.html").read_text(encoding="utf-8")
+          incident=Path("docs/incident-board/index.html").read_text(encoding="utf-8")
+          academy=Path("docs/agent-retry-academy/index.html").read_text(encoding="utf-8")
+          museum=Path("docs/purrtocol-museum/index.html").read_text(encoding="utf-8")
           assert "M/M/1 toy model" in food
           assert "ChatGPT/OpenAI productionそのもののモデルではない" in food
+          assert "Timeline is not causality" in incident
+          assert "UNKNOWN ≠ retry permission" in academy
+          assert "artifactの存在は観測できる" in museum
           print("Purrtocol learning surfaces: PASS")
           PY
