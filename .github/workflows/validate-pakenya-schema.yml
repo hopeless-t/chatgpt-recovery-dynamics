@@ -4,21 +4,29 @@ on:
   push:
     paths:
       - "data/pakenya_events.jsonl"
-      - "data/pakenya_concepts.jsonl"\n      - "data/pakenya_promotions.jsonl"
+      - "data/pakenya_concepts.jsonl"
+      - "data/pakenya_promotions.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
       - "docs/purrtocol-doomsday/index.html"
       - "docs/purrtocol-expansion/concepts/index.html"
+      - "docs/purrtocol-university/index.html"
+      - "docs/evidence-court/index.html"
+      - "docs/queueing-restaurant/index.html"
   pull_request:
     paths:
       - "data/pakenya_events.jsonl"
-      - "data/pakenya_concepts.jsonl"\n      - "data/pakenya_promotions.jsonl"
+      - "data/pakenya_concepts.jsonl"
+      - "data/pakenya_promotions.jsonl"
       - "data/pakenya_event_schema.json"
       - "scripts/validate_pakenya_events.py"
       - ".github/workflows/validate-pakenya-schema.yml"
       - "docs/purrtocol-doomsday/index.html"
       - "docs/purrtocol-expansion/concepts/index.html"
+      - "docs/purrtocol-university/index.html"
+      - "docs/evidence-court/index.html"
+      - "docs/queueing-restaurant/index.html"
 
 jobs:
   validate:
@@ -29,16 +37,29 @@ jobs:
         with:
           python-version: "3.13"
       - run: python scripts/validate_pakenya_events.py
-      - name: Validate Purrtocol doomsday evidence boundary
+      - name: Validate Purrtocol learning surfaces
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path("docs/purrtocol-doomsday/index.html").read_text(encoding="utf-8")
-          assert "TOY MODEL" in p.upper()
-          assert "NOT ESTABLISHED" in p
-          assert "MODEL FALSIFIED BY CONTINUED PLANETARY EXISTENCE" in p
-          c=Path("docs/purrtocol-expansion/concepts/index.html").read_text(encoding="utf-8")
-          assert "Concept ≠ implemented artifact" in c
-          assert c.count("CONCEPT") >= 7
-          print("Purrtocol doomsday/concept surfaces: PASS")
+          doom=Path("docs/purrtocol-doomsday/index.html").read_text(encoding="utf-8")
+          assert "TOY MODEL" in doom.upper()
+          assert "NOT ESTABLISHED" in doom
+          assert "MODEL FALSIFIED BY CONTINUED PLANETARY EXISTENCE" in doom
+
+          concepts=Path("docs/purrtocol-expansion/concepts/index.html").read_text(encoding="utf-8")
+          assert "Concept ≠ implemented artifact" in concepts
+          assert concepts.count("PROMOTED") >= 3
+
+          uni=Path("docs/purrtocol-university/index.html").read_text(encoding="utf-8")
+          assert "パケニャ大学" in uni
+          assert "The joke may be sloppy; the footnote may not be sloppy." in uni
+
+          court=Path("docs/evidence-court/index.html").read_text(encoding="utf-8")
+          assert "Visualization ≠ Evidence" in court
+          assert "NOT ESTABLISHED" in court
+
+          food=Path("docs/queueing-restaurant/index.html").read_text(encoding="utf-8")
+          assert "M/M/1 toy model" in food
+          assert "ChatGPT/OpenAI productionそのもののモデルではない" in food
+          print("Purrtocol learning surfaces: PASS")
           PY
