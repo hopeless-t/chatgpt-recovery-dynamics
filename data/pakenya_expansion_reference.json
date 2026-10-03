@@ -1,11 +1,124 @@
 {
-  "carrying_capacity_escape": {"interpretation":"Tooling and reusable surfaces can increase the effective capacity for future Purrtocol artifacts.","model":"dK/dt=cP","status":"symbolic_only"},
-  "earth_saturation": {"forecast":"NOT_ESTABLISHED","note":"No empirical Purrtocol surface-coverage measurement exists.","status":"NOT_YET_OBSERVED"},
-  "event_log": {"distinct_parents":6,"edges":9,"events_total":10,"implemented_timestamped_events":10,"mean_adjacent_ideas_generated_mark":3.3,"mean_children_among_observed_parents":1.5,"observed_edges_per_event":0.9,"pairwise_contact_surface":45,"roots":1,"span_hours":7.0183333333333335},
-  "evidence_class":"satirical_side-study_with_commit-backed_event_times",
-  "exponential_growth_fit":{"doubling_time_hours":3.7580063798226635,"intercept_log_p0":0.7717935854795618,"model":"P(t)=P0*exp(r*t)","p0_fit":2.1636434551836197,"r2_log_cumulative":0.7334548699924759,"r_per_hour":0.1844454507266308,"warning":"This is a descriptive fit to a manually curated subset of Purrtocol-related commits, not a forecast."},
-  "hawkes_fit":{"alpha_per_hour":6.7517899951564,"beta_per_hour":7.943282347242825,"branching_ratio_n":0.85,"classification":"subcritical","fit_status":"descriptive_grid_fit","log_likelihood":1.7391011196297743,"mu_per_hour":0.4166256573088865,"warning":"Selected commit events are sparse, curated, bursty, and right-censored. This fit is not a general law of mascot growth."},
-  "observation_hazard_scenario":{"expected_P_at_observation_when_h0_zero":11.385915991515159,"h0_per_hour":0.0,"model":"h(P)=h0+sP","s_per_event_hour":0.02,"survival_formula":"S(t)=exp(-h0*t-(s*P0/r)*(exp(r*t)-1)) for r>0","warning":"Sam/Tibo observation is not instrumented. Hazard parameters are illustrative only."},
-  "quadratic_contact_scenario":{"b_per_event_hour":0.02,"finite_time_singularity_hours_from_origin":9.003114797648042,"model":"dP/dt=rP+bP^2","r_source":"descriptive exponential fit","warning":"b is an illustrative scenario parameter, not estimated from production or biological cat dynamics."},
-  "schema":"purrtocol-expansion-analysis/v1"
+  "carrying_capacity_escape": {
+    "model": "dK/dt=cP",
+    "status": "symbolic_only"
+  },
+  "checkpoint": {
+    "commit": "ec25244a024f2049cfc7851c7fafd421d35a113c",
+    "end_utc": "2026-10-03T07:42:51Z",
+    "rule": "frozen observer-inclusive checkpoint; later instrumentation excluded"
+  },
+  "earth_saturation": {
+    "forecast": "NOT_ESTABLISHED",
+    "status": "NOT_YET_OBSERVED"
+  },
+  "event_log": {
+    "distinct_parents": 12,
+    "edges": 21,
+    "events_total": 22,
+    "implemented_timestamped_events": 22,
+    "measurement_associated_events": 12,
+    "measurement_burst_seconds": 183,
+    "pairwise_contact_surface": 231,
+    "primary_fit_events": 10,
+    "primary_mean_adjacent_ideas_generated_mark": 3.3,
+    "roots": 1,
+    "span_hours": 7.911388888888889
+  },
+  "evidence_class": "satirical_side-study_with_commit-backed_event_times",
+  "exponential_growth_fit": {
+    "doubling_time_hours": 3.7580063798226635,
+    "intercept_log_p0": 0.7717935854795618,
+    "model": "P(t)=P0*exp(r*t)",
+    "p0_fit": 2.1636434551836197,
+    "r2_log_cumulative": 0.7334548699924759,
+    "r_per_hour": 0.1844454507266308,
+    "warning": "Descriptive fit; not a forecast."
+  },
+  "hawkes_fit": {
+    "alpha_per_hour": 6.7517899951564,
+    "beta_per_hour": 7.943282347242825,
+    "branching_ratio_n": 0.85,
+    "classification": "subcritical",
+    "fit_status": "descriptive_grid_fit",
+    "log_likelihood": 1.7391011196297743,
+    "mu_per_hour": 0.4166256573088865,
+    "warning": "Commit events are sparse, curated, bursty, and right-censored. This is descriptive project archaeology."
+  },
+  "measurement_backaction": {
+    "artifact_count_before": 10,
+    "artifact_count_inclusive": 22,
+    "artifact_multiplier": 2.2,
+    "burst_seconds": 183,
+    "causal_generalization": "NOT_ESTABLISHED",
+    "checkpoint_commit": "ec25244a024f2049cfc7851c7fafd421d35a113c",
+    "classification_shift": "subcritical -> near-critical",
+    "measurement_associated_artifacts": 12,
+    "note": "Operationalizing the side-study created more Purrtocol repository artifacts; this is measurement-associated backaction, not a universal observer-effect law.",
+    "observer_inclusive_branching_ratio_n": 1,
+    "primary_branching_ratio_n": 0.85,
+    "status": "MEASUREMENT_ASSOCIATED_ARTIFACT_BURST_OBSERVED"
+  },
+  "observation_hazard_scenario": {
+    "expected_P_at_observation_when_h0_zero": 11.385915991515159,
+    "h0_per_hour": 0,
+    "model": "h(P)=h0+sP",
+    "s_per_event_hour": 0.02,
+    "survival_formula": "S(t)=exp(-h0*t-(s*P0/r)*(exp(r*t)-1)) for r>0",
+    "warning": "Sam/Tibo observation is not instrumented."
+  },
+  "observer_inclusive_fit": {
+    "count": 22,
+    "exponential_growth_fit": {
+      "doubling_time_hours": 2.802994645107955,
+      "intercept_log_p0": 0.6876780265424609,
+      "model": "P(t)=P0*exp(r*t)",
+      "p0_fit": 1.9890915491547099,
+      "r2_log_cumulative": 0.8054652361537676,
+      "r_per_hour": 0.24728808589402398,
+      "warning": "Descriptive fit; not a forecast."
+    },
+    "hawkes_fit": {
+      "alpha_per_hour": 63.095734448019414,
+      "beta_per_hour": 63.095734448019414,
+      "branching_ratio_n": 1,
+      "classification": "near-critical",
+      "fit_status": "descriptive_grid_fit",
+      "log_likelihood": 45.85833243373424,
+      "mu_per_hour": 0.8131112140249959,
+      "warning": "Commit events are sparse, curated, bursty, and right-censored. This is descriptive project archaeology."
+    },
+    "span_hours": 7.911388888888889
+  },
+  "primary_fit": {
+    "count": 10,
+    "exponential_growth_fit": {
+      "doubling_time_hours": 3.7580063798226635,
+      "intercept_log_p0": 0.7717935854795618,
+      "model": "P(t)=P0*exp(r*t)",
+      "p0_fit": 2.1636434551836197,
+      "r2_log_cumulative": 0.7334548699924759,
+      "r_per_hour": 0.1844454507266308,
+      "warning": "Descriptive fit; not a forecast."
+    },
+    "hawkes_fit": {
+      "alpha_per_hour": 6.7517899951564,
+      "beta_per_hour": 7.943282347242825,
+      "branching_ratio_n": 0.85,
+      "classification": "subcritical",
+      "fit_status": "descriptive_grid_fit",
+      "log_likelihood": 1.7391011196297743,
+      "mu_per_hour": 0.4166256573088865,
+      "warning": "Commit events are sparse, curated, bursty, and right-censored. This is descriptive project archaeology."
+    },
+    "span_hours": 7.0183333333333335
+  },
+  "quadratic_contact_scenario": {
+    "b_per_event_hour": 0.02,
+    "finite_time_singularity_hours_from_origin": 9.003114797648042,
+    "model": "dP/dt=rP+bP^2",
+    "r_source": "primary descriptive exponential fit",
+    "warning": "Illustrative b; not fitted. Toy extrapolation only."
+  },
+  "schema": "purrtocol-expansion-analysis/v2"
 }
