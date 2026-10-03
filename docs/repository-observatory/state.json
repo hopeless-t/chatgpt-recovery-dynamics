@@ -28,7 +28,9 @@
     "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
     "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED",
     "meta_improvement_loop": "MIL-001 deployed Critic Router v1 and bounded two-level control; effect on observation-to-change latency NOT_ESTABLISHED pending at least three post-tuning RIL cycles",
-    "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller"
+    "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
+    "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
+    "critic_router_post_tuning_samples": "1 of 3 minimum RIL cycles observed; effect claim still NOT_ESTABLISHED"
   },
   "frontiers": [
     {
@@ -76,8 +78,8 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "baseline_implemented",
-      "target": "Port the 429 Survival Plane into independent client libraries/services and compare retry amplification without production load testing.",
+      "status": "loopback_baseline_implemented",
+      "target": "Port the Survival Plane into independent client libraries/services and compare conformance without production load testing.",
       "promotion_gate": "independent local/mock implementation reproduces floor/budget/authorization invariants and reports provider-specific differences separately"
     },
     {
@@ -90,7 +92,7 @@
     {
       "id": "META-001",
       "lane": "governance",
-      "status": "tuning_deployed_awaiting_remeasurement",
+      "status": "tuning_deployed_1_of_3_samples",
       "target": "Determine whether Critic Router v1 reduces observation-to-first-change latency across at least three post-tuning RIL cycles without weakening verification or increasing observer footprint beyond soft budgets.",
       "promotion_gate": "at least 3 post-tuning RIL cycles; post-tuning median observation->first-change < 488s; verified-before-promotion ratio remains 1.0; critical guardrails unchanged; observer footprint under warnings"
     }
