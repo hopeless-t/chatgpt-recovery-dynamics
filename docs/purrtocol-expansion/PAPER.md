@@ -175,6 +175,27 @@ measurement window.
 
 > **The instrument used to measure the cat is also made of cat.**
 
+## Post-checkpoint registry
+
+The observer-inclusive checkpoint is frozen. Later implemented Purrtocol artifacts
+remain recorded with:
+
+~~~text
+fit_cohort = post_checkpoint
+~~~
+
+They are excluded from the frozen primary and observer-inclusive event-time fits.
+This allows continued project archaeology without retroactively changing the
+measurement-backaction comparison.
+
+Current first post-checkpoint entry:
+
+~~~text
+PKE-023
+Purrtocol doomsday control room and concept registry
+source commit: 07cd98fe273ed7ddb3d8aef9349a2ae96edb8134
+~~~
+
 ## Lineage boundary
 
 Primary lineage PKE-001 through PKE-010 is the original selected cohort.
