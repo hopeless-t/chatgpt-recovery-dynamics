@@ -1,0 +1,147 @@
+{
+  "box": {
+    "candidate_count": 2,
+    "candidates": [
+      {
+        "evidence_status": "concept",
+        "generator": {
+          "genome_schema": "purrtocol-genome/v1",
+          "genome_sha256": "b4804cd0149c0db743fefcae4b9f78b52490c6714e25fcf1ef2351c1ce8d4bfa",
+          "name": "purrtocol-genome-breeder",
+          "seed": "schrodinger-pakenya-box-001:A",
+          "version": "1"
+        },
+        "genome": {
+          "blocked_cue": "queue_gate_closed",
+          "habitat": "queueing_restaurant",
+          "healthy_cue": "stable_snapshot",
+          "medium": "pixel_sprite",
+          "mutation_class": "tool_strain",
+          "narrative_job": "crawler_librarian",
+          "observation_prop": "mini_trace_scope",
+          "recovering_cue": "single_probe_orbit",
+          "silhouette": "retry_tanuki",
+          "temperament": "skeptical_archivist"
+        },
+        "label": "A",
+        "mutations": [
+          "medium=pixel_sprite",
+          "silhouette=retry_tanuki",
+          "habitat=queueing_restaurant",
+          "blocked_cue=queue_gate_closed",
+          "recovering_cue=single_probe_orbit",
+          "healthy_cue=stable_snapshot",
+          "observation_prop=mini_trace_scope",
+          "temperament=skeptical_archivist",
+          "narrative_job=crawler_librarian",
+          "mutation_class=tool_strain"
+        ],
+        "name": "ObserverPaw / seeded Purrtocol concept",
+        "preserved_invariants": [
+          "recover_dont_amplify",
+          "visualization_not_evidence",
+          "unknown_not_retry_permission",
+          "observer_side_not_omniscient_backend",
+          "concept_not_implemented",
+          "first_success_not_necessarily_healthy",
+          "observe_before_materialize"
+        ],
+        "seed": "schrodinger-pakenya-box-001:A",
+        "status": "concept",
+        "variant_id": "PKV-SEED-D9966B702AFA"
+      },
+      {
+        "evidence_status": "concept",
+        "generator": {
+          "genome_schema": "purrtocol-genome/v1",
+          "genome_sha256": "b4804cd0149c0db743fefcae4b9f78b52490c6714e25fcf1ef2351c1ce8d4bfa",
+          "name": "purrtocol-genome-breeder",
+          "seed": "schrodinger-pakenya-box-001:B",
+          "version": "1"
+        },
+        "genome": {
+          "blocked_cue": "red_stop_sign",
+          "habitat": "lunar_relay",
+          "healthy_cue": "quiet_paws",
+          "medium": "paper_cutout",
+          "mutation_class": "localization_strain",
+          "narrative_job": "incident_detective",
+          "observation_prop": "tiny_cyan_packet",
+          "recovering_cue": "half_open_gate",
+          "silhouette": "retry_tanuki",
+          "temperament": "museum_curator"
+        },
+        "label": "B",
+        "mutations": [
+          "medium=paper_cutout",
+          "silhouette=retry_tanuki",
+          "habitat=lunar_relay",
+          "blocked_cue=red_stop_sign",
+          "recovering_cue=half_open_gate",
+          "healthy_cue=quiet_paws",
+          "observation_prop=tiny_cyan_packet",
+          "temperament=museum_curator",
+          "narrative_job=incident_detective",
+          "mutation_class=localization_strain"
+        ],
+        "name": "ObserverGate / seeded Purrtocol concept",
+        "preserved_invariants": [
+          "recover_dont_amplify",
+          "visualization_not_evidence",
+          "unknown_not_retry_permission",
+          "observer_side_not_omniscient_backend",
+          "concept_not_implemented",
+          "first_success_not_necessarily_healthy",
+          "observe_before_materialize"
+        ],
+        "seed": "schrodinger-pakenya-box-001:B",
+        "status": "concept",
+        "variant_id": "PKV-SEED-CB4C752C8D00"
+      }
+    ],
+    "pre_observation_status": "candidate_set_not_yet_promoted"
+  },
+  "classification": "deterministic_epistemic_toy_not_quantum_physics",
+  "contract": "data/purrtocol_schrodinger_contract.json",
+  "interpretation_rules": [
+    "The two sealed-box candidates are deterministic concept manifests.",
+    "The first observed selection is repository history only after the CI run is read and frozen.",
+    "The selection is not quantum measurement or physical wavefunction collapse.",
+    "Observation does not imply external human attention or production-system evidence.",
+    "Concept candidate != implemented derivative."
+  ],
+  "observation": {
+    "observation_digest_sha256": "12910a8094ff0096d403b08f321ce8033572d25686e80547ae46aad524cd7ca2",
+    "observer_seed": "schrodinger-pakenya-observer-001",
+    "quantum_physics_claim": false,
+    "selected_candidate_name": "ObserverPaw / seeded Purrtocol concept",
+    "selected_candidate_variant_id": "PKV-SEED-D9966B702AFA",
+    "selected_genome": {
+      "blocked_cue": "queue_gate_closed",
+      "habitat": "queueing_restaurant",
+      "healthy_cue": "stable_snapshot",
+      "medium": "pixel_sprite",
+      "mutation_class": "tool_strain",
+      "narrative_job": "crawler_librarian",
+      "observation_prop": "mini_trace_scope",
+      "recovering_cue": "single_probe_orbit",
+      "silhouette": "retry_tanuki",
+      "temperament": "skeptical_archivist"
+    },
+    "selected_label": "A",
+    "selection_index": 0,
+    "semantics": "deterministic repository observation bookkeeping"
+  },
+  "promotion_plan": {
+    "concept_candidates_remain_concepts": true,
+    "implemented_variant_id": "PKV-SCHRODINGER-OBS-001",
+    "selected_candidate_is_copied_into_implemented_variant": true
+  },
+  "schema": "purrtocol-schrodinger-observation/v1",
+  "source": {
+    "workflow_run_id": 37140797936,
+    "job_id": 111254648344,
+    "head_sha": "36e9608f0d52dfe09e7c2175a1f1a5dbe7df7d2b",
+    "observation_class": "first_ci_observation_before_result_freeze"
+  }
+}
