@@ -1,0 +1,110 @@
+{
+  "schema": "meta-improvement-loop-policy/v1",
+  "purpose": "Tune the repository improvement loop without optimizing away evidence quality.",
+  "inner_loop": "observe -> biopsy -> competing explanations -> smallest reversible change -> verify -> promote -> re-observe",
+  "outer_loop": "measure inner-loop telemetry -> locate dominant friction -> propose bounded tuning -> verify guardrails -> adopt tuning -> remeasure",
+  "immutable_guardrails": [
+    "Critical verification must precede promotion.",
+    "A failed invariant is a specimen, not permission to weaken the invariant.",
+    "Historical raw evidence remains immutable.",
+    "Story/concept/visualization must not be promoted to observed fact without evidence.",
+    "UNKNOWN does not create action authority.",
+    "No meta metric is allowed to become a single overall success score.",
+    "Cycle speed is diagnostic telemetry, not the North Star.",
+    "Deleting checks merely to reduce latency is not a valid tuning action."
+  ],
+  "tunable_surfaces": [
+    {
+      "id": "critic_surface",
+      "examples": [
+        "audit failure localization",
+        "next-action summaries",
+        "frontier routing"
+      ],
+      "objective": "reduce observation-to-change friction"
+    },
+    {
+      "id": "verification_staging",
+      "examples": [
+        "parallel independent checks",
+        "change-sensitive deep checks",
+        "reference regeneration"
+      ],
+      "objective": "reduce redundant verification work without weakening merge gates"
+    },
+    {
+      "id": "context_routing",
+      "examples": [
+        "AGENTS maps",
+        "llms maps",
+        "nested task instructions"
+      ],
+      "objective": "reduce agent search/path length without instruction bloat"
+    },
+    {
+      "id": "artifact_granularity",
+      "examples": [
+        "small reversible commits",
+        "append-only references",
+        "digest-bound derived outputs"
+      ],
+      "objective": "reduce biopsy/rework cost"
+    },
+    {
+      "id": "frontier_selection",
+      "examples": [
+        "separate local-actionable work from external-evidence-blocked work",
+        "parallel independent lanes"
+      ],
+      "objective": "avoid waiting on unavailable evidence while preserving the blocked frontier"
+    },
+    {
+      "id": "observer_footprint",
+      "examples": [
+        "workflow count",
+        "audit code size",
+        "duplicated projections"
+      ],
+      "objective": "keep measurement machinery from becoming the dominant maintenance burden"
+    }
+  ],
+  "trigger_rules": [
+    {
+      "id": "diagnosis_dominates",
+      "condition": "median_observation_to_change_s > 2 * (median_change_to_verification_s + median_verification_to_promotion_s)",
+      "recommendation": "Improve critic localization and task routing before reducing verification."
+    },
+    {
+      "id": "verification_dominates",
+      "condition": "median_change_to_verification_s > 180",
+      "recommendation": "Investigate parallelism/caching/change-sensitive staging while keeping full promotion gates."
+    },
+    {
+      "id": "promotion_lag_dominates",
+      "condition": "median_verification_to_promotion_s > 180",
+      "recommendation": "Reduce manual promotion friction only after required verification is complete."
+    },
+    {
+      "id": "rework_signal",
+      "condition": "fraction_cycles_with_multiple_changes >= 0.25",
+      "recommendation": "Add cheaper intermediate validation near the failure source."
+    },
+    {
+      "id": "observer_growth_warning",
+      "condition": "github_workflows > 16 or observatory_python_bytes > 50000",
+      "recommendation": "Audit measurement duplication and projection cost. Soft design threshold, not empirical optimum."
+    }
+  ],
+  "anti_goodhart": [
+    "Do not optimize commit count, PR count, file count, cat count, or raw cycle count as success.",
+    "Do not turn Purrtocol delight into a fake scientific score.",
+    "Do not treat fewer failures as success if failures disappeared because observation was removed.",
+    "Do not treat lower CI runtime as improvement if coverage or evidence checks were weakened.",
+    "Do not treat theoretical genotype space as external adoption."
+  ],
+  "soft_design_budgets": {
+    "github_workflows_warning_above": 16,
+    "observatory_python_bytes_warning_above": 50000,
+    "root_agents_bytes_hard_existing_guardrail": 12000
+  }
+}
