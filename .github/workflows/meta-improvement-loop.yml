@@ -1,0 +1,123 @@
+name: Meta Improvement Loop
+
+on:
+  push:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "data/meta_improvement_loop_policy.json"
+      - "docs/repository-observatory/critic-router.md"
+      - "scripts/preflight_router.py"
+      - "data/preflight_routes.json"
+      - "data/meta_improvement_event_schema.json"
+      - "data/meta_improvement_events.jsonl"
+      - "scripts/analyze_improvement_loop.py"
+      - "META_IMPROVEMENT_LOOP.md"
+      - ".github/workflows/meta-improvement-loop.yml"
+  pull_request:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "data/meta_improvement_loop_policy.json"
+      - "data/meta_improvement_events.jsonl"
+      - "data/meta_improvement_event_schema.json"
+      - "data/preflight_routes.json"
+      - "scripts/analyze_improvement_loop.py"
+      - "scripts/preflight_router.py"
+      - "docs/repository-observatory/critic-router.md"
+      - "META_IMPROVEMENT_LOOP.md"
+      - ".github/workflows/meta-improvement-loop.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "43 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  tune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Analyze improvement loop telemetry
+        run: |
+          python scripts/analyze_improvement_loop.py \
+            --output /tmp/meta-loop.json
+      - name: Validate Critic Router
+        run: |
+          python scripts/preflight_router.py \
+            --path docs/assets/purrtocol/purrtocol.glb \
+            --output /tmp/preflight-3d.json
+          python scripts/preflight_router.py \
+            --path scripts/http_429_survival.py \
+            --output /tmp/preflight-429.json
+          python scripts/preflight_router.py \
+            --path data/meta_improvement_loop_policy.json \
+            --output /tmp/preflight-meta.json
+          python scripts/preflight_router.py \
+            --path README.ja.md \
+            --output /tmp/preflight-unmatched.json
+          python - <<'PY'
+          import json
+
+          def load(path):
+              with open(path, "r", encoding="utf-8") as f:
+                  return json.load(f)
+
+          d3 = load("/tmp/preflight-3d.json")
+          h429 = load("/tmp/preflight-429.json")
+          meta = load("/tmp/preflight-meta.json")
+          unmatched = load("/tmp/preflight-unmatched.json")
+
+          assert "purrtocol-3d" in {
+              r["route_id"] for r in d3["matched_routes"]
+          }
+          assert "http-429-survival" in {
+              r["route_id"] for r in h429["matched_routes"]
+          }
+          assert "meta-improvement-loop" in {
+              r["route_id"] for r in meta["matched_routes"]
+          }
+          assert unmatched["unmatched_paths"] == ["README.ja.md"]
+
+          for result in (d3, h429, meta, unmatched):
+              assert "Repository Observatory" in result["promotion_gates"]
+              assert any(
+                  "audit_repository_state.py" in command
+                  for command in result["commands"]
+              )
+              assert (
+                  result["interpretation"]["preflight_pass_does_not_mean"]
+                  == "promotion gate passed"
+              )
+
+          print("Critic Router invariants: PASS")
+          PY
+
+      - name: Check second-order guardrails
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/meta-loop.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "meta-improvement-loop-report/v1"
+          assert r["classification"] == "repository_process_telemetry_not_quality_score"
+          assert r["aggregate"]["completed_cycles"] >= 4
+          assert r["aggregate"]["verified_before_promotion_ratio"] == 1.0
+          assert r["interpretation"]["single_overall_score"] == "FORBIDDEN"
+          assert not r["violations"]
+          assert all(
+              cycle["verified_before_promotion"]
+              for cycle in r["cycles"]
+          )
+
+          # Observe before freezing any particular bottleneck.
+          print("meta improvement structural invariants: PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meta-improvement-loop-report
+          path: /tmp/meta-loop.json

@@ -87,6 +87,9 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 
 ## Repository improvement loop
 
+- [Meta Improvement Loop](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/META_IMPROVEMENT_LOOP.md): Second-order loop telemetry, anti-Goodhart guardrails, and Critic Router tuning.
+- [Critic Router](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/repository-observatory/critic-router.md): Path-aware source-proximate preflight routing.
+- [Meta Loop Reference](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_loop_reference.json): Frozen first four-cycle timing checkpoint.
 - [Repository Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/index.md): Closed-loop self-audit and active frontiers.
 - [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md): Observe -> biopsy -> reversible change -> verify -> promote -> re-observe.
 - [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl): Append-only machine-readable improvement history.

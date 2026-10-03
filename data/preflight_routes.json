@@ -1,0 +1,120 @@
+{
+  "schema": "preflight-routes/v1",
+  "purpose": "Map changed paths to cheap source-proximate diagnostics before full promotion CI.",
+  "rules": [
+    {
+      "route_id": "purrtocol-3d",
+      "priority": 10,
+      "patterns": [
+        "docs/assets/purrtocol/*",
+        "docs/purrtocol-3d/*",
+        "data/purrtocol_3d_contract.json",
+        "scripts/validate_purrtocol_3d.py"
+      ],
+      "commands": [
+        "python scripts/validate_purrtocol_3d.py"
+      ],
+      "promotion_gate": "Validate Purrtocol 3D",
+      "rationale": "Catch GLB/hash/node/animation/lineage faults before the full PR cycle."
+    },
+    {
+      "route_id": "purrtocol-variants",
+      "priority": 20,
+      "patterns": [
+        "data/purrtocol_variant_schema.json",
+        "data/purrtocol_variants.jsonl",
+        "data/purrtocol_genome.json",
+        "docs/purrtocol-variant*",
+        "docs/purrtocol-genome.json",
+        "docs/purrtocol-variant-foundry/*",
+        "scripts/breed_purrtocol.py",
+        "scripts/validate_purrtocol_variants.py"
+      ],
+      "commands": [
+        "python scripts/validate_purrtocol_variants.py"
+      ],
+      "promotion_gate": "Validate Purrtocol variants",
+      "rationale": "Catch schema/lineage/genome drift near the mutation source."
+    },
+    {
+      "route_id": "purrtocol-entropy",
+      "priority": 25,
+      "patterns": [
+        "data/purrtocol_genome.json",
+        "data/purrtocol_entropy_reference.json",
+        "docs/purrtocol-entropy/*",
+        "scripts/breed_purrtocol.py",
+        "scripts/analyze_purrtocol_entropy.py"
+      ],
+      "commands": [
+        "python scripts/analyze_purrtocol_entropy.py --samples 4096 --output /tmp/purrtocol-entropy-preflight.json"
+      ],
+      "promotion_gate": "Purrtocol Entropy Reactor",
+      "rationale": "Detect deterministic breeder diversity/collision regressions before publication."
+    },
+    {
+      "route_id": "http-429-survival",
+      "priority": 30,
+      "patterns": [
+        "data/http_429_survival_*",
+        "docs/429-survival-kit/*",
+        "rfcs/RFC-0003-http-429-survival-plane.md",
+        "scripts/http_429_survival.py",
+        "scripts/validate_http_429_survival.py"
+      ],
+      "commands": [
+        "python scripts/validate_http_429_survival.py"
+      ],
+      "promotion_gate": "Validate HTTP 429 Survival Kit",
+      "rationale": "Catch timing-floor, authorization, budget, standards-boundary, and reference drift locally."
+    },
+    {
+      "route_id": "meta-improvement-loop",
+      "priority": 35,
+      "patterns": [
+        "data/improvement_events.jsonl",
+        "data/meta_improvement_loop_*",
+        "scripts/analyze_improvement_loop.py",
+        "META_IMPROVEMENT_LOOP.md"
+      ],
+      "commands": [
+        "python scripts/analyze_improvement_loop.py --output /tmp/meta-loop-preflight.json"
+      ],
+      "promotion_gate": "Meta Improvement Loop",
+      "rationale": "Check second-order guardrails before changing the loop that changes the repository."
+    },
+    {
+      "route_id": "public-analysis-core",
+      "priority": 40,
+      "patterns": [
+        "data/paired_observations.csv",
+        "data/session_b_events.jsonl",
+        "scripts/analyze_public_data.py",
+        "scripts/deep_validate_trace.py",
+        "scripts/validate_model_generalization.py",
+        "scripts/latent_timing_model_competition.py",
+        "data/latent_timing_model_reference.json",
+        "docs/model.md",
+        "docs/deep-validation.md",
+        "docs/evidence-ledger.md",
+        "docs/latent-timing-model-competition.md"
+      ],
+      "commands": [
+        "python -m compileall -q scripts",
+        "python scripts/analyze_public_data.py > /tmp/public-analysis-preflight.json"
+      ],
+      "promotion_gate": "Validate public analysis",
+      "rationale": "Run the smallest stable public-data recomputation before the broader matrix/deep jobs."
+    }
+  ],
+  "always": [
+    {
+      "route_id": "repository-observatory",
+      "command": "python scripts/audit_repository_state.py --json-out /tmp/repository-audit-preflight.json",
+      "promotion_gate": "Repository Observatory",
+      "rationale": "Every change can create cross-surface drift."
+    }
+  ],
+  "unmatched_policy": "Run the Repository Observatory and inspect the nearest AGENTS.md; unmatched does not mean unvalidated.",
+  "anti_goodhart": "Preflight is an early diagnostic. Passing preflight never replaces the full promotion gate."
+}

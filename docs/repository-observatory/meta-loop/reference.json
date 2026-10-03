@@ -1,0 +1,141 @@
+{
+  "aggregate": {
+    "completed_cycles": 4,
+    "fraction_cycles_with_failed_observations": 0.25,
+    "fraction_cycles_with_multiple_changes": 0.25,
+    "max_cycle_duration_s": 1806,
+    "mean_cycle_duration_s": 818.75,
+    "median_cycle_duration_s": 631.5,
+    "median_last_change_to_verification_s": 41.5,
+    "median_observation_to_first_change_s": 488,
+    "median_verification_to_promotion_s": 32.5,
+    "min_cycle_duration_s": 206,
+    "verified_before_promotion_ratio": 1
+  },
+  "anti_goodhart": [
+    "Do not optimize commit count, PR count, file count, cat count, or raw cycle count as success.",
+    "Do not turn Purrtocol delight into a fake scientific score.",
+    "Do not treat fewer failures as success if failures disappeared because observation was removed.",
+    "Do not treat lower CI runtime as improvement if coverage or evidence checks were weakened.",
+    "Do not treat theoretical genotype space as external adoption."
+  ],
+  "classification": "repository_process_telemetry_not_quality_score",
+  "cycles": [
+    {
+      "cycle_id": "RIL-001",
+      "duration_s": 1806,
+      "failed_observations": 2,
+      "last_change_to_verification_s": 17,
+      "multiple_changes": true,
+      "observation_to_first_change_s": 1672,
+      "observations_after_first_change": 1,
+      "record_counts": {
+        "change": 2,
+        "cycle_end": 1,
+        "cycle_start": 1,
+        "observation": 2,
+        "promotion": 1,
+        "verification": 1
+      },
+      "target": "3d_first_light",
+      "verification_to_promotion_s": 34,
+      "verified_before_promotion": true
+    },
+    {
+      "cycle_id": "RIL-002",
+      "duration_s": 206,
+      "failed_observations": 0,
+      "last_change_to_verification_s": 25,
+      "multiple_changes": false,
+      "observation_to_first_change_s": 151,
+      "observations_after_first_change": 0,
+      "record_counts": {
+        "change": 1,
+        "cycle_end": 1,
+        "cycle_start": 1,
+        "observation": 1,
+        "promotion": 1,
+        "verification": 1
+      },
+      "target": "agent_native_entrypoints",
+      "verification_to_promotion_s": 30,
+      "verified_before_promotion": true
+    },
+    {
+      "cycle_id": "RIL-003",
+      "duration_s": 753,
+      "failed_observations": 0,
+      "last_change_to_verification_s": 58,
+      "multiple_changes": false,
+      "observation_to_first_change_s": 664,
+      "observations_after_first_change": 0,
+      "record_counts": {
+        "change": 1,
+        "cycle_end": 1,
+        "cycle_start": 1,
+        "observation": 1,
+        "promotion": 1,
+        "verification": 1
+      },
+      "target": "http_429_survival",
+      "verification_to_promotion_s": 31,
+      "verified_before_promotion": true
+    },
+    {
+      "cycle_id": "RIL-004",
+      "duration_s": 510,
+      "failed_observations": 0,
+      "last_change_to_verification_s": 85,
+      "multiple_changes": false,
+      "observation_to_first_change_s": 312,
+      "observations_after_first_change": 0,
+      "record_counts": {
+        "change": 1,
+        "cycle_end": 1,
+        "cycle_start": 1,
+        "observation": 1,
+        "promotion": 1,
+        "verification": 1
+      },
+      "target": "purrtocol_entropy_reactor",
+      "verification_to_promotion_s": 82,
+      "verified_before_promotion": true
+    }
+  ],
+  "interpretation": {
+    "current_tuning_direction": "Use triggered signals to choose bounded improvements while preserving immutable guardrails.",
+    "single_overall_score": "FORBIDDEN",
+    "speed": "diagnostic only"
+  },
+  "observer_footprint": {
+    "github_workflows": 11,
+    "observatory_python_bytes": 29332
+  },
+  "schema": "meta-improvement-loop-report/v1",
+  "triggered_tuning_signals": [
+    {
+      "evidence": {
+        "median_observation_to_first_change_s": 488,
+        "two_x_downstream_median_s": 148
+      },
+      "recommendation": "Improve critic localization/task routing before reducing verification.",
+      "rule": "diagnosis_dominates",
+      "status": "TRIGGERED"
+    },
+    {
+      "evidence": {
+        "fraction_cycles_with_multiple_changes": 0.25
+      },
+      "recommendation": "Add cheaper intermediate validation near the failure source.",
+      "rule": "rework_signal",
+      "status": "TRIGGERED"
+    }
+  ],
+  "violations": [],
+  "source": {
+    "workflow_run_id": 37130862023,
+    "job_id": 111225515505,
+    "head_sha": "2d35f5fbfa4b2902cd9849c23fad4f2ee4d57f1a",
+    "observed_at": "2026-10-03T14:47:18Z"
+  }
+}

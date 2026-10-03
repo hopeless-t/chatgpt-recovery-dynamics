@@ -1,0 +1,39 @@
+# Meta Improvement Loop Dashboard
+
+> Second-order repository control. Measures RIL telemetry and tunes bounded process surfaces without weakening evidence guardrails.
+
+Frozen first checkpoint:
+- completed RIL cycles: 4
+- median total cycle: 631.5 s
+- median observation -> first change: 488.0 s
+- median last change -> verification: 41.5 s
+- median verification -> promotion: 32.5 s
+- verified-before-promotion ratio: 1.0
+
+First triggered signals:
+- diagnosis_dominates
+- rework_signal
+
+First tuning:
+- Critic Router v1
+- source-proximate preflight
+- full promotion gates remain required
+
+Evaluation:
+- require >=3 post-tuning RIL cycles before claiming improvement
+- target observation -> first change median below 488 s
+- preserve verification-before-promotion ratio 1.0
+- observer footprint must stay under soft design warnings
+
+Recursion:
+- automatic control depth = 2
+- no automatic third-order controller
+
+## Surfaces
+
+- [Dashboard Markdown](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/meta-loop/index.md)
+- [Frozen reference](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/meta-loop/reference.json)
+- [Meta Loop contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/META_IMPROVEMENT_LOOP.md)
+- [Critic Router](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/repository-observatory/critic-router.md)
+- [Meta policy](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_loop_policy.json)
+- [MIL ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_events.jsonl)

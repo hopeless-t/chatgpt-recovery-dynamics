@@ -20,3 +20,19 @@ Core rule:
 ## First cycle
 
 RIL-001 = 3D First Light CI failure -> binary biopsy -> repair -> stale-hash detection -> metadata rebind -> all checks PASS -> merge.
+
+
+## Meta loop
+
+- [Meta Improvement Loop](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/META_IMPROVEMENT_LOOP.md): Second-order tuning loop.
+- [Meta Loop Policy](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_loop_policy.json): Immutable guardrails, tunable surfaces, triggers, and bounded recursion.
+- [Meta Loop Reference](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_loop_reference.json): First observed four-cycle checkpoint.
+- [Critic Router](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/repository-observatory/critic-router.md): First tuning selected by the meta loop.
+- [Preflight Routes](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/preflight_routes.json): Changed-path to diagnostic mapping.
+- [Meta Improvement Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/meta_improvement_events.jsonl): MIL history.
+
+Current first-order finding:
+- median observation -> first change: 488.0 s
+- median last change -> verification: 41.5 s
+- median verification -> promotion: 32.5 s
+- tuning direction: improve critic localization, not weaker verification
