@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/improvement-event.schema.json",
+  "title": "Repository Improvement Loop Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "cycle_id",
+    "seq",
+    "record_type",
+    "wall_time_utc",
+    "target",
+    "source_commit",
+    "evidence_class",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "cycle_id": {"type": "string", "pattern": "^RIL-[0-9]{3,}$"},
+    "seq": {"type": "integer", "minimum": 0},
+    "record_type": {
+      "type": "string",
+      "enum": ["cycle_start", "observation", "change", "verification", "promotion", "cycle_end"]
+    },
+    "wall_time_utc": {"type": "string", "format": "date-time"},
+    "target": {"type": "string", "minLength": 1},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "evidence_class": {
+      "type": "string",
+      "enum": ["observed", "recomputed", "design", "change", "verified"]
+    },
+    "details": {"type": "object"}
+  }
+}

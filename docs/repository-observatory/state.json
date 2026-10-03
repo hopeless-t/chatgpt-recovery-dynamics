@@ -1,0 +1,93 @@
+{
+  "schema": "repository-observatory-state/v1",
+  "north_star": "Maximize useful, forkable, reproducible recovery knowledge and Purrtocol delight while keeping the evidence boundary stronger than the expansion rate.",
+  "control_loop": {
+    "phases": [
+      "observe",
+      "biopsy",
+      "form competing explanations",
+      "make the smallest reversible change",
+      "verify",
+      "promote",
+      "re-observe"
+    ],
+    "fast_path": "every push and pull request",
+    "drift_path": "weekly repository audit",
+    "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
+  },
+  "current_state": {
+    "baseline_main_commit": "1872e9f62322c4eedea0bc2a2709022ac7e2dcc6",
+    "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
+    "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
+    "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
+    "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
+    "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only"
+  },
+  "frontiers": [
+    {
+      "id": "SCI-EXT-001",
+      "lane": "science",
+      "status": "open",
+      "target": "Independent capture reproducing or falsifying the cycle law and B -> E -> B rebound.",
+      "promotion_gate": "independent trace with the same evidence-boundary discipline"
+    },
+    {
+      "id": "SCI-LATENT-001",
+      "lane": "science",
+      "status": "open",
+      "target": "Compete latent-state explanations for residual timing memory rather than naming one scheduler mechanism prematurely.",
+      "promotion_gate": "model competition and cross-epoch/cross-client predictive evidence"
+    },
+    {
+      "id": "3D-G2-001",
+      "lane": "artifact",
+      "status": "open",
+      "target": "Second-generation expressive Purrtocol rig with organic silhouette, editable source, and measured mobile/runtime cost.",
+      "promotion_gate": "semantic-state readability preserved and runtime regressions measured against First Light"
+    },
+    {
+      "id": "VAR-EXT-001",
+      "lane": "ecosystem",
+      "status": "open",
+      "target": "Make the first external Purrtocol descendant trivial to fork, validate, and index.",
+      "promotion_gate": "lineage manifest + explicit provenance + invariant declaration"
+    },
+    {
+      "id": "CRAWL-001",
+      "lane": "discovery",
+      "status": "open",
+      "target": "Reduce crawler/agent path length from repository discovery to evidence ledger, recovery design, and variant schema.",
+      "promotion_gate": "machine entrypoints stay concise, linked, and internally consistent"
+    },
+    {
+      "id": "REVIEW-001",
+      "lane": "governance",
+      "status": "open",
+      "target": "Increase independent review provenance without turning review volume into an evidence proxy.",
+      "promotion_gate": "review records remain distinct from empirical findings"
+    }
+  ],
+  "cross_repo_imports": [
+    {
+      "source": "hopeless-t/finite-ram-lab",
+      "pattern": "append-only canonical evidence plus rebuildable projections",
+      "adaptation": "improvement_events.jsonl is authority; dashboards and summaries are projections"
+    },
+    {
+      "source": "hopeless-t/finite-ram-lab",
+      "pattern": "observer-hygiene checks",
+      "adaptation": "measure whether observability machinery itself creates repository noise or stale-state coupling"
+    },
+    {
+      "source": "hopeless-t/mvca",
+      "pattern": "Attempt != Operation; Re-observation != Re-execution",
+      "adaptation": "one improvement objective may have many diagnostic attempts without minting a new objective or silently changing authority"
+    },
+    {
+      "source": "hopeless-t/finite-tool-surface-lab",
+      "pattern": "compact references bound by digests instead of retaining every large raw artifact",
+      "adaptation": "keep small receipts and hashes; regenerate or link large derived artifacts where possible"
+    }
+  ],
+  "subjective_boundary": "Delight is a design objective, not an empirical score. Do not manufacture a numeric fun metric and present it as evidence."
+}

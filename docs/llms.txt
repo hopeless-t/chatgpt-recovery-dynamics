@@ -67,3 +67,11 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [Animated recovery network](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/): Visual recovery explanation; visualization is not evidence.
 - [PKN-429 local TV](https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/): Intentionally unnecessary communication layer.
 - [Doomsday toy model](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/): Illustrative sensitivity model; planetary saturation is NOT ESTABLISHED.
+
+
+## Repository improvement loop
+
+- [Repository Observatory](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/index.md): Closed-loop self-audit and active frontiers.
+- [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md): Observe -> biopsy -> reversible change -> verify -> promote -> re-observe.
+- [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl): Append-only machine-readable improvement history.
+- [Improvement Event Schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/improvement-event.schema.json): RIL event contract.

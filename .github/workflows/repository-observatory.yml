@@ -1,0 +1,31 @@
+name: Repository Observatory
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Audit repository state
+        run: |
+          python scripts/audit_repository_state.py \
+            --json-out /tmp/repository-audit.json \
+            --markdown-out /tmp/repository-audit.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-observatory-audit
+          path: |
+            /tmp/repository-audit.json
+            /tmp/repository-audit.md
