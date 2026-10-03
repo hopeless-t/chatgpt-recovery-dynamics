@@ -1,0 +1,30 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Queueing Restaurant | パケニャ待ち行列食堂</title><meta name="description" content="λ、μ、ρ、M/M/1、retry amplificationをラーメン屋で理解するパケニャ待ち行列食堂。">
+<style>:root{--b:#140f08;--p:#241a0f;--l:#6d4d28;--t:#fff8e9;--m:#cdbb9e;--c:#4cdaeb;--g:#4cd384;--a:#f6bb44;--r:#ef5f6c}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -15%,#5a3e1e 0,var(--b) 42%);color:var(--t);font:16px/1.65 system-ui,sans-serif}.w{max-width:1050px;margin:auto;padding:52px 22px}.ey{color:var(--a);font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,6rem);line-height:.9;margin:.2em 0}.lead{color:var(--m);max-width:850px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}.card,.ctrl{border:1px solid var(--l);background:rgba(36,26,15,.92);border-radius:20px;padding:18px;margin:14px 0}.big{font-size:2rem;font-weight:950}.safe{color:var(--g)}.warn{color:var(--a)}.danger{color:var(--r)}label{display:block;font-weight:900;margin-top:13px}input[type=range]{width:100%}.eq{font:700 .95rem ui-monospace,monospace;background:#0d0905;border:1px solid var(--l);border-radius:12px;padding:12px;white-space:pre-wrap}.rule{border-left:5px solid var(--a);background:rgba(246,187,68,.07);padding:14px;color:var(--m);margin:20px 0}a{color:var(--c)}.btn{display:inline-block;border:1px solid var(--l);border-radius:999px;padding:9px 14px;text-decoration:none;color:var(--t);margin:5px 6px 0 0}</style></head><body><main class="w">
+<div class="ey">Queueing Restaurant</div><h1>パケニャ<br>待ち行列食堂</h1><p class="lead">ラーメンが遅いから同じ注文をもう一杯入れると、厨房はなぜ救われないのか。λ・μ・ρを食堂で覚えるにゃ。</p>
+<div class="rule"><b>モデル注意：</b> 下の待ち時間式はM/M/1 toy model。Poisson arrival・exponential service・single server等の仮定を置く。ChatGPT/OpenAI productionそのもののモデルではない。</div>
+<div class="ctrl">
+<label>客の基礎arrival λ = <span id="lamL">7.0</span> orders/min</label><input id="lam" type="range" min="1" max="12" step="0.1" value="7">
+<label>厨房service μ = <span id="muL">10.0</span> orders/min</label><input id="mu" type="range" min="2" max="15" step="0.1" value="10">
+<label>「まだ来ないにゃ」再注文率 = <span id="retryL">0</span>%</label><input id="retry" type="range" min="0" max="100" step="1" value="0">
+</div>
+<div class="grid">
+<div class="card"><div class="lead">effective λ</div><div class="big" id="eff">—</div></div>
+<div class="card"><div class="lead">utilization ρ</div><div class="big" id="rho">—</div></div>
+<div class="card"><div class="lead">M/M/1 mean system time</div><div class="big" id="wait">—</div></div>
+<div class="card"><div class="lead">店長判定</div><div class="big" id="state">—</div></div>
+</div>
+<div class="eq">λ_eff = λ × (1 + retry_fraction)
+ρ = λ_eff / μ
+
+if ρ < 1:
+  W = 1 / (μ - λ_eff)
+  L = λ_eff × W
+else:
+  steady-state M/M/1 does not exist</div>
+<div class="card"><h2>パケニャの注文</h2><p id="speech">「まだ来ないにゃ。もう一杯注文するにゃ！」</p><p class="lead" id="explain"></p></div>
+<div class="rule"><b>Tragedy of the Commons:</b> 一匹だけの追加注文は小さく見える。でも全員が同じことをするとshared capacityを食べる。個人の「もう一回だけ」が集団ではretry amplificationになる。</div>
+<a class="btn" href="../purrtocol-university/">大学へ戻る</a><a class="btn" href="../evidence-court/">証拠裁判所</a><a class="btn" href="../purrtocol-doomsday/">終末予測室</a><a class="btn" href="../">研究所正面</a>
+</main><script>
+const $=x=>document.getElementById(x);function u(){const l=+$("lam").value,m=+$("mu").value,q=+$("retry").value/100,e=l*(1+q),r=e/m;$("lamL").textContent=l.toFixed(1);$("muL").textContent=m.toFixed(1);$("retryL").textContent=Math.round(q*100);$("eff").textContent=e.toFixed(2)+" /min";$("rho").textContent=r.toFixed(3);let st,cl,ex;if(r>=1){$("wait").textContent="∞ / unstable";st="厨房崩壊";cl="danger";ex="λ_eff ≥ μ。定常M/M/1は成立しない。再注文はcapacityを作らないにゃ。"}else{const W=1/(m-e),mins=W,seconds=mins*60;$("wait").textContent=seconds.toFixed(1)+" sec";if(r<.7){st="平和";cl="safe"}else if(r<.9){st="混雑";cl="warn"}else{st="危険";cl="danger"}ex="ρ="+r.toFixed(3)+"。ρが1へ近づくと、toy model上の待ち時間は急増するにゃ。"}$("state").textContent=st;$("state").className="big "+cl;$("explain").textContent=ex;$("speech").textContent=q>0?"「遅いから追加注文 "+Math.round(q*100)+"% にゃ！」 店長「それ厨房を増やしてない！！」":"「まだ来ないにゃ……でも追加注文は待つにゃ。」"}["lam","mu","retry"].forEach(x=>$(x).addEventListener("input",u));u();
+</script></body></html>
