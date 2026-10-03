@@ -1,0 +1,48 @@
+name: Validate HTTP 429 Survival Kit
+
+on:
+  push:
+    paths:
+      - "data/http_429_survival_contract.json"
+      - "data/http_429_survival_scenarios.json"
+      - "docs/429-survival-kit/**"
+      - "docs/recovery-design.md"
+      - "docs/server-friendly-congestion-control.md"
+      - "docs/provider-friendly-checklist.md"
+      - "scripts/http_429_survival.py"
+      - "scripts/validate_http_429_survival.py"
+      - ".github/workflows/validate-http-429-survival.yml"
+  pull_request:
+    paths:
+      - "data/http_429_survival_contract.json"
+      - "data/http_429_survival_scenarios.json"
+      - "docs/429-survival-kit/**"
+      - "docs/recovery-design.md"
+      - "docs/server-friendly-congestion-control.md"
+      - "docs/provider-friendly-checklist.md"
+      - "scripts/http_429_survival.py"
+      - "scripts/validate_http_429_survival.py"
+      - ".github/workflows/validate-http-429-survival.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  survival:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate survival invariants
+        run: python scripts/validate_http_429_survival.py
+      - name: Generate deterministic scenario reference
+        run: |
+          python scripts/http_429_survival.py \
+            --scenarios data/http_429_survival_scenarios.json \
+            --output /tmp/http-429-survival.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: http-429-survival-reference
+          path: /tmp/http-429-survival.json
