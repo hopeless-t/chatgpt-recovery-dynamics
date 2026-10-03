@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant.schema.json",
+  "title": "Purrtocol Variant Manifest",
+  "description": "Portable lineage manifest for canonical, forked, or derivative Purrtocol variants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "variant_id",
+    "name",
+    "status",
+    "parent_variant_id",
+    "origin",
+    "mutations",
+    "preserved_invariants",
+    "evidence_status",
+    "license"
+  ],
+  "properties": {
+    "schema": {"const": "purrtocol-variant/v1"},
+    "variant_id": {
+      "type": "string",
+      "pattern": "^PKV-[A-Z0-9][A-Z0-9._-]*$"
+    },
+    "name": {"type": "string", "minLength": 1, "maxLength": 120},
+    "status": {
+      "type": "string",
+      "enum": ["canonical", "concept", "implemented", "external"]
+    },
+    "parent_variant_id": {
+      "type": ["string", "null"],
+      "pattern": "^PKV-[A-Z0-9][A-Z0-9._-]*$"
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_url", "commit", "submitted_by"],
+      "properties": {
+        "repository_url": {"type": "string", "format": "uri"},
+        "commit": {"type": ["string", "null"]},
+        "submitted_by": {"type": "string", "minLength": 1},
+        "pull_request_url": {"type": ["string", "null"], "format": "uri"}
+      }
+    },
+    "mutations": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "maxItems": 64
+    },
+    "preserved_invariants": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "recover_dont_amplify",
+          "visualization_not_evidence",
+          "unknown_not_retry_permission",
+          "observer_side_not_omniscient_backend",
+          "concept_not_implemented",
+          "first_success_not_necessarily_healthy",
+          "observe_before_materialize"
+        ]
+      }
+    },
+    "evidence_status": {
+      "type": "string",
+      "enum": ["story", "concept", "implemented_artifact", "observed_repository_history"]
+    },
+    "license": {"type": "string", "minLength": 1},
+    "homepage": {"type": ["string", "null"], "format": "uri"},
+    "assets": {
+      "type": "array",
+      "items": {"type": "string"},
+      "maxItems": 64
+    },
+    "notes": {"type": "string", "maxLength": 4000}
+  }
+}
