@@ -21,7 +21,8 @@
     "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
     "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
-    "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only"
+    "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only",
+    "agent_entrypoints": "root AGENTS.md plus local 3D/variant maps; size and task-routing invariants audited"
   },
   "frontiers": [
     {
@@ -55,9 +56,9 @@
     {
       "id": "CRAWL-001",
       "lane": "discovery",
-      "status": "open",
-      "target": "Reduce crawler/agent path length from repository discovery to evidence ledger, recovery design, and variant schema.",
-      "promotion_gate": "machine entrypoints stay concise, linked, and internally consistent"
+      "status": "baseline_implemented",
+      "target": "Continuously reduce agent path length while keeping root guidance concise and task-specific detail local.",
+      "promotion_gate": "root/nested AGENTS + llms/Markdown entrypoints stay concise, linked, and internally consistent"
     },
     {
       "id": "REVIEW-001",
