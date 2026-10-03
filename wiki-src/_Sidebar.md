@@ -13,6 +13,7 @@
 - [[FAQ]]
 - [[Glossary]]
 - [[Purrtocol]]
+- [[Purrtocol Expansion Dynamics]]
 - [[Release Notes]]
 - [[The Recursive 429 Incident]]
 - [[The Trust-Level Paradox]]
