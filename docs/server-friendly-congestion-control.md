@@ -184,14 +184,28 @@ On overload/throttling:
 next_start =
     max(
         previous_start + normal_period,
-        Retry-After,
-        local_backoff_with_jitter
+        now + retry_after_floor,
+        now + local_backoff
     )
+    + nonnegative_herd_jitter
 ~~~
 
 A client should not convert a fast 429 into a higher request rate.
 
-Jitter prevents synchronized clients from returning as a new herd.
+The ordering is deliberate:
+
+1. preserve the start-to-start floor;
+2. honor stable server-directed `Retry-After` as a lower bound;
+3. apply bounded local backoff;
+4. only then add **nonnegative** jitter to spread the herd.
+
+Negative jitter must not pull a client earlier than a server-requested minimum.
+
+The active 2026 RateLimit header work is still an Internet-Draft, not an RFC;
+this repository keeps those hints in an experimental layer rather than silently
+upgrading them to stable HTTP semantics.
+
+See [HTTP 429 Survival Kit](429-survival-kit/index.md).
 
 ### Layer D — small queues and early load shedding
 
