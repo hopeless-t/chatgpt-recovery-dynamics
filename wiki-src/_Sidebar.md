@@ -14,6 +14,7 @@
 - [[Glossary]]
 - [[Purrtocol]]
 - [[Release Notes]]
+- [[The Recursive 429 Incident]]
 
 ---
 
