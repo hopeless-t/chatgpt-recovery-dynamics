@@ -8,6 +8,7 @@ on:
       - "data/purrtocol_variants.jsonl"
       - "examples/purrtocol-variant.example.json"
       - "docs/purrtocol.json"
+      - "docs/purrtocol-variant.schema.json"
       - "docs/llms.txt"
       - "docs/index.md"
       - "docs/purrtocol-variant-foundry/**"
