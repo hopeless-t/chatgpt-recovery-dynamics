@@ -50,3 +50,8 @@ Evidence Court: https://hopeless-t.github.io/chatgpt-recovery-dynamics/evidence-
 Queueing Restaurant: https://hopeless-t.github.io/chatgpt-recovery-dynamics/queueing-restaurant/
 These are educational/satirical surfaces. Evidence Court mirrors the repository evidence boundary. Queueing Restaurant uses an explicitly labeled M/M/1 toy model and is not a model of OpenAI production.
 Concept promotions are recorded separately in data/pakenya_promotions.jsonl. The original concept records remain concept-origin provenance.
+
+Incident Investigation Board: https://hopeless-t.github.io/chatgpt-recovery-dynamics/incident-board/
+Agent Retry Academy: https://hopeless-t.github.io/chatgpt-recovery-dynamics/agent-retry-academy/
+Purrtocol Museum: https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-museum/
+Six of seven registered concepts have now been promoted to separate implemented post-checkpoint events. The remaining unimplemented concept is the future 3D Purrtocol model.
