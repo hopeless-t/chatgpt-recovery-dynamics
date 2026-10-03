@@ -34,3 +34,18 @@ Prefer passive observation of naturally occurring failures and local
 simulation.
 
 Contributions that reduce duplicate/retry/provider work are especially welcome.
+
+
+## Purrtocol variants
+
+Forked and derivative Purrtocols are welcome.
+
+Read [PURRTOCOL_VARIANTS.md](PURRTOCOL_VARIANTS.md), start from
+[examples/purrtocol-variant.example.json](examples/purrtocol-variant.example.json),
+and use the Purrtocol Variant pull-request template if you want upstream lineage
+indexing.
+
+A fork does not need upstream approval to exist. Upstream indexing records
+provenance; it does not imply endorsement, ranking, or empirical validation.
+
+Please keep lineage and third-party asset licensing explicit.
