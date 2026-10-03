@@ -8,17 +8,23 @@
 
 ## Why this exists
 
-Purrtocol began as a visual metaphor for provider-friendly recovery and then acquired a local-TV commercial, a blooper reel, a studio documentary, a glossary bridge, and an HTTP 429 learning surface.
+Purrtocol began as a visual metaphor for provider-friendly recovery and then
+acquired a local-TV commercial, a blooper reel, a studio documentary, a
+glossary bridge, and an HTTP 429 learning surface.
 
 This appendix asks:
 
 > If every Purrtocol artifact creates adjacent ideas for more Purrtocol artifacts, what kind of growth process are we looking at?
 
-This is a **side-study of repository evolution**, not part of the ChatGPT recovery evidence base.
+This is a **side-study of repository evolution**, not part of the ChatGPT
+recovery evidence base.
 
 ## Event unit
 
-The recorder is data/pakenya_events.jsonl. Each selected implemented event has a commit-backed timestamp. parent_event_id is a curated conceptual lineage, not causal proof. adjacent_ideas_generated is an author annotation, not a measured branching process.
+The recorder is `data/pakenya_events.jsonl`. Each selected implemented event
+has a commit-backed timestamp. `parent_event_id` is a curated conceptual
+lineage, not causal proof. `adjacent_ideas_generated` is an author annotation,
+not a measured branching process.
 
 ## Event schema
 
@@ -30,10 +36,18 @@ data/pakenya_event_schema.json
 
 Human-readable contract: [SCHEMA.md](SCHEMA.md).
 
-`implemented` nodes require commit-backed time/provenance and are eligible for
-event-time fits. `concept` nodes are allowed for future adjacent ideas but
-remain outside the compound-growth and Hawkes event-time fits until they are
-actually implemented.
+`implemented` nodes require commit-backed time/provenance.
+`concept` nodes are reserved for future adjacent ideas.
+
+Two analysis cohorts are now explicit:
+
+~~~text
+primary
+observer_effect
+~~~
+
+The observer-effect cohort is measurement-associated repository history, not a
+universal causal observer-effect claim.
 
 ## Compound-growth baseline
 
@@ -43,7 +57,7 @@ P(t) = P0 exp(r t)
 T2 = ln(2) / r
 ~~~
 
-Initial selected 10-event log:
+Primary 10-event cohort:
 
 ~~~text
 r ~= 0.1844 per hour
@@ -60,7 +74,7 @@ C(P) = P(P - 1) / 2
 dP/dt = r P + b P^2
 ~~~
 
-The toy solution has a finite-time singularity for b > 0:
+For b > 0 the toy solution has a finite-time singularity:
 
 ~~~text
 t* = (1/r) ln(1 + r/(b P0))
@@ -81,9 +95,15 @@ n = 1  -> critical
 n > 1  -> supercritical
 ~~~
 
-The first descriptive grid fit gives approximately n ~= 0.85: **subcritical**.
+The primary descriptive grid fit gives approximately:
 
-The manually annotated adjacent-idea mark averages **3.3 ideas/event**, and observed parents have **1.5 implemented children/parent**, but neither quantity is a Hawkes branching ratio. The current selected commit sequence therefore does **not** establish supercritical implementation growth.
+~~~text
+n ~= 0.85
+classification = subcritical
+~~~
+
+The manually annotated adjacent-idea mark averages **3.3 ideas/event**. That
+quantity is not a Hawkes branching ratio.
 
 ## Observation hazard
 
@@ -112,28 +132,65 @@ dP/dt = growth(P, K)
 dK/dt = c P
 ~~~
 
-Reusable CSS, navigation, schemas, analysis scripts, CI, and future 3D pipelines can increase effective capacity for future artifacts. No c is estimated.
+Reusable CSS, navigation, schemas, analysis scripts, CI, and future 3D pipelines
+can increase effective capacity for future artifacts. No c is estimated.
 
-## Lineage
+## Measurement backaction / observer-inclusive checkpoint
+
+Operationalizing this side-study created additional Purrtocol artifacts:
+analysis code, a reference dataset, a paper, a design bible, navigation,
+machine-reader surfaces, Wiki surfaces, and CI validation.
+
+The checkpoint is frozen through:
 
 ~~~text
-PKE-001 Canonical identity
-├─ PKE-002 SVG
-├─ PKE-003 Wiki
-└─ PKE-004 Local-TV commercial
-   └─ PKE-005 Expanded universe
-      └─ PKE-006 Blooper reel
-         └─ PKE-007 Studio documentary
-            └─ PKE-008 Glossary / education bridge
-               ├─ PKE-009 CM-to-glossary link
-               └─ PKE-010 429 learning surface
+commit = ec25244a024f2049cfc7851c7fafd421d35a113c
+time   = 2026-10-03T07:42:51Z
 ~~~
+
+It records **12 measurement-associated artifacts in 183 seconds** after the
+original 10-event cohort.
+
+~~~text
+pre-measurement cohort:
+  events = 10
+  descriptive doubling time ~= 3.758 h
+  Hawkes n ~= 0.85
+  classification = subcritical
+
+observer-inclusive checkpoint:
+  events = 22
+  descriptive doubling time ~= 2.803 h
+  Hawkes n ~= 1.00
+  classification = near-critical
+~~~
+
+This is **measurement-associated repository backaction**, not a universal causal
+observer effect. The primary fit remains preserved beside the observer-inclusive
+fit.
+
+The checkpoint is frozen because otherwise every attempt to document the
+observer effect would itself generate another Purrtocol artifact inside the same
+measurement window.
+
+> **The instrument used to measure the cat is also made of cat.**
+
+## Lineage boundary
+
+Primary lineage PKE-001 through PKE-010 is the original selected cohort.
+PKE-011 through PKE-022 are the fixed measurement-associated cohort.
 
 The lineage is editorial project archaeology, not experimental causality.
 
 ## Falsification
 
-The model should be weakened if new artifacts stop generating adjacent ideas, longer event logs remain stably subcritical, doubling time lengthens strongly after the novelty phase, or tooling does not increase implementation capacity.
+The model should be weakened if new artifacts stop generating adjacent ideas,
+longer event logs remain stably subcritical, doubling time lengthens strongly
+after the novelty phase, or tooling does not increase implementation capacity.
+
+The measurement-backaction interpretation should be narrowed if future
+checkpoints do not show any systematic difference between primary and
+observer-inclusive cohorts.
 
 ## Canonical conclusion
 
@@ -141,8 +198,14 @@ The model should be weakened if new artifacts stop generating adjacent ideas, lo
 Idea-space proliferation:
   currently exuberant
 
-Implemented-event Hawkes fit:
-  currently subcritical (~0.85)
+Primary implemented-event Hawkes fit:
+  subcritical (~0.85)
+
+Observer-inclusive checkpoint:
+  near-critical (~1.00)
+
+Causal observer-effect law:
+  NOT ESTABLISHED
 
 Earth saturation:
   NOT YET OBSERVED

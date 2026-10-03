@@ -65,8 +65,6 @@ Typical mistakes:
 
 Japanese Purrtocol uses simple analogies and often ends with にゃ. Difficult concepts may be explained aggressively simply. Footnotes are not allowed to become sloppy.
 
-Canonical production rule:
-
 > **The joke may be sloppy; the footnote may not be sloppy.**
 
 ## World
@@ -136,6 +134,17 @@ animation:
 ~~~
 
 The model should function as an **architecture mascot**: state, observation, transport, and materialization should remain visually legible.
+
+## Measurement backaction
+
+The act of measuring Purrtocol expansion can itself create documentation, pages,
+scripts, CI, and lore. These artifacts belong to a separate `observer_effect`
+cohort rather than being silently folded into the original fit.
+
+> **The instrument used to measure the cat is also made of cat.**
+
+Measurement-associated expansion is repository history. A universal causal
+observer effect is not established.
 
 ## Meta-rule
 

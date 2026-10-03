@@ -18,8 +18,29 @@ concept
 Evidence Court, the 3D model, or any other not-yet-built surface. Concept nodes
 must leave `timestamp_utc` and `source_commit` null.
 
-Only implemented timestamped events are eligible for the compound-growth and
-Hawkes event-time fits.
+## Analysis cohorts
+
+~~~text
+fit_cohort = primary
+  original selected Purrtocol artifact cohort
+
+fit_cohort = observer_effect
+  measurement-associated artifacts created while operationalizing the side-study
+~~~
+
+`measurement_associated=true` is repository provenance, not a universal causal
+observer-effect claim.
+
+The first observer-inclusive checkpoint is frozen through:
+
+~~~text
+commit = ec25244a024f2049cfc7851c7fafd421d35a113c
+time   = 2026-10-03T07:42:51Z
+~~~
+
+Later instrumentation is intentionally outside that checkpoint, otherwise every
+attempt to document the observer effect would recursively create another event
+inside the same measurement window.
 
 Evidence boundary:
 
@@ -27,6 +48,7 @@ Evidence boundary:
 commit timestamp             = repository observation
 parent_event_id              = editorial lineage annotation
 adjacent_ideas_generated     = author annotation
+fit_cohort                   = analysis selection label
 exponential / Hawkes fit     = descriptive model
 quadratic singularity        = scenario
 observation hazard           = illustrative unless instrumented
