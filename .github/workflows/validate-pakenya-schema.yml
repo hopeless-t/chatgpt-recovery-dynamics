@@ -1,0 +1,25 @@
+name: Validate Purrtocol event schema
+
+on:
+  push:
+    paths:
+      - "data/pakenya_events.jsonl"
+      - "data/pakenya_event_schema.json"
+      - "scripts/validate_pakenya_events.py"
+      - ".github/workflows/validate-pakenya-schema.yml"
+  pull_request:
+    paths:
+      - "data/pakenya_events.jsonl"
+      - "data/pakenya_event_schema.json"
+      - "scripts/validate_pakenya_events.py"
+      - ".github/workflows/validate-pakenya-schema.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python scripts/validate_pakenya_events.py
