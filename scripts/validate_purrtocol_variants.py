@@ -78,6 +78,15 @@ def main() -> None:
     validate_variant(example, allow_placeholder=True)
     assert example["parent_variant_id"] == "PKV-CANONICAL"
 
+    schema_data = json.loads(
+        (ROOT / "data" / "purrtocol_variant_schema.json").read_text(encoding="utf-8")
+    )
+    schema_pages = json.loads(
+        (ROOT / "docs" / "purrtocol-variant.schema.json").read_text(encoding="utf-8")
+    )
+    assert schema_data == schema_pages, "published schema drift"
+    assert schema_pages["$id"].endswith("/purrtocol-variant.schema.json")
+
     discovery = json.loads(
         (ROOT / "docs" / "purrtocol.json").read_text(encoding="utf-8")
     )
@@ -94,7 +103,7 @@ def main() -> None:
         ROOT / "docs" / "purrtocol-variant-foundry" / "index.html"
     ).read_text(encoding="utf-8")
     assert 'rel="alternate" type="text/markdown"' in html
-    assert 'rel="describedby"' in html
+    assert 'rel="describedby" href="./llms.txt"' in html
     assert "story mechanic only" in html
     assert "Sam/Tibo observation → NOT OBSERVED" in html
 
@@ -103,6 +112,12 @@ def main() -> None:
     )
     assert "Fork the cat" in md
     assert "NOT OBSERVED" in md
+
+    foundry_llms = (
+        ROOT / "docs" / "purrtocol-variant-foundry" / "llms.txt"
+    ).read_text(encoding="utf-8")
+    assert foundry_llms.startswith("# Purrtocol Variant Foundry\n")
+    assert "[Variant JSON Schema]" in foundry_llms
 
     llms = (ROOT / "docs" / "llms.txt").read_text(encoding="utf-8")
     assert llms.startswith("# ChatGPT Conversation Recovery Dynamics\n")
