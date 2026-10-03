@@ -78,15 +78,16 @@ Current canonical sets:
 - studio documentary
 - glossary / classroom
 - 429 learning room
+- Purrtocol University
+- Evidence Court
+- Purrtocol Restaurant for queueing theory
 
 Permitted future adjacent sets:
 
-- Purrtocol University
-- Evidence Court
 - Incident Investigation Board
-- Purrtocol Restaurant for queueing theory
 - Agent Retry Academy
 - Museum / archive
+- Future 3D Purrtocol model
 
 ## Props
 
@@ -151,3 +152,23 @@ observer effect is not established.
 Every additional document about why the cat exists increases the amount of evidence that the cat exists.
 
 This is not evidence that the cat was necessary.
+
+
+## Concept promotion rule
+
+Future settings may be registered as `status=concept` before implementation.
+When a concept becomes real, the concept record is retained as historical
+provenance and `data/pakenya_promotions.jsonl` maps it to a separate
+commit-backed implemented event.
+
+~~~text
+concept origin != implemented artifact
+promotion       = explicit bridge
+frozen fit      = unchanged
+~~~
+
+First promotions:
+
+- PKE-100 → PKE-024 — Purrtocol University
+- PKE-101 → PKE-025 — Evidence Court
+- PKE-103 → PKE-026 — Queueing Restaurant
