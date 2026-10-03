@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>HTTP 429 Survival Kit | パケニャ救難隊</title>
+<meta name="description" content="A local-only vendor-neutral 429 rescue console: honor Retry-After, prevent retry amplification, and re-observe ambiguous side effects.">
+<link rel="canonical" href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-survival-kit/">
+<link rel="alternate" type="text/markdown" href="./index.md">
+<link rel="describedby" href="./llms.txt">
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--line:#294966;--text:#edf5ff;--muted:#96a9bd;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44;--red:#ef5f6c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 72% 0,rgba(239,95,108,.12),transparent 30%),radial-gradient(circle at 10% 5%,rgba(76,218,235,.10),transparent 26%),var(--bg);color:var(--text);font:16px/1.6 system-ui,sans-serif}
+main{max-width:1140px;margin:auto;padding:46px 22px 80px}.ey{font-weight:900;letter-spacing:.14em;color:var(--red);text-transform:uppercase}
+h1{font-size:clamp(3rem,8vw,7rem);line-height:.9;letter-spacing:-.06em;margin:.15em 0}.lead{font-size:1.15rem;color:var(--muted);max-width:850px}
+.grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:15px;margin-top:22px}.card{border:1px solid var(--line);border-radius:22px;background:rgba(13,27,45,.92);padding:18px}
+label{display:block;font-weight:850;margin:.7rem 0 .25rem}input,select{width:100%;background:#050c15;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px;font:inherit}
+.check{display:flex;align-items:center;gap:8px;margin-top:10px}.check input{width:auto}
+button,.btn{display:inline-block;margin-top:12px;border:1px solid var(--cyan);border-radius:999px;padding:9px 14px;background:#0a2033;color:var(--text);font-weight:850;text-decoration:none;cursor:pointer}
+.result{font-size:clamp(2rem,5vw,4rem);font-weight:950;line-height:1;margin:.3em 0}.wait{color:var(--amber)}.stop{color:var(--red)}.go{color:var(--green)}.observe{color:var(--cyan)}
+.code{font-family:ui-monospace,monospace;background:#050c15;border:1px solid var(--line);border-radius:14px;padding:13px;white-space:pre-wrap}
+.badges{display:flex;flex-wrap:wrap;gap:8px}.badge{border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:.8rem}.rfc{color:var(--green)}.draft{color:var(--amber)}.expired{color:var(--red)}
+.rule{border-left:5px solid var(--amber);background:rgba(246,187,68,.05);padding:13px 16px;margin:18px 0}.cat{font-size:4rem}.small{font-size:.9rem;color:var(--muted)}a{color:var(--cyan)}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<div class="ey">Purrtocol Internet Rescue Corps</div>
+<h1>429火災を<br>retryで燃やすな。</h1>
+<p class="lead">サーバが「待って」と言った時に、fast-failを理由にもっと速く叩かない。UNKNOWNな副作用を新しい実行許可に変換しない。全部ブラウザ内だけで判定する救難コンソール。</p>
+
+<div class="badges">
+<span class="badge rfc">RFC 6585 · 429</span>
+<span class="badge rfc">RFC 9110 · Retry-After</span>
+<span class="badge rfc">RFC 9457 · Problem Details</span>
+<span class="badge draft">RateLimit draft-11 · NOT RFC</span>
+<span class="badge expired">Idempotency-Key draft-07 · EXPIRED</span>
+</div>
+
+<div class="rule"><b>消防規則：</b> Retry-Afterは<strong>床</strong>。jitterで前倒し禁止。消防車が「120秒待て」と言ったら119秒で戻ってくる猫を作らない。</div>
+
+<div class="grid">
+<section class="card">
+<div class="cat">🐈‍⬛🚒</div>
+<h2>Rescue input</h2>
+<label for="method">HTTP method</label>
+<select id="method"><option>GET</option><option>POST</option><option>PATCH</option><option>PUT</option><option>DELETE</option></select>
+
+<label for="state">Operation state</label>
+<select id="state">
+<option value="read_only_observation">read-only observation</option>
+<option value="known_not_applied">known not applied</option>
+<option value="unknown">UNKNOWN</option>
+<option value="known_applied">known applied</option>
+</select>
+
+<label class="check"><input type="checkbox" id="idem"> explicit application/provider idempotency contract</label>
+
+<label for="attempt">Attempt number</label>
+<input id="attempt" type="number" min="1" value="1">
+<label for="budget">Retry budget</label>
+<input id="budget" type="number" min="1" value="6">
+
+<label for="elapsed">Seconds since previous start</label>
+<input id="elapsed" type="number" min="0" step=".1" value=".3">
+<label for="minperiod">Minimum start-to-start period</label>
+<input id="minperiod" type="number" min="0" step=".1" value="10">
+
+<label for="retry">Retry-After (seconds; blank if absent)</label>
+<input id="retry" inputmode="numeric" value="120">
+<label for="draft">Experimental RateLimit header</label>
+<input id="draft" value='"default";r=0;t=30'>
+
+<button id="run">Dispatch rescue cat</button>
+</section>
+
+<section class="card">
+<h2>Decision</h2>
+<div id="decision" class="result">—</div>
+<p id="reason"></p>
+<div id="timing" class="code"></div>
+<h3>Why</h3>
+<p id="why" class="small"></p>
+<a class="btn" href="./index.md">Technical guide</a>
+<a class="btn" href="./contract.json">Machine contract</a>
+<a class="btn" href="../purrtocol-university/">Purrtocol University</a>
+</section>
+</div>
+
+<div class="card" style="margin-top:15px">
+<h2>Rescue doctrine</h2>
+<div class="code">429          → reduce pressure
+Retry-After  → minimum wait floor
+UNKNOWN POST → REOBSERVE unless explicit idempotency contract
+known applied→ STOP_DUPLICATE
+budget gone  → STOP_BUDGET
+first success after Blocked → Recovering / E, not automatically Healthy / H</div>
+<p class="small">This UI is a teaching/reference surface, not a complete HTTP client or a substitute for provider-specific API contracts.</p>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const idemMethods=new Set(['GET','HEAD','PUT','DELETE','OPTIONS','TRACE']);
+function parseDraft(s){
+  const m=s.match(/(?:^|,)\s*(?:"[^"]*"|[A-Za-z0-9._~-]+)\s*;[^,]*\br=0\b[^,]*\bt=(\d+)\b/i);
+  return m?Number(m[1]):0;
+}
+function unit(key){
+  let h=2166136261>>>0;
+  for(const ch of key){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)>>>0}
+  return h/4294967295;
+}
+function run(){
+  const method=$('method').value, state=$('state').value, explicit=$('idem').checked;
+  const attempt=Math.max(1,Number($('attempt').value)||1), budget=Math.max(1,Number($('budget').value)||1);
+  const elapsed=Math.max(0,Number($('elapsed').value)||0), minp=Math.max(0,Number($('minperiod').value)||0);
+  const retryRaw=$('retry').value.trim(), retry=/^\d+$/.test(retryRaw)?Number(retryRaw):0;
+  const draft=retry?0:parseDraft($('draft').value);
+  let action,reason;
+  if(state==='known_applied'){action='STOP_DUPLICATE';reason='Operation is already known applied.'}
+  else if(state==='unknown'&&!idemMethods.has(method)&&!explicit){action='REOBSERVE';reason='UNKNOWN non-idempotent outcome has no explicit idempotency contract.'}
+  else if(attempt>=budget){action='STOP_BUDGET';reason='Retry budget is exhausted.'}
+  else{action='WAIT_THEN_RETRY';reason='Retry is authorized, but timing floors and budget still apply.'}
+  const box=$('decision');box.textContent=action;box.className='result '+(action==='WAIT_THEN_RETRY'?'wait':action==='REOBSERVE'?'observe':'stop');
+  $('reason').textContent=reason;
+  if(action!=='WAIT_THEN_RETRY'){
+    $('timing').textContent='No execution retry scheduled.';
+    $('why').textContent='Authorization and timing are separate. A retry timer cannot manufacture execution authority.';
+    return;
+  }
+  const local=Math.min(60,2*Math.pow(2,Math.min(attempt-1,30)));
+  const anchor=Math.max(0,minp-elapsed);
+  const base=Math.max(anchor,retry,draft,local);
+  const jitterWindow=Math.max(minp,retry,draft,local,1)*.2;
+  const jitter=jitterWindow*unit(method+':'+state+':'+attempt);
+  const wait=base+jitter;
+  $('timing').textContent=
+    'start-anchor floor : '+anchor.toFixed(2)+' s\n'+
+    'Retry-After floor  : '+retry.toFixed(2)+' s\n'+
+    'draft hint floor   : '+draft.toFixed(2)+' s\n'+
+    'local backoff      : '+local.toFixed(2)+' s\n'+
+    'nonnegative jitter : '+jitter.toFixed(2)+' s\n'+
+    '--------------------------------\n'+
+    'wait at least      : '+wait.toFixed(2)+' s';
+  $('why').textContent=retry
+    ? 'Stable Retry-After wins as a lower bound. Draft RateLimit timing is ignored when Retry-After is present.'
+    : draft
+      ? 'No Retry-After was supplied, so the active RateLimit draft zero-quota window is treated only as an experimental hint.'
+      : 'No server delay was supplied. Start anchoring plus bounded local exponential backoff prevents fast-failure cadence amplification.';
+}
+$('run').onclick=run;run();
+</script>
+</body></html>
