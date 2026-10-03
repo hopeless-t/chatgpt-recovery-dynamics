@@ -160,6 +160,8 @@ External archaeology: [docs/external-evidence.md](docs/external-evidence.md)
 - [Animated network visualizer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/network/)
 - [Research Wiki](https://github.com/hopeless-t/chatgpt-recovery-dynamics/wiki)
 - [Pakenya 429 trivia](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429/)
+- [Purrtocol Design Bible](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol/)
+- [Purrtocol Expansion Dynamics](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-expansion/)
 - [30-second brief](https://hopeless-t.github.io/chatgpt-recovery-dynamics/brief/)
 - [One-minute reproduction guide](https://hopeless-t.github.io/chatgpt-recovery-dynamics/reproduce/)
 - [Static evidence explorer](https://hopeless-t.github.io/chatgpt-recovery-dynamics/lab/)
@@ -889,3 +891,21 @@ MIT. See [LICENSE](LICENSE).
 ## Disclaimer
 
 Independent observational research. Not affiliated with or endorsed by OpenAI.
+
+
+## Purrtocol expansion side-study
+
+The mascot now has its own deliberately over-engineered, clearly separated side-study:
+
+~~~text
+selected implemented events  = 10
+descriptive doubling time    ~= 3.758 h
+Hawkes branching ratio       ~= 0.85
+implemented-event class      = subcritical
+annotated adjacent ideas     = 3.3 / event
+Earth saturation             = NOT YET OBSERVED
+~~~
+
+This does **not** modify the primary conversation-recovery dataset. Commit timestamps are repository observations; lineage and adjacent-idea counts are editorial annotations; quadratic singularity and observation-hazard parameters are illustrative scenarios.
+
+See [Purrtocol Expansion Dynamics](docs/purrtocol-expansion/PAPER.md) and the [Purrtocol Design Bible](docs/purrtocol-design-bible.md).
