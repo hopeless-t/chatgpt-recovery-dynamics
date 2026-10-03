@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "a784da0ebe0064acf3cd8d7382a29dc3e0bc5592",
+    "baseline_main_commit": "ce997d24e7cb086c6f60c7d2fa1a42a402cd60c9",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -30,7 +30,8 @@
     "meta_improvement_loop": "MIL-001 deployed Critic Router v1 and bounded two-level control; effect on observation-to-change latency NOT_ESTABLISHED pending at least three post-tuning RIL cycles",
     "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
     "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
-    "critic_router_post_tuning_samples": "1 of 3 minimum RIL cycles observed; effect claim still NOT_ESTABLISHED"
+    "critic_router_post_tuning_samples": "2 of 3 minimum RIL cycles observed; effect claim still NOT_ESTABLISHED",
+    "purrtocol_3d_browser": "interactive GLB observed in Chrome/SwiftShader; forced viewer-runtime failure shows poster fallback instead of a dark stage"
   },
   "frontiers": [
     {
@@ -50,7 +51,7 @@
     {
       "id": "3D-G2-001",
       "lane": "artifact",
-      "status": "open",
+      "status": "browser_observability_baseline_implemented",
       "target": "Second-generation expressive Purrtocol rig with organic silhouette, editable source, and measured mobile/runtime cost.",
       "promotion_gate": "semantic-state readability preserved and runtime regressions measured against First Light"
     },
@@ -92,7 +93,7 @@
     {
       "id": "META-001",
       "lane": "governance",
-      "status": "tuning_deployed_1_of_3_samples",
+      "status": "tuning_deployed_2_of_3_samples",
       "target": "Determine whether Critic Router v1 reduces observation-to-first-change latency across at least three post-tuning RIL cycles without weakening verification or increasing observer footprint beyond soft budgets.",
       "promotion_gate": "at least 3 post-tuning RIL cycles; post-tuning median observation->first-change < 488s; verified-before-promotion ratio remains 1.0; critical guardrails unchanged; observer footprint under warnings"
     }
