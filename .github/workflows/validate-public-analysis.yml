@@ -186,6 +186,11 @@ jobs:
           python scripts/compete_transition_models.py \
             --output /tmp/transition-models.json
 
+      - name: Audit recovery-convergence identifiability
+        run: |
+          python scripts/audit_recovery_convergence_identifiability.py \
+            --output /tmp/recovery-convergence-identifiability.json
+
       - name: Check transition invariants
         run: |
           python - <<'PY'
@@ -216,7 +221,41 @@ jobs:
           assert m["models"][0]["loo_logloss"] < 0.21
           assert m["models"][0]["log_bayes_factor_vs_constant"] > 15
 
+          with open(
+              "/tmp/recovery-convergence-identifiability.json",
+              "r",
+              encoding="utf-8",
+          ) as f:
+              fp = json.load(f)
+
+          assert fp["schema"] == "recovery-convergence-identifiability/v1"
+          assert fp["experiment_id"] == "REC-FP-001"
+          assert fp["reentry"]["b_to_e_events"] == 8
+          assert fp["reentry"]["e_to_b_next"] == 8
+          assert fp["reentry"]["e_to_h_observed"] == 0
+          assert fp["reentry"]["max_post_reentry_accessible_run_length"] == 1
+          assert (
+              fp["contraction_identifiability"][
+                  "adjacent_post_reentry_accessible_pairs"
+              ]
+              == 0
+          )
+          assert (
+              fp["contraction_identifiability"]["status"]
+              == "CONTRACTION_NOT_IDENTIFIABLE_FROM_CURRENT_CAPTURE"
+          )
+          assert (
+              fp["candidate_model_status"]["M_D_rebound_hysteresis"]
+              == "SUPPORTED_WITHIN_CAPTURE"
+          )
+          assert (
+              fp["candidate_model_status"]["M_C_observable_contraction"]
+              == "UNIDENTIFIABLE_FROM_CURRENT_CAPTURE"
+          )
+          assert fp["candidate_model_status"]["M_E_no_fixed_point_structure"] == "NOT_REJECTED"
+
           print("A-to-B transition biopsy/model competition: PASS")
+          print("REC-FP-001 identifiability audit: PASS")
           PY
 
       - uses: actions/upload-artifact@v4
@@ -226,6 +265,7 @@ jobs:
             /tmp/transition-biopsy.json
             /tmp/transition-biopsy.jsonl
             /tmp/transition-models.json
+            /tmp/recovery-convergence-identifiability.json
 
   transport-recovery:
     runs-on: ubuntu-latest
