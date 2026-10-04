@@ -1,0 +1,51 @@
+{
+  "schema": "http-429-go-cross-language-reference/v1",
+  "source": {
+    "workflow_run_id": 37194246111,
+    "job_id": 111412674767,
+    "head_sha": "60d1750324492dea69d042efeb48386ee2ac8b0f",
+    "artifact_id": 11300515312,
+    "observation_class": "first_go_cross_language_ci_observation_before_reference_freeze",
+    "go_runtime": "go1.24.13 linux/amd64"
+  },
+  "observed": {
+    "schema": "http-429-cross-language-conformance/v1",
+    "implementations": [
+      "python-standard-library",
+      "go-standard-library"
+    ],
+    "scenario_count": 8,
+    "semantic_parity": true,
+    "float_tolerance_abs": 1e-9,
+    "ignored_as_implementation_specific": [
+      "transport_error_name",
+      "classification_label"
+    ],
+    "errors": []
+  },
+  "go_implementation": {
+    "language": "go",
+    "runtime": "go",
+    "imports_python_reference": false,
+    "invokes_python_reference": false,
+    "imports_node_reference": false,
+    "invokes_node_reference": false,
+    "third_party_packages": false,
+    "scenarios": 8,
+    "passed": 8,
+    "failed": 0,
+    "observed_transport_error_family": "EOF on intentionally dropped loopback response; excluded from semantic equality"
+  },
+  "safety": {
+    "production_traffic": false,
+    "rate_limit_evasion": false,
+    "remote_target_input": false
+  },
+  "interpretation": {
+    "conclusion": "The Python reference and an independent Go standard-library implementation reproduced the same repository contract semantics across all eight shared loopback scenarios.",
+    "prior_python_node_baseline": "PRESERVED_SEPARATELY",
+    "external_validity": "NOT_ESTABLISHED",
+    "production_provider_behavior": "NOT_ESTABLISHED",
+    "certification": "NOT_AN_RFC_CONFORMANCE_CERTIFICATION"
+  }
+}

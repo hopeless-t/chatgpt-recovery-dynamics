@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare Python and independent Node HTTP 429 conformance reports.
+"""Compare Python and an independent candidate HTTP 429 conformance report.
 
 This comparison intentionally ignores implementation-specific transport error
 names while requiring semantic parity for retry timing, authorization,
@@ -123,25 +123,26 @@ def compare_ambiguous(a: dict[str, Any], b: dict[str, Any], errors: list[str]) -
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--python-report", required=True)
-    parser.add_argument("--node-report", required=True)
+    parser.add_argument("--node-report", required=True, help="candidate report path; retained for backward-compatible CLI")
+    parser.add_argument("--candidate-label", default="node-standard-library")
     parser.add_argument("--output")
     args = parser.parse_args()
 
     py = json.loads(Path(args.python_report).read_text(encoding="utf-8"))
-    node = json.loads(Path(args.node_report).read_text(encoding="utf-8"))
+    candidate = json.loads(Path(args.node_report).read_text(encoding="utf-8"))
 
     errors: list[str] = []
     py_by = by_id(py)
-    node_by = by_id(node)
+    candidate_by = by_id(candidate)
 
-    if set(py_by) != set(node_by):
+    if set(py_by) != set(candidate_by):
         errors.append(
-            f"scenario ids differ: python={sorted(py_by)} node={sorted(node_by)}"
+            f"scenario ids differ: python={sorted(py_by)} candidate={sorted(candidate_by)}"
         )
 
-    for sid in sorted(set(py_by) & set(node_by)):
+    for sid in sorted(set(py_by) & set(candidate_by)):
         a = py_by[sid]
-        b = node_by[sid]
+        b = candidate_by[sid]
         if sid in {
             "unknown-post-reobserve",
             "explicit-contract-deduplicates",
@@ -154,9 +155,9 @@ def main() -> None:
         "schema": "http-429-cross-language-conformance/v1",
         "implementations": [
             "python-standard-library",
-            "node-standard-library",
+            args.candidate_label,
         ],
-        "scenario_count": len(set(py_by) & set(node_by)),
+        "scenario_count": len(set(py_by) & set(candidate_by)),
         "semantic_parity": not errors,
         "float_tolerance_abs": FLOAT_TOL,
         "ignored_as_implementation_specific": [
@@ -166,8 +167,8 @@ def main() -> None:
         "errors": errors,
         "interpretation": {
             "pass_means": (
-                "Two independent standard-library implementations reproduced the "
-                "same repository contract semantics across the shared loopback scenarios."
+                "The Python reference and an independent candidate implementation "
+                "reproduced the same repository contract semantics across the shared loopback scenarios."
             ),
             "pass_does_not_mean": (
                 "universal provider behavior, production reliability, or RFC conformance certification"
