@@ -1,0 +1,64 @@
+{
+  "schema": "http-429-recovery-hysteresis-metamorphic-reference/v1",
+  "experiment_id": "NET-429-HYS-002",
+  "source": {
+    "first_observed_workflow_run_id": 37210948381,
+    "reproducible_artifact_workflow_run_id": 37211126462,
+    "job_id": 111462377193,
+    "head_sha": "2b77b8e64fc66ab9966984194132e20c13e79837",
+    "artifact_id": 11306097502,
+    "observation_class": "first_reproducible_artifact_baseline_after_artifact_persistence_repair"
+  },
+  "generator": {
+    "id": "hysteresis-metamorphic-kitten-swarm-v1",
+    "deterministic": true,
+    "policy_count": 12,
+    "confirmation_counts": [
+      2,
+      3,
+      4
+    ],
+    "minimum_recovering_durations_s": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "relation_checks": 84,
+    "relation_families": {
+      "exact_boundary_promotes_once": 12,
+      "first_success_is_recovering": 12,
+      "post_healthy_success_does_not_reset_again": 12,
+      "recovering_429_rebounds_to_blocked": 12,
+      "stricter_count_cannot_promote_earlier": 12,
+      "stricter_duration_cannot_promote_earlier": 12,
+      "time_translation_preserves_semantics": 12
+    },
+    "generated_input_sha256": "b224188bd7a46fcf6f6a49869e2305bdb1cf3e0a4555db36e81a95fde710c913"
+  },
+  "observed": {
+    "summary": {
+      "relation_checks": 84,
+      "passed": 84,
+      "failed": 0
+    }
+  },
+  "safety": {
+    "production_traffic": false,
+    "network_access": false,
+    "operation_replay_authority": false
+  },
+  "freeze_policy": {
+    "freeze_generator_digest": true,
+    "freeze_relation_family_counts": true,
+    "freeze_semantic_summary": true,
+    "freeze_full_transition_dump": false,
+    "reason": "The compact receipt freezes deterministic inputs and relation outcomes while keeping the large per-check transition dump reproducible from source."
+  },
+  "interpretation": {
+    "conclusion": "The executable Recovery Hysteresis Gate preserved seven predeclared metamorphic relations across a deterministic 12-policy grid (84/84 checks).",
+    "production_thresholds": "NOT_ESTABLISHED",
+    "provider_recovery_model": "NOT_ESTABLISHED",
+    "universal_rebound_claim": "NOT_ESTABLISHED"
+  }
+}

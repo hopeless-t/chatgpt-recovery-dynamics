@@ -40,7 +40,8 @@
     "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
     "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
-    "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations"
+    "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations",
+    "http_429_hysteresis_metamorphic": "NET-429-HYS-002 observed pending promotion: deterministic 12-policy × 7-relation swarm passed 84/84; clean artifact-backed receipt frozen after persistence repair; no network traffic"
   },
   "frontiers": [
     {
@@ -88,9 +89,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "recovery_hysteresis_baseline_implemented",
-      "target": "Stress recovery-hysteresis relations over generated state sequences and couple confidence-state transitions to the existing scheduler without allowing first success to reset pacing prematurely.",
-      "promotion_gate": "generated relations preserve B->E first-success, E->B rebound, E->H confirmation, and failure-history reset semantics across parameter variations; frozen 8-case/30-case/hysteresis references remain unchanged; no production traffic"
+      "status": "hysteresis_metamorphic_baseline_observed_pending_promotion",
+      "target": "Promote the 84-relation hysteresis metamorphic baseline, then couple scheduler pacing and confidence-state recovery without allowing first success to relax pacing or reset failure history.",
+      "promotion_gate": "84/84 generated hysteresis relations stay green across 12 policies; frozen 8-case/30-case/tri-runtime/hysteresis references remain unchanged; compact artifact-backed receipt matches; no production traffic"
     },
     {
       "id": "ENTROPY-001",

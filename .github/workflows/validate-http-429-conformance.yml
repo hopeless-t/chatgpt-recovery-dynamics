@@ -12,6 +12,8 @@ on:
       - "data/http_429_recovery_hysteresis_scenarios.json"
       - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
+      - "scripts/http_429_recovery_hysteresis_swarm.py"
+      - "data/http_429_recovery_hysteresis_metamorphic_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -33,6 +35,8 @@ on:
       - "data/http_429_recovery_hysteresis_scenarios.json"
       - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
+      - "scripts/http_429_recovery_hysteresis_swarm.py"
+      - "data/http_429_recovery_hysteresis_metamorphic_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -206,6 +210,92 @@ jobs:
           assert reference["interpretation"]["provider_root_cause"] == "NOT_ESTABLISHED"
 
           print("HTTP 429 Recovery Hysteresis frozen reference: PASS")
+          PY
+
+      - name: Run Recovery Hysteresis Metamorphic Kitten Swarm
+        run: |
+          python scripts/http_429_recovery_hysteresis_swarm.py \
+            --output /tmp/http-429-recovery-hysteresis-swarm.json
+
+      - name: Check Recovery Hysteresis Metamorphic relations
+        run: |
+          python - <<'PY'
+          import json
+
+          r = json.load(open(
+              "/tmp/http-429-recovery-hysteresis-swarm.json",
+              encoding="utf-8",
+          ))
+          assert r["schema"] == "http-429-recovery-hysteresis-metamorphic-report/v1"
+          assert r["experiment_id"] == "NET-429-HYS-002"
+          assert r["classification"] == (
+              "deterministic_state_machine_metamorphic_lab_not_provider_behavior"
+          )
+          assert r["generator"]["id"] == "hysteresis-metamorphic-kitten-swarm-v1"
+          assert r["generator"]["deterministic"] is True
+          assert r["generator"]["policy_count"] == 12
+          assert r["generator"]["confirmation_counts"] == [2, 3, 4]
+          assert r["generator"]["minimum_recovering_durations_s"] == [0.0, 2.0, 5.0, 10.0]
+          assert r["generator"]["relation_checks"] == 84
+          assert set(r["generator"]["relation_families"]) == {
+              "first_success_is_recovering",
+              "recovering_429_rebounds_to_blocked",
+              "exact_boundary_promotes_once",
+              "stricter_count_cannot_promote_earlier",
+              "stricter_duration_cannot_promote_earlier",
+              "time_translation_preserves_semantics",
+              "post_healthy_success_does_not_reset_again",
+          }
+          assert set(r["generator"]["relation_families"].values()) == {12}
+          assert r["summary"] == {
+              "relation_checks": 84,
+              "passed": 84,
+              "failed": 0,
+          }
+          assert r["safety"] == {
+              "production_traffic": False,
+              "network_access": False,
+              "operation_replay_authority": False,
+          }
+          print("HTTP 429 Recovery Hysteresis Metamorphic Kitten Swarm: PASS (84/84)")
+          PY
+
+      - name: Compare frozen Recovery Hysteresis Metamorphic reference
+        run: |
+          python - <<'PY'
+          import json
+
+          observed = json.load(open(
+              "/tmp/http-429-recovery-hysteresis-swarm.json",
+              encoding="utf-8",
+          ))
+          reference = json.load(open(
+              "data/http_429_recovery_hysteresis_metamorphic_reference.json",
+              encoding="utf-8",
+          ))
+
+          assert reference["schema"] == (
+              "http-429-recovery-hysteresis-metamorphic-reference/v1"
+          )
+          assert observed["experiment_id"] == reference["experiment_id"]
+          assert observed["generator"]["id"] == reference["generator"]["id"]
+          assert observed["generator"]["deterministic"] is True
+          assert observed["generator"]["policy_count"] == reference["generator"]["policy_count"]
+          assert observed["generator"]["confirmation_counts"] == reference["generator"]["confirmation_counts"]
+          assert (
+              observed["generator"]["minimum_recovering_durations_s"]
+              == reference["generator"]["minimum_recovering_durations_s"]
+          )
+          assert observed["generator"]["relation_checks"] == reference["generator"]["relation_checks"]
+          assert observed["generator"]["relation_families"] == reference["generator"]["relation_families"]
+          assert observed["generator"]["generated_input_sha256"] == reference["generator"]["generated_input_sha256"]
+          assert observed["summary"] == reference["observed"]["summary"]
+          assert observed["safety"] == reference["safety"]
+          assert reference["interpretation"]["production_thresholds"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["provider_recovery_model"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["universal_rebound_claim"] == "NOT_ESTABLISHED"
+
+          print("HTTP 429 Recovery Hysteresis Metamorphic frozen reference: PASS")
           PY
 
       - name: Generate Metamorphic Kitten Swarm
@@ -460,6 +550,7 @@ jobs:
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
             /tmp/http-429-recovery-hysteresis.json
+            /tmp/http-429-recovery-hysteresis-swarm.json
             data/http_429_recovery_hysteresis_reference.json
             /tmp/http-429-metamorphic-scenarios.json
             /tmp/http-429-metamorphic-scenarios-second.json
