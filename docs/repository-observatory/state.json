@@ -16,9 +16,9 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "3e015a1e3bf1ce6f9eee9ccb6d6d81b252c5a511",
+    "baseline_main_commit": "d476bc6b66792c140066cfcd6ee1a07bf717d8b4",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
-    "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-035 429 Peace Bridge implemented as visualization-only",
+    "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
     "machine_discovery": "root/subpath llms maps, Markdown entries, schema, sitemap, JSON manifest",
     "observer_horizon_story": "Sam/Tibo NOT OBSERVED; story-only",
@@ -37,7 +37,7 @@
     "branch_convergence_tuning": "v1 observation baseline implemented: real history separated BASE_NOT_AHEAD, BASE_AHEAD_NO_PATH_OVERLAP, and CONVERGENCE_RISK; remains advisory",
     "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
-    "purrtocol_429_peace_bridge": "browser-observed visualization implemented; frozen Python/Node 8/8 semantic parity receipt mirrored; visualization remains non-evidence",
+    "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately"
   },
   "frontiers": [
