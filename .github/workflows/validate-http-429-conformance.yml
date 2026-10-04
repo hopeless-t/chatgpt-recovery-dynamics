@@ -10,6 +10,7 @@ on:
       - "data/http_429_metamorphic_reference.json"
       - "data/http_429_recovery_hysteresis_contract.json"
       - "data/http_429_recovery_hysteresis_scenarios.json"
+      - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
@@ -30,6 +31,7 @@ on:
       - "data/http_429_metamorphic_reference.json"
       - "data/http_429_recovery_hysteresis_contract.json"
       - "data/http_429_recovery_hysteresis_scenarios.json"
+      - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
@@ -176,6 +178,34 @@ jobs:
           assert by_id["promote-then-reblock"]["observed_states"] == ["E", "H", "B"]
 
           print("HTTP 429 Recovery Hysteresis Gate: PASS (8/8)")
+          PY
+
+      - name: Compare frozen Recovery Hysteresis reference
+        run: |
+          python - <<'PY'
+          import json
+
+          observed = json.load(open("/tmp/http-429-recovery-hysteresis.json", encoding="utf-8"))
+          reference = json.load(open("data/http_429_recovery_hysteresis_reference.json", encoding="utf-8"))
+
+          assert reference["schema"] == "http-429-recovery-hysteresis-reference/v1"
+          assert observed["experiment_id"] == reference["experiment_id"]
+          assert observed["summary"] == reference["observed"]["summary"]
+          assert observed["policy"] == reference["lab_policy"]
+          assert observed["invariants"] == reference["observed"]["invariants"]
+          assert observed["safety"] == reference["safety"]
+
+          by_id = {row["scenario_id"]: row for row in observed["results"]}
+          for scenario_id, states in reference["observed"]["state_sequences"].items():
+              assert by_id[scenario_id]["observed_states"] == states
+          for scenario_id, resets in reference["observed"]["failure_history_resets"].items():
+              assert by_id[scenario_id]["failure_history_resets"] == resets
+
+          assert reference["interpretation"]["universal_rebound_claim"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["production_thresholds"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["provider_root_cause"] == "NOT_ESTABLISHED"
+
+          print("HTTP 429 Recovery Hysteresis frozen reference: PASS")
           PY
 
       - name: Generate Metamorphic Kitten Swarm
@@ -430,6 +460,7 @@ jobs:
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
             /tmp/http-429-recovery-hysteresis.json
+            data/http_429_recovery_hysteresis_reference.json
             /tmp/http-429-metamorphic-scenarios.json
             /tmp/http-429-metamorphic-scenarios-second.json
             /tmp/http-429-metamorphic-python.json
