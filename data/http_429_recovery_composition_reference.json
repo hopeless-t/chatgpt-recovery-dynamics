@@ -1,0 +1,52 @@
+{
+  "schema": "http-429-recovery-composition-reference/v1",
+  "experiment_id": "NET-429-COMP-001",
+  "source": {
+    "workflow_run_id": 37211808310,
+    "job_id": 111464340871,
+    "head_sha": "97a0cc3eaca479ddf072733bc5283a604f28848e",
+    "artifact_id": 11306778418,
+    "observation_class": "first_scheduler_hysteresis_composition_ci_observation_before_reference_freeze"
+  },
+  "lab_policy": {
+    "confirmation_successes_required": 2,
+    "minimum_recovering_duration_s": 5,
+    "base_minimum_period_s": 1,
+    "recovery_probe_period_s": 5,
+    "production_recommendation": false
+  },
+  "observed": {
+    "summary": {
+      "scenarios": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    "scenario_ids": [
+      "first-success-keeps-recovery-floor",
+      "recovering-reblock-keeps-pacing-floor",
+      "confidence-floor-is-monotone-conservative",
+      "retry-after-remains-stronger-floor",
+      "confidence-cannot-override-budget-stop",
+      "confidence-cannot-override-reobserve",
+      "failure-history-clears-only-on-healthy-promotion",
+      "pacing-relaxes-only-after-healthy"
+    ],
+    "authority_boundary": {
+      "scheduler_owns_retry_authorization": true,
+      "hysteresis_owns_recovery_confidence": true,
+      "confidence_can_create_replay_authority": false,
+      "confidence_can_shorten_scheduler_floor": false
+    }
+  },
+  "safety": {
+    "network_access": false,
+    "production_traffic": false,
+    "operation_replay_authority": false
+  },
+  "interpretation": {
+    "conclusion": "The deterministic composition preserved scheduler timing/authorization authority while recovery confidence only added conservative pacing until Healthy promotion.",
+    "production_thresholds": "NOT_ESTABLISHED",
+    "provider_internal_states": "NOT_ESTABLISHED",
+    "provider_root_cause": "NOT_ESTABLISHED"
+  }
+}
