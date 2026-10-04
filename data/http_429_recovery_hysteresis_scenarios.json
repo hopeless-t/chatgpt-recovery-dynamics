@@ -1,0 +1,186 @@
+{
+  "schema": "http-429-recovery-hysteresis-scenarios/v1",
+  "experiment_id": "NET-429-HYS-001",
+  "safety": {
+    "network_scope": "none_state_machine_only",
+    "production_traffic": false
+  },
+  "lab_policy": {
+    "confirmation_successes_required": 2,
+    "minimum_recovering_duration_s": 5,
+    "note": "Values are deterministic test fixtures only."
+  },
+  "cases": [
+    {
+      "scenario_id": "first-success-is-recovering",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E"
+        ],
+        "final_state": "E",
+        "failure_history_resets": 0
+      }
+    },
+    {
+      "scenario_id": "rebound-before-confirmation",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 12,
+          "outcome": "429"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E",
+          "B"
+        ],
+        "final_state": "B",
+        "failure_history_resets": 0
+      }
+    },
+    {
+      "scenario_id": "count-met-window-not-met",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 12,
+          "outcome": "2xx"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E",
+          "E"
+        ],
+        "final_state": "E",
+        "failure_history_resets": 0
+      }
+    },
+    {
+      "scenario_id": "window-met-count-met-promotes",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 16,
+          "outcome": "2xx"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E",
+          "H"
+        ],
+        "final_state": "H",
+        "failure_history_resets": 1
+      }
+    },
+    {
+      "scenario_id": "extra-confirmation-after-window-promotes",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 12,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 16,
+          "outcome": "2xx"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E",
+          "E",
+          "H"
+        ],
+        "final_state": "H",
+        "failure_history_resets": 1
+      }
+    },
+    {
+      "scenario_id": "healthy-success-stays-healthy",
+      "initial_state": "H",
+      "events": [
+        {
+          "at_s": 3,
+          "outcome": "2xx"
+        }
+      ],
+      "expect": {
+        "states": [
+          "H"
+        ],
+        "final_state": "H",
+        "failure_history_resets": 0
+      }
+    },
+    {
+      "scenario_id": "healthy-throttle-enters-blocked",
+      "initial_state": "H",
+      "events": [
+        {
+          "at_s": 3,
+          "outcome": "429"
+        }
+      ],
+      "expect": {
+        "states": [
+          "B"
+        ],
+        "final_state": "B",
+        "failure_history_resets": 0
+      }
+    },
+    {
+      "scenario_id": "promote-then-reblock",
+      "initial_state": "B",
+      "events": [
+        {
+          "at_s": 10,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 16,
+          "outcome": "2xx"
+        },
+        {
+          "at_s": 17,
+          "outcome": "429"
+        }
+      ],
+      "expect": {
+        "states": [
+          "E",
+          "H",
+          "B"
+        ],
+        "final_state": "B",
+        "failure_history_resets": 1
+      }
+    }
+  ]
+}
