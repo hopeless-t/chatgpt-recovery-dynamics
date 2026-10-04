@@ -107,13 +107,15 @@
         "data/improvement_events.jsonl",
         "data/meta_improvement_loop_*",
         "scripts/analyze_improvement_loop.py",
+        "scripts/audit_meta_phase_semantics.py",
         "META_IMPROVEMENT_LOOP.md"
       ],
       "commands": [
-        "python scripts/analyze_improvement_loop.py --output /tmp/meta-loop-preflight.json"
+        "python scripts/analyze_improvement_loop.py --output /tmp/meta-loop-preflight.json",
+        "python scripts/audit_meta_phase_semantics.py --output /tmp/meta-phase-preflight.json"
       ],
       "promotion_gate": "Meta Improvement Loop",
-      "rationale": "Check second-order guardrails before changing the loop that changes the repository."
+      "rationale": "Check second-order guardrails and phase-order semantics before changing the loop that changes the repository."
     },
     {
       "route_id": "public-analysis-core",
