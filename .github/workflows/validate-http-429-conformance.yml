@@ -8,6 +8,9 @@ on:
       - "data/http_429_cross_language_reference.json"
       - "data/http_429_go_cross_language_reference.json"
       - "data/http_429_metamorphic_reference.json"
+      - "data/http_429_recovery_hysteresis_contract.json"
+      - "data/http_429_recovery_hysteresis_scenarios.json"
+      - "scripts/http_429_recovery_hysteresis.py"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -25,6 +28,9 @@ on:
       - "data/http_429_cross_language_reference.json"
       - "data/http_429_go_cross_language_reference.json"
       - "data/http_429_metamorphic_reference.json"
+      - "data/http_429_recovery_hysteresis_contract.json"
+      - "data/http_429_recovery_hysteresis_scenarios.json"
+      - "scripts/http_429_recovery_hysteresis.py"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -127,6 +133,49 @@ jobs:
           )
           assert observed["errors"] == frozen["errors"]
           print("HTTP 429 cross-language frozen reference: PASS")
+          PY
+
+      - name: Run Recovery Hysteresis Gate
+        run: |
+          python scripts/http_429_recovery_hysteresis.py \
+            --output /tmp/http-429-recovery-hysteresis.json
+
+      - name: Check Recovery Hysteresis invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          r = json.load(open("/tmp/http-429-recovery-hysteresis.json", encoding="utf-8"))
+          assert r["schema"] == "http-429-recovery-hysteresis-report/v1"
+          assert r["experiment_id"] == "NET-429-HYS-001"
+          assert r["classification"] == "deterministic_state_machine_lab_not_provider_behavior"
+          assert r["summary"] == {"scenarios": 8, "passed": 8, "failed": 0}
+          assert r["policy"] == {
+              "confirmation_successes_required": 2,
+              "minimum_recovering_duration_s": 5.0,
+              "production_recommendation": False,
+          }
+          assert r["invariants"] == {
+              "first_success_after_blocked_is_recovering": True,
+              "first_success_resets_failure_history": False,
+              "recovering_429_returns_blocked": True,
+              "healthy_requires_configured_stability_confirmation": True,
+              "failure_history_reset_only_on_e_to_h": True,
+          }
+          assert r["safety"] == {
+              "production_traffic": False,
+              "network_access": False,
+              "operation_replay_authority": False,
+          }
+
+          by_id = {row["scenario_id"]: row for row in r["results"]}
+          assert by_id["first-success-is-recovering"]["observed_states"] == ["E"]
+          assert by_id["rebound-before-confirmation"]["observed_states"] == ["E", "B"]
+          assert by_id["count-met-window-not-met"]["observed_states"] == ["E", "E"]
+          assert by_id["window-met-count-met-promotes"]["observed_states"] == ["E", "H"]
+          assert by_id["promote-then-reblock"]["observed_states"] == ["E", "H", "B"]
+
+          print("HTTP 429 Recovery Hysteresis Gate: PASS (8/8)")
           PY
 
       - name: Generate Metamorphic Kitten Swarm
@@ -380,6 +429,7 @@ jobs:
             /tmp/http-429-conformance-go.json
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
+            /tmp/http-429-recovery-hysteresis.json
             /tmp/http-429-metamorphic-scenarios.json
             /tmp/http-429-metamorphic-scenarios-second.json
             /tmp/http-429-metamorphic-python.json
