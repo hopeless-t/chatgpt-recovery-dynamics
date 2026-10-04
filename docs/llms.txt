@@ -35,6 +35,7 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [HTTP 429 Survival Kit](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-survival-kit/index.md): Standards-aware Retry-After floor, retry authorization, bounded budgets, and deterministic rescue scenarios.
 - [HTTP 429 Survival Contract](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-survival-kit/contract.json): Stable RFC vs active/expired draft boundary and machine-readable invariants.
 - [RFC-0003](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/rfcs/RFC-0003-http-429-survival-plane.md): Vendor-neutral HTTP 429 Survival Plane.
+- [Purrtocol 429 Peace Bridge](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/): Visualization-only bridge over the frozen Python/Node loopback semantic parity baseline.
 
 ## Reproduction and public data
 
