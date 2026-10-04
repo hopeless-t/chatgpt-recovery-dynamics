@@ -147,7 +147,7 @@
   },
   "next_tuning": {
     "tuning_id": "branch-convergence-gate-v1",
-    "status": "observation_only",
+    "status": "observation_baseline_implemented",
     "motivation": "RIL-007 exposed late old-base reintegration after diagnosis latency had already improved.",
     "implementation": [
       "scripts/check_branch_convergence.py",
@@ -155,6 +155,10 @@
       "existing Meta Improvement Loop workflow"
     ],
     "promotion_rule": "Observe real pull-request convergence reports before deciding whether any status should become a hard gate.",
-    "observer_rule": "Reuse the existing Meta Improvement Loop workflow; do not add a new workflow."
+    "observer_rule": "Reuse the existing Meta Improvement Loop workflow; do not add a new workflow.",
+    "evaluation_reference": "data/branch_convergence_reference.json",
+    "observed_cases": 3,
+    "hard_gate": false,
+    "next_evidence": "Accumulate additional real PR outcomes and audit false-positive/false-negative behavior before any hard-gate proposal."
   }
 }
