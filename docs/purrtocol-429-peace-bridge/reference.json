@@ -1,0 +1,47 @@
+{
+  "schema": "http-429-cross-language-reference/v1",
+  "source": {
+    "workflow_run_id": 37192562631,
+    "job_id": 111407652075,
+    "head_sha": "6e8547c1c5dceacd3d1824ad7fd1f4e26e0f8635",
+    "artifact_id": 11299855762,
+    "observation_class": "first_cross_language_ci_observation_before_reference_freeze",
+    "node_runtime": "24.21.0"
+  },
+  "observed": {
+    "schema": "http-429-cross-language-conformance/v1",
+    "implementations": [
+      "python-standard-library",
+      "node-standard-library"
+    ],
+    "scenario_count": 8,
+    "semantic_parity": true,
+    "float_tolerance_abs": 1e-9,
+    "ignored_as_implementation_specific": [
+      "transport_error_name",
+      "classification_label"
+    ],
+    "errors": []
+  },
+  "node_implementation": {
+    "language": "javascript",
+    "runtime": "node",
+    "imports_python_reference": false,
+    "invokes_python_reference": false,
+    "third_party_packages": false,
+    "scenarios": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "safety": {
+    "production_traffic": false,
+    "rate_limit_evasion": false,
+    "remote_target_input": false
+  },
+  "interpretation": {
+    "conclusion": "Two independent standard-library implementations reproduced the same repository contract semantics across all eight shared loopback scenarios.",
+    "external_validity": "NOT_ESTABLISHED",
+    "production_provider_behavior": "NOT_ESTABLISHED",
+    "certification": "NOT_AN_RFC_CONFORMANCE_CERTIFICATION"
+  }
+}
