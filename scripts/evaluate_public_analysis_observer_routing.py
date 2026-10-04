@@ -43,21 +43,44 @@ def main() -> None:
                 f"{result['candidate_job_count']} != {expected_count}"
             )
 
+        expected_coverage = case.get("expected_source_gate_coverage")
+        if expected_coverage is not None:
+            actual_coverage = result["source_gate_trigger_coverage"][
+                "all_paths_covered"
+            ]
+            if actual_coverage is not expected_coverage:
+                expectation_errors.append(
+                    f"{case['case_id']}: source-gate coverage "
+                    f"{actual_coverage} != {expected_coverage}"
+                )
+
         actual = case.get("observed_public_analysis_jobs_launched")
         if actual is not None:
             total_actual_jobs += actual
             total_candidate_jobs += result["candidate_job_count"]
 
+        coverage = result["source_gate_trigger_coverage"]
         observed.append(
             {
                 "case_id": case["case_id"],
                 "source_pr": case["source_pr"],
                 "route_id": result["route_id"],
+                "candidate_route_before_coverage": result[
+                    "candidate_route_before_coverage"
+                ],
                 "candidate_jobs": result["candidate_jobs"],
                 "candidate_job_count": result["candidate_job_count"],
                 "full_job_count": result["full_job_count"],
                 "candidate_avoided_jobs": result["candidate_avoided_jobs"],
-                "candidate_avoided_job_count": result["candidate_avoided_job_count"],
+                "candidate_avoided_job_count": result[
+                    "candidate_avoided_job_count"
+                ],
+                "source_gate_trigger_coverage": {
+                    "all_paths_covered": coverage["all_paths_covered"],
+                    "uncovered_paths": coverage["uncovered_paths"],
+                    "workflow_count": coverage["workflow_count"],
+                },
+                "coverage_fail_closed": result["coverage_fail_closed"],
                 "fail_closed": result["fail_closed"],
                 "jobs_actually_skipped": result["jobs_actually_skipped"],
             }
@@ -72,7 +95,9 @@ def main() -> None:
         "expectations_pass": not expectation_errors,
         "observed_run_subset": {
             "cases_with_actual_launch_count": sum(
-                1 for case in cases if case.get("observed_public_analysis_jobs_launched") is not None
+                1
+                for case in cases
+                if case.get("observed_public_analysis_jobs_launched") is not None
             ),
             "actual_jobs_launched": total_actual_jobs,
             "candidate_jobs_if_router_were_promoted": total_candidate_jobs,
@@ -84,8 +109,9 @@ def main() -> None:
             "full_public_analysis_still_runs": True,
         },
         "next_evidence": (
-            "Run the router in shadow mode on live PRs and compare its candidate route "
-            "with the still-executed full public-analysis result before any skip proposal."
+            "Run another live isolated 429 PR whose complete path set has verified "
+            "source-gate trigger coverage, while the full public-analysis matrix still "
+            "runs. Only then consider a separate reversible execution-routing promotion."
         ),
     }
 
