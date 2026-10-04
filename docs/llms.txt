@@ -94,3 +94,5 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md): Observe -> biopsy -> reversible change -> verify -> promote -> re-observe.
 - [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl): Append-only machine-readable improvement history.
 - [Improvement Event Schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/improvement-event.schema.json): RIL event contract.
+
+- [Fixed-point recovery correspondence / REC-FP-001](fixed-point-recovery-correspondence.md) — tests whether post-reentry contraction is identifiable before fitting it; current capture has zero usable contraction pairs.
