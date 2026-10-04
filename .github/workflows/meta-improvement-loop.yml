@@ -24,8 +24,10 @@ on:
       - "data/meta_improvement_event_schema.json"
       - "data/preflight_routes.json"
       - "scripts/analyze_improvement_loop.py"
+      - "scripts/check_branch_convergence.py"
       - "scripts/preflight_router.py"
       - "docs/repository-observatory/critic-router.md"
+      - "docs/repository-observatory/branch-convergence.md"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   workflow_dispatch:
@@ -132,6 +134,50 @@ jobs:
           )
           PY
 
+      - name: Regress branch convergence against real stale PR history
+        run: |
+          BASE_CHECKPOINT="7547b817fd8271a3d54c2497ae1d311fd9f4056f"
+          PR14_HEAD="513e06463b44748c28da301b73f279d205e65294"
+          PR10_HEAD="efd907105b016e1f64042667276204efed20bb37"
+
+          git fetch --no-tags origin "$BASE_CHECKPOINT" "$PR14_HEAD" "$PR10_HEAD"
+
+          python scripts/check_branch_convergence.py \
+            --base "$BASE_CHECKPOINT" \
+            --head "$PR14_HEAD" \
+            --output /tmp/branch-convergence-pr14.json
+
+          python scripts/check_branch_convergence.py \
+            --base "$BASE_CHECKPOINT" \
+            --head "$PR10_HEAD" \
+            --output /tmp/branch-convergence-pr10.json
+
+          python - <<'PY'
+          import json
+
+          def load(path):
+              with open(path, "r", encoding="utf-8") as f:
+                  return json.load(f)
+
+          pr14 = load("/tmp/branch-convergence-pr14.json")
+          pr10 = load("/tmp/branch-convergence-pr10.json")
+
+          assert pr14["status"] == "CONVERGENCE_RISK"
+          assert {
+              "data/improvement_events.jsonl",
+              "docs/repository-observatory/state.json",
+          }.issubset(set(pr14["overlapping_changed_paths"]))
+
+          assert pr10["status"] == "BASE_AHEAD_NO_PATH_OVERLAP"
+          assert pr10["overlap_count"] == 0
+
+          print(
+              "Historical convergence regression: PASS",
+              "PR14=", pr14["status"],
+              "PR10=", pr10["status"],
+          )
+          PY
+
       - name: Check second-order guardrails
         run: |
           python - <<'PY'
@@ -164,3 +210,5 @@ jobs:
           path: |
             /tmp/meta-loop.json
             /tmp/branch-convergence.json
+            /tmp/branch-convergence-pr14.json
+            /tmp/branch-convergence-pr10.json
