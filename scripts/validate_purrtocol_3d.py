@@ -274,10 +274,16 @@ def main() -> None:
     assert "cdnjs.cloudflare.com/ajax/libs/model-viewer/4.3.1" in html
     assert 'poster="../assets/purrtocol/purrtocol-poster.svg"' in html
     assert 'slot="poster"' in html
-    assert "poster fallback remains visible" in html
+    assert 'class="viewer-backstop"' in html
+    assert "fallback-active" in html
+    assert "static-first" in html
+    assert "webglcontextlost" in html
+    assert "forceWebglLoss" in html
+    assert "purrtocol3dSustained" in html
+    assert "stable poster remains visible" in html
     assert "viewer.addEventListener('error'" in html
     assert "WebGL2 available" in html
-    assert "display:block" in html
+    assert "background:transparent" in html
     for name in contract["required_animations"]:
         assert name in html
 
