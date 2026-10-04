@@ -1,0 +1,50 @@
+{
+  "schema": "http-429-recovery-composition-metamorphic-reference/v1",
+  "experiment_id": "NET-429-COMP-002",
+  "source": {
+    "workflow_run_id": 37232843414,
+    "job_id": 111525997438,
+    "head_sha": "1625b2ad2fef148b3e274be9cdb248329c1ed166",
+    "artifact_id": 11314722454,
+    "artifact_digest": "sha256:51a3d1b4db2104db6817bf691e6864063719cb59df0330cb1f5c367e14b019dd",
+    "observation_class": "first_ci_observation_before_reference_freeze"
+  },
+  "observed": {
+    "generator_id": "scheduler-confidence-metamorphic-kitten-swarm-v1",
+    "generated_input_sha256": "2e8e834634feaa15a897214cdf720cbf79bd2852856a6f00a278f44cfc4d7365",
+    "policy_count": 36,
+    "relation_checks": 360,
+    "passed": 360,
+    "failed": 0,
+    "relation_families": {
+      "blocked_confidence_never_retries_earlier": 36,
+      "confidence_never_overrides_budget_stop": 36,
+      "confidence_never_overrides_reobserve": 36,
+      "pacing_relaxes_only_at_healthy_threshold": 36,
+      "recovering_confidence_never_retries_earlier": 36,
+      "stricter_confidence_cannot_relax_pacing_earlier": 36,
+      "strong_retry_after_remains_authoritative": 36,
+      "stronger_base_floor_cannot_retry_earlier": 36,
+      "stronger_probe_floor_cannot_retry_earlier": 36,
+      "time_translation_preserves_composition_semantics": 36
+    },
+    "authority_boundary": {
+      "scheduler_owns_retry_authorization": true,
+      "hysteresis_owns_recovery_confidence": true,
+      "confidence_can_create_replay_authority": false,
+      "confidence_can_shorten_scheduler_floor": false
+    },
+    "safety": {
+      "network_access": false,
+      "production_traffic": false,
+      "operation_replay_authority": false
+    }
+  },
+  "interpretation": {
+    "conclusion": "Generated policy transformations preserved scheduler authority and conservative recovery-confidence pacing relations across the predeclared 36-policy / 360-relation grid.",
+    "external_validity": "NOT_ESTABLISHED",
+    "provider_behavior": "NOT_ESTABLISHED",
+    "fixture_values_are_production_recommendations": false,
+    "coverage_claim": "relation_grid_only_not_all_possible_compositions"
+  }
+}
