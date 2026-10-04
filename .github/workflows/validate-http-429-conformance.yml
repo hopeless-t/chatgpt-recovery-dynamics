@@ -5,8 +5,11 @@ on:
     paths:
       - "data/http_429_conformance_scenarios.json"
       - "data/http_429_conformance_reference.json"
+      - "data/http_429_cross_language_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
+      - "scripts/compare_http_429_conformance.py"
+      - "scripts/http_429_conformance_node.js"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
       - ".github/workflows/validate-http-429-conformance.yml"
@@ -31,11 +34,50 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
 
       - name: Run loopback-only conformance fire drill
         run: |
           python scripts/http_429_conformance_lab.py \
             --output /tmp/http-429-conformance.json
+
+      - name: Run independent Node conformance fire drill
+        run: |
+          node scripts/http_429_conformance_node.js \
+            --output /tmp/http-429-conformance-node.json
+
+      - name: Compare Python and Node contract semantics
+        run: |
+          python scripts/compare_http_429_conformance.py \
+            --python-report /tmp/http-429-conformance.json \
+            --node-report /tmp/http-429-conformance-node.json \
+            --output /tmp/http-429-cross-language.json
+
+      - name: Compare frozen cross-language reference
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/http-429-cross-language.json", "r", encoding="utf-8") as f:
+              observed = json.load(f)
+          with open("data/http_429_cross_language_reference.json", "r", encoding="utf-8") as f:
+              reference = json.load(f)
+
+          frozen = reference["observed"]
+          assert observed["schema"] == frozen["schema"]
+          assert observed["implementations"] == frozen["implementations"]
+          assert observed["scenario_count"] == frozen["scenario_count"]
+          assert observed["semantic_parity"] is frozen["semantic_parity"]
+          assert observed["float_tolerance_abs"] == frozen["float_tolerance_abs"]
+          assert (
+              observed["ignored_as_implementation_specific"]
+              == frozen["ignored_as_implementation_specific"]
+          )
+          assert observed["errors"] == frozen["errors"]
+          print("HTTP 429 cross-language frozen reference: PASS")
+          PY
 
       - name: Check local-network and recovery invariants
         run: |
@@ -115,4 +157,6 @@ jobs:
           name: http-429-local-conformance
           path: |
             /tmp/http-429-conformance.json
+            /tmp/http-429-conformance-node.json
+            /tmp/http-429-cross-language.json
             data/http_429_conformance_reference.json

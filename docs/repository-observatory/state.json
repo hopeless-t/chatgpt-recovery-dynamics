@@ -35,7 +35,8 @@
     "purrtocol_indexed_variants": 2,
     "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
     "branch_convergence_tuning": "v1 observation baseline implemented: real history separated BASE_NOT_AHEAD, BASE_AHEAD_NO_PATH_OVERLAP, and CONVERGENCE_RISK; remains advisory",
-    "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture"
+    "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
+    "http_429_cross_language": "first baseline observed: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; promotion pending"
   },
   "frontiers": [
     {
@@ -83,9 +84,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "loopback_baseline_implemented",
-      "target": "Port the Survival Plane into independent client libraries/services and compare conformance without production load testing.",
-      "promotion_gate": "independent local/mock implementation reproduces floor/budget/authorization invariants and reports provider-specific differences separately"
+      "status": "cross_language_baseline_observed_pending_promotion",
+      "target": "Promote and then extend the Survival Plane across additional independent runtimes/client libraries without production load testing.",
+      "promotion_gate": "independent local/mock implementation reproduces floor/budget/authorization/identity invariants; cross-language comparison stays green; provider-specific differences remain separate"
     },
     {
       "id": "ENTROPY-001",
