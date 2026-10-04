@@ -38,7 +38,8 @@
     "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
     "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
-    "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately"
+    "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
+    "http_429_metamorphic_swarm": "first baseline observed: 30 deterministic cases × 3 runtimes = 90 local executions, all passed; Python/Node and Python/Go semantic parity true; promotion pending"
   },
   "frontiers": [
     {
@@ -86,9 +87,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "tri_runtime_baseline_implemented",
-      "target": "Characterize provider-adapter differences or add a fourth independent runtime without weakening the vendor-neutral core.",
-      "promotion_gate": "new adapter/runtime reports deviations explicitly, preserves local timing/budget/authorization/identity invariants where applicable, and never uses production load testing"
+      "status": "metamorphic_swarm_observed_pending_promotion",
+      "target": "Promote the 30-case tri-runtime metamorphic baseline, then expand relation coverage rather than merely adding more languages.",
+      "promotion_gate": "deterministic generated scenario digest stays fixed; 30/30 per runtime; both semantic comparisons stay green; raw ephemeral transport diagnostics remain outside the freeze"
     },
     {
       "id": "ENTROPY-001",

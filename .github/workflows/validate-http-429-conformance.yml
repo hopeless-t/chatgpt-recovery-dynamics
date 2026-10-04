@@ -7,11 +7,13 @@ on:
       - "data/http_429_conformance_reference.json"
       - "data/http_429_cross_language_reference.json"
       - "data/http_429_go_cross_language_reference.json"
+      - "data/http_429_metamorphic_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
       - "scripts/http_429_conformance_node.js"
       - "scripts/http_429_conformance_go.go"
+      - "scripts/generate_http_429_metamorphic_cases.py"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
       - "docs/purrtocol-429-peace-bridge/**"
@@ -22,11 +24,13 @@ on:
       - "data/http_429_conformance_reference.json"
       - "data/http_429_cross_language_reference.json"
       - "data/http_429_go_cross_language_reference.json"
+      - "data/http_429_metamorphic_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
       - "scripts/http_429_conformance_node.js"
       - "scripts/http_429_conformance_go.go"
+      - "scripts/generate_http_429_metamorphic_cases.py"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
       - "docs/purrtocol-429-peace-bridge/**"
@@ -123,6 +127,142 @@ jobs:
           )
           assert observed["errors"] == frozen["errors"]
           print("HTTP 429 cross-language frozen reference: PASS")
+          PY
+
+      - name: Generate Metamorphic Kitten Swarm
+        run: |
+          python scripts/generate_http_429_metamorphic_cases.py \
+            --output /tmp/http-429-metamorphic-scenarios.json
+          python scripts/generate_http_429_metamorphic_cases.py \
+            --output /tmp/http-429-metamorphic-scenarios-second.json
+          cmp \
+            /tmp/http-429-metamorphic-scenarios.json \
+            /tmp/http-429-metamorphic-scenarios-second.json
+
+      - name: Run Python against Metamorphic Kitten Swarm
+        run: |
+          python scripts/http_429_conformance_lab.py \
+            --scenarios /tmp/http-429-metamorphic-scenarios.json \
+            --output /tmp/http-429-metamorphic-python.json
+
+      - name: Run Node against Metamorphic Kitten Swarm
+        run: |
+          node scripts/http_429_conformance_node.js \
+            --scenarios /tmp/http-429-metamorphic-scenarios.json \
+            --output /tmp/http-429-metamorphic-node.json
+
+      - name: Run Go against Metamorphic Kitten Swarm
+        run: |
+          go run scripts/http_429_conformance_go.go \
+            --scenarios /tmp/http-429-metamorphic-scenarios.json \
+            --output /tmp/http-429-metamorphic-go.json
+
+      - name: Compare swarm semantics across runtimes
+        run: |
+          python scripts/compare_http_429_conformance.py \
+            --python-report /tmp/http-429-metamorphic-python.json \
+            --node-report /tmp/http-429-metamorphic-node.json \
+            --output /tmp/http-429-metamorphic-python-node.json
+
+          python scripts/compare_http_429_conformance.py \
+            --python-report /tmp/http-429-metamorphic-python.json \
+            --node-report /tmp/http-429-metamorphic-go.json \
+            --candidate-label go-standard-library \
+            --output /tmp/http-429-metamorphic-python-go.json
+
+      - name: Check Metamorphic Kitten Swarm invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          scenarios = json.load(open("/tmp/http-429-metamorphic-scenarios.json", encoding="utf-8"))
+          py = json.load(open("/tmp/http-429-metamorphic-python.json", encoding="utf-8"))
+          node = json.load(open("/tmp/http-429-metamorphic-node.json", encoding="utf-8"))
+          go = json.load(open("/tmp/http-429-metamorphic-go.json", encoding="utf-8"))
+          pn = json.load(open("/tmp/http-429-metamorphic-python-node.json", encoding="utf-8"))
+          pg = json.load(open("/tmp/http-429-metamorphic-python-go.json", encoding="utf-8"))
+
+          assert scenarios["schema"] == "http-429-metamorphic-scenarios/v1"
+          assert scenarios["generator"]["id"] == "metamorphic-kitten-swarm-v1"
+          assert scenarios["generator"]["deterministic"] is True
+          assert scenarios["generator"]["case_count"] == 30
+          assert scenarios["generator"]["families"] == {
+              "retry_after_floor": 6,
+              "fast_fail_anchor": 6,
+              "draft_zero_window": 6,
+              "retry_after_precedence": 6,
+              "budget_stop": 6,
+          }
+          assert scenarios["safety"] == {
+              "network_scope": "loopback_only",
+              "allowed_host": "127.0.0.1",
+              "production_traffic": False,
+          }
+          assert scenarios["ambiguous"] == []
+
+          for report in (py, node, go):
+              assert report["summary"]["scenarios"] == 30
+              assert report["summary"]["passed"] == 30
+              assert report["summary"]["failed"] == 0
+              assert report["safety"] == {
+                  "production_traffic": False,
+                  "rate_limit_evasion": False,
+                  "remote_target_input": False,
+              }
+
+          assert pn["scenario_count"] == 30
+          assert pn["semantic_parity"] is True
+          assert pn["errors"] == []
+          assert pg["scenario_count"] == 30
+          assert pg["semantic_parity"] is True
+          assert pg["errors"] == []
+
+          # The generated family itself remains free of duplicated logical IDs.
+          op_ids = [row["operation_id"] for row in scenarios["scripted"]]
+          assert len(op_ids) == len(set(op_ids)) == 30
+
+          print("HTTP 429 Metamorphic Kitten Swarm: PASS (30/30 × 3 runtimes)")
+          PY
+
+      - name: Check frozen Metamorphic Kitten Swarm reference
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          scenario_path = Path("/tmp/http-429-metamorphic-scenarios.json")
+          scenarios = json.loads(scenario_path.read_text(encoding="utf-8"))
+          py = json.load(open("/tmp/http-429-metamorphic-python.json", encoding="utf-8"))
+          node = json.load(open("/tmp/http-429-metamorphic-node.json", encoding="utf-8"))
+          go = json.load(open("/tmp/http-429-metamorphic-go.json", encoding="utf-8"))
+          pn = json.load(open("/tmp/http-429-metamorphic-python-node.json", encoding="utf-8"))
+          pg = json.load(open("/tmp/http-429-metamorphic-python-go.json", encoding="utf-8"))
+          reference = json.load(open("data/http_429_metamorphic_reference.json", encoding="utf-8"))
+
+          digest = hashlib.sha256(scenario_path.read_bytes()).hexdigest()
+          assert digest == reference["generator"]["scenario_sha256"]
+          assert scenarios["generator"]["id"] == reference["generator"]["id"]
+          assert scenarios["generator"]["case_count"] == reference["generator"]["case_count"]
+          assert scenarios["generator"]["families"] == reference["generator"]["families"]
+
+          assert py["summary"] == reference["observed"]["python"]
+          assert node["summary"] == reference["observed"]["node"]
+          assert go["summary"] == reference["observed"]["go"]
+
+          assert {
+              "scenario_count": pn["scenario_count"],
+              "semantic_parity": pn["semantic_parity"],
+              "errors": pn["errors"],
+          } == reference["observed"]["python_node"]
+          assert {
+              "scenario_count": pg["scenario_count"],
+              "semantic_parity": pg["semantic_parity"],
+              "errors": pg["errors"],
+          } == reference["observed"]["python_go"]
+
+          assert reference["freeze_policy"]["freeze_raw_runtime_report_bytes"] is False
+          print("HTTP 429 Metamorphic Kitten Swarm frozen reference: PASS")
           PY
 
       - name: Check Peace Junction reference mirrors
@@ -240,6 +380,13 @@ jobs:
             /tmp/http-429-conformance-go.json
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
+            /tmp/http-429-metamorphic-scenarios.json
+            /tmp/http-429-metamorphic-scenarios-second.json
+            /tmp/http-429-metamorphic-python.json
+            /tmp/http-429-metamorphic-node.json
+            /tmp/http-429-metamorphic-go.json
+            /tmp/http-429-metamorphic-python-node.json
+            /tmp/http-429-metamorphic-python-go.json
             data/http_429_go_cross_language_reference.json
             /tmp/purrtocol-429-peace-bridge-dom.html
             /tmp/purrtocol-429-peace-bridge.png
