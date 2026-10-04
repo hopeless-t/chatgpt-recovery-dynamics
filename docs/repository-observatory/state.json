@@ -41,7 +41,8 @@
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
     "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
     "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations",
-    "http_429_hysteresis_metamorphic": "baseline implemented: deterministic 12-policy × 7-relation Recovery Hysteresis Metamorphic Kitten Swarm passed 84/84; compact artifact-backed receipt frozen; no network traffic"
+    "http_429_hysteresis_metamorphic": "baseline implemented: deterministic 12-policy × 7-relation Recovery Hysteresis Metamorphic Kitten Swarm passed 84/84; compact artifact-backed receipt frozen; no network traffic",
+    "http_429_scheduler_hysteresis_composition": "NET-429-COMP-001 observed pending promotion: 8/8 deterministic composition cases passed; scheduler retains retry authorization/timing/budget authority; hysteresis confidence may only add conservative B/E pacing; no replay authority or production traffic"
   },
   "frontiers": [
     {
@@ -89,9 +90,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "hysteresis_metamorphic_baseline_implemented",
-      "target": "Couple retry pacing and recovery-confidence state so provisional success cannot relax pacing or clear failure history prematurely, while keeping operation replay authority separate.",
-      "promotion_gate": "scheduler×hysteresis composition preserves Retry-After/start-anchor/budget/UNKNOWN rules and B->E/E->B/E->H hysteresis across generated sequences; no first-success pacing reset; no production traffic"
+      "status": "scheduler_hysteresis_composition_observed_pending_promotion",
+      "target": "Promote scheduler×hysteresis composition, then stress the composed controller across generated timing/confidence sequences without allowing confidence to shorten floors or mint replay authority.",
+      "promotion_gate": "8/8 composition baseline and frozen receipt stay green; existing scheduler/cross-language/metamorphic/hysteresis baselines unchanged; composed generated relations preserve STOP_BUDGET, REOBSERVE, Retry-After floors and first-success E semantics; no production traffic"
     },
     {
       "id": "ENTROPY-001",
