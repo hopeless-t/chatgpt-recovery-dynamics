@@ -512,6 +512,7 @@ jobs:
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
             /tmp/http-429-recovery-hysteresis.json
+            /tmp/http-429-recovery-hysteresis-swarm.json
             data/http_429_recovery_hysteresis_reference.json
             /tmp/http-429-metamorphic-scenarios.json
             /tmp/http-429-metamorphic-scenarios-second.json
