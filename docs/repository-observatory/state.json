@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "43d6015ffcdf5ee77e1cad6a27f50b22b48d3f40",
+    "baseline_main_commit": "d3841bc8f329dd42e5e8d6ae3e81f6cf19591bc3",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -40,7 +40,7 @@
     "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
     "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
-    "http_429_recovery_hysteresis": "NET-429-HYS-001 observed baseline pending promotion: 8/8 deterministic state-machine cases pass; first post-Blocked success enters E, E+429 returns B, failure history resets only on configured E->H confirmation"
+    "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations"
   },
   "frontiers": [
     {
@@ -88,9 +88,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "recovery_hysteresis_baseline_observed_pending_promotion",
-      "target": "Promote executable first-success hysteresis while preserving frozen base/cross-language/metamorphic references; then test hysteresis relations across broader generated state sequences.",
-      "promotion_gate": "8/8 deterministic H/E/B cases stay green; frozen 429 baselines unchanged; lab thresholds remain explicitly non-production; no network traffic from the hysteresis layer"
+      "status": "recovery_hysteresis_baseline_implemented",
+      "target": "Stress recovery-hysteresis relations over generated state sequences and couple confidence-state transitions to the existing scheduler without allowing first success to reset pacing prematurely.",
+      "promotion_gate": "generated relations preserve B->E first-success, E->B rebound, E->H confirmation, and failure-history reset semantics across parameter variations; frozen 8-case/30-case/hysteresis references remain unchanged; no production traffic"
     },
     {
       "id": "ENTROPY-001",
