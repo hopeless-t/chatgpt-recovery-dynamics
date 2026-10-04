@@ -65,7 +65,8 @@
         "docs/429-conformance-lab/*",
         "scripts/http_429_conformance_lab.py",
         "scripts/http_429_conformance_node.js",
-        "scripts/compare_http_429_conformance.py"
+        "scripts/compare_http_429_conformance.py",
+        "data/http_429_cross_language_reference.json"
       ],
       "commands": [
         "python scripts/validate_http_429_survival.py",
