@@ -16,55 +16,32 @@
   "tunable_surfaces": [
     {
       "id": "critic_surface",
-      "examples": [
-        "audit failure localization",
-        "next-action summaries",
-        "frontier routing"
-      ],
+      "examples": ["audit failure localization", "next-action summaries", "frontier routing"],
       "objective": "reduce observation-to-change friction"
     },
     {
       "id": "verification_staging",
-      "examples": [
-        "parallel independent checks",
-        "change-sensitive deep checks",
-        "reference regeneration"
-      ],
+      "examples": ["parallel independent checks", "change-sensitive deep checks", "reference regeneration"],
       "objective": "reduce redundant verification work without weakening merge gates"
     },
     {
       "id": "context_routing",
-      "examples": [
-        "AGENTS maps",
-        "llms maps",
-        "nested task instructions"
-      ],
+      "examples": ["AGENTS maps", "llms maps", "nested task instructions"],
       "objective": "reduce agent search/path length without instruction bloat"
     },
     {
       "id": "artifact_granularity",
-      "examples": [
-        "small reversible commits",
-        "append-only references",
-        "digest-bound derived outputs"
-      ],
+      "examples": ["small reversible commits", "append-only references", "digest-bound derived outputs"],
       "objective": "reduce biopsy/rework cost"
     },
     {
       "id": "frontier_selection",
-      "examples": [
-        "separate local-actionable work from external-evidence-blocked work",
-        "parallel independent lanes"
-      ],
+      "examples": ["separate local-actionable work from external-evidence-blocked work", "parallel independent lanes"],
       "objective": "avoid waiting on unavailable evidence while preserving the blocked frontier"
     },
     {
       "id": "observer_footprint",
-      "examples": [
-        "workflow count",
-        "audit code size",
-        "duplicated projections"
-      ],
+      "examples": ["workflow count", "audit code size", "duplicated projections"],
       "objective": "keep measurement machinery from becoming the dominant maintenance burden"
     }
   ],
@@ -109,10 +86,7 @@
   },
   "recursion_policy": {
     "automatic_control_depth": 2,
-    "levels": [
-      "repository_improvement_loop",
-      "meta_improvement_loop"
-    ],
+    "levels": ["repository_improvement_loop", "meta_improvement_loop"],
     "spawn_additional_controller_automatically": false,
     "rationale": "The meta loop observes its own footprint through the Repository Observatory instead of recursively creating higher-order controllers."
   },
@@ -127,18 +101,14 @@
       "observer footprint remains below soft design warnings"
     ],
     "note": "A single faster cycle is not sufficient evidence that the loop improved.",
-    "deployment_commit": "a784da0ebe0064acf3cd8d7382a29dc3e0bc5592",
+    "deployment_commit": "a784da0ebe0064acf3cd9849c23fad4f2ee4d57f1a",
     "meta_cycle_id": "MIL-001",
     "status": "validated_pass",
     "evaluation_reference": "data/critic_router_v1_evaluation.json",
     "observed_result": {
       "sample_count": 3,
       "baseline_median_observation_to_first_change_s": 488,
-      "post_tuning_observation_to_first_change_s": [
-        78,
-        109,
-        142
-      ],
+      "post_tuning_observation_to_first_change_s": [78, 109, 142],
       "post_tuning_median_observation_to_first_change_s": 109,
       "verified_before_promotion_ratio": 1,
       "observer_footprint_within_soft_budget": true,
@@ -160,5 +130,21 @@
     "observed_cases": 3,
     "hard_gate": false,
     "next_evidence": "Accumulate additional real PR outcomes and audit false-positive/false-negative behavior before any hard-gate proposal."
+  },
+  "public_analysis_observer_routing": {
+    "tuning_id": "public-analysis-observer-routing-v1",
+    "meta_cycle_id": "MIL-004",
+    "status": "shadow_baseline_implemented",
+    "reference": "data/public_analysis_observer_routing_reference.json",
+    "execution_authority": false,
+    "jobs_actually_skipped": false,
+    "full_public_analysis_jobs": 13,
+    "isolated_429_candidate_jobs": 4,
+    "candidate_avoided_jobs": 9,
+    "historical_case_count": 4,
+    "live_case_count": 2,
+    "live_isolated_pair_count": 1,
+    "open_guardrail": "safe-island path coverage by required source-proximate workflow triggers is not yet machine-proven",
+    "promotion_rule": "No real public-analysis job skipping until trigger coverage is machine-checked, additional live paired observations accumulate, and any miss outside the candidate subset is investigated under the still-running full matrix."
   }
 }
