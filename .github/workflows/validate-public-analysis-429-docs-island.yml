@@ -58,13 +58,8 @@ jobs:
 
           python - <<'PY'
           import json
-          import os
 
           route = json.load(open("/tmp/public-analysis-route.json", encoding="utf-8"))
-          docs_only = os.environ.get("DOCS_ONLY") == "true"
-
-          # The shell exports the step output separately. Recompute from the
-          # changed-path list here so the route audit cannot trust that output.
           paths = json.load(open("/tmp/changed-paths.json", encoding="utf-8"))["paths"]
           docs_only = bool(paths) and all(
               path.startswith("docs/429-conformance-lab/") for path in paths
@@ -173,3 +168,47 @@ jobs:
             /tmp/changed-paths.txt
             /tmp/public-analysis-route.json
             /tmp/docs-island-execution.json
+
+  promotion-patch:
+    if: github.head_ref == 'meta-public-analysis-docs-island-promotion' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: meta-public-analysis-docs-island-promotion
+          fetch-depth: 0
+
+      - name: Patch only the full workflow pull-request trigger
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path(".github/workflows/validate-public-analysis.yml")
+          text = path.read_text(encoding="utf-8")
+          old = "on:\n  push:\n  pull_request:\n"
+          new = (
+              "on:\n"
+              "  push:\n"
+              "  pull_request:\n"
+              "    paths-ignore:\n"
+              "      - \"docs/429-conformance-lab/**\"\n"
+          )
+          assert text.count(old) == 1, "unexpected public-analysis trigger shape"
+          updated = text.replace(old, new, 1)
+          assert updated.count("paths-ignore:") == 1
+          path.write_text(updated, encoding="utf-8")
+          PY
+
+      - name: Commit exact trigger patch
+        run: |
+          set -euo pipefail
+          git add .github/workflows/validate-public-analysis.yml
+          test "$(git diff --cached --name-only)" = ".github/workflows/validate-public-analysis.yml"
+          git diff --cached --check
+          git diff --cached --stat
+          git config user.name "Catfood Meta Loop"
+          git config user.email "274503048+hopeless-t@users.noreply.github.com"
+          git commit -m "Route pure 429 lab docs through lightweight public analysis"
+          git push origin HEAD:meta-public-analysis-docs-island-promotion
