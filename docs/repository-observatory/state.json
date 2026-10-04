@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "d3841bc8f329dd42e5e8d6ae3e81f6cf19591bc3",
+    "baseline_main_commit": "980a586fc785e986f58b5e782bf339de0a5d5bfe",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -41,7 +41,7 @@
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
     "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
     "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations",
-    "http_429_hysteresis_metamorphic": "NET-429-HYS-002 observed pending promotion: deterministic 12-policy × 7-relation swarm passed 84/84; clean artifact-backed receipt frozen after persistence repair; no network traffic"
+    "http_429_hysteresis_metamorphic": "baseline implemented: deterministic 12-policy × 7-relation Recovery Hysteresis Metamorphic Kitten Swarm passed 84/84; compact artifact-backed receipt frozen; no network traffic"
   },
   "frontiers": [
     {
@@ -89,9 +89,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "hysteresis_metamorphic_baseline_observed_pending_promotion",
-      "target": "Promote the 84-relation hysteresis metamorphic baseline, then couple scheduler pacing and confidence-state recovery without allowing first success to relax pacing or reset failure history.",
-      "promotion_gate": "84/84 generated hysteresis relations stay green across 12 policies; frozen 8-case/30-case/tri-runtime/hysteresis references remain unchanged; compact artifact-backed receipt matches; no production traffic"
+      "status": "hysteresis_metamorphic_baseline_implemented",
+      "target": "Couple retry pacing and recovery-confidence state so provisional success cannot relax pacing or clear failure history prematurely, while keeping operation replay authority separate.",
+      "promotion_gate": "scheduler×hysteresis composition preserves Retry-After/start-anchor/budget/UNKNOWN rules and B->E/E->B/E->H hysteresis across generated sequences; no first-success pacing reset; no production traffic"
     },
     {
       "id": "ENTROPY-001",
