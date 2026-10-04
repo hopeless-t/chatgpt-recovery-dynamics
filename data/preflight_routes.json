@@ -70,7 +70,8 @@
       "commands": [
         "python scripts/validate_http_429_survival.py",
         "python scripts/http_429_conformance_lab.py --output /tmp/http-429-conformance-preflight.json",
-        "node scripts/http_429_conformance_node.js --output /tmp/http-429-conformance-node-preflight.json"
+        "node scripts/http_429_conformance_node.js --output /tmp/http-429-conformance-node-preflight.json",
+        "python scripts/compare_http_429_conformance.py --python-report /tmp/http-429-conformance-preflight.json --node-report /tmp/http-429-conformance-node-preflight.json --output /tmp/http-429-cross-language-preflight.json"
       ],
       "promotion_gate": "Validate HTTP 429 Survival Kit",
       "rationale": "Catch timing-floor, authorization, budget, standards-boundary, cross-language parity, reference drift, and loopback conformance failures close to the 429 source."
