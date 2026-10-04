@@ -1,0 +1,69 @@
+{
+  "schema": "http-429-metamorphic-reference/v1",
+  "source": {
+    "workflow_run_id": 37195222630,
+    "job_id": 111415574176,
+    "head_sha": "e0117110f371a8e903b5395c9ccf9d565042fdaa",
+    "artifact_id": 11300686289,
+    "observation_class": "first_metamorphic_swarm_ci_observation_before_reference_freeze"
+  },
+  "generator": {
+    "id": "metamorphic-kitten-swarm-v1",
+    "deterministic": true,
+    "scenario_sha256": "2886f662e1f635e0ded7195a0007390ae9f1786979eea7d81cb0153ae84c4f05",
+    "case_count": 30,
+    "families": {
+      "retry_after_floor": 6,
+      "fast_fail_anchor": 6,
+      "draft_zero_window": 6,
+      "retry_after_precedence": 6,
+      "budget_stop": 6
+    }
+  },
+  "observed": {
+    "total_local_case_executions": 90,
+    "python": {
+      "scenarios": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "node": {
+      "scenarios": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "go": {
+      "scenarios": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "python_node": {
+      "scenario_count": 30,
+      "semantic_parity": true,
+      "errors": []
+    },
+    "python_go": {
+      "scenario_count": 30,
+      "semantic_parity": true,
+      "errors": []
+    }
+  },
+  "safety": {
+    "production_traffic": false,
+    "rate_limit_evasion": false,
+    "remote_target_input": false,
+    "network_scope": "loopback_only"
+  },
+  "freeze_policy": {
+    "freeze_generated_scenario_digest": true,
+    "freeze_semantic_summaries": true,
+    "freeze_raw_runtime_report_bytes": false,
+    "reason": "Raw runtime reports may contain implementation-specific transport diagnostics with ephemeral loopback port numbers; those are deliberately outside semantic equality."
+  },
+  "interpretation": {
+    "conclusion": "Thirty deterministic metamorphic cases reproduced the same HTTP 429 recovery contract semantics across Python, Node, and Go in the loopback lab.",
+    "production_provider_behavior": "NOT_ESTABLISHED",
+    "load_testing": "NOT_PERFORMED",
+    "universal_correctness": "NOT_ESTABLISHED"
+  }
+}
