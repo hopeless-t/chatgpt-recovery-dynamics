@@ -15,6 +15,7 @@
 - [Interactive rescue console](./429-survival-kit/)
 - [Technical guide](./429-survival-kit/index.md)
 - [Machine contract](./429-survival-kit/contract.json)
+- [Purrtocol 429 Peace Bridge](./purrtocol-429-peace-bridge/) — visualization of the frozen Python/Node cross-language local conformance baseline
 
 Core rule: **Retry-After is a floor; jitter must not pull a client earlier.**
 
