@@ -263,6 +263,39 @@ jobs:
           print("HTTP 429 Scheduler x Hysteresis composition: PASS (8/8)")
           PY
 
+      - name: Compare frozen Scheduler x Hysteresis composition reference
+        run: |
+          python - <<'PY'
+          import json
+
+          observed = json.load(open(
+              "/tmp/http-429-recovery-composition.json",
+              encoding="utf-8",
+          ))
+          reference = json.load(open(
+              "data/http_429_recovery_composition_reference.json",
+              encoding="utf-8",
+          ))
+
+          assert reference["schema"] == "http-429-recovery-composition-reference/v1"
+          assert observed["experiment_id"] == reference["experiment_id"]
+          assert observed["policy"] == reference["lab_policy"]
+          assert observed["summary"] == reference["observed"]["summary"]
+          assert [
+              row["scenario_id"] for row in observed["results"]
+          ] == reference["observed"]["scenario_ids"]
+          assert (
+              observed["authority_boundary"]
+              == reference["observed"]["authority_boundary"]
+          )
+          assert observed["safety"] == reference["safety"]
+          assert reference["interpretation"]["production_thresholds"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["provider_internal_states"] == "NOT_ESTABLISHED"
+          assert reference["interpretation"]["provider_root_cause"] == "NOT_ESTABLISHED"
+
+          print("HTTP 429 Scheduler x Hysteresis frozen reference: PASS")
+          PY
+
       - name: Run Recovery Hysteresis Metamorphic Kitten Swarm
         run: |
           python scripts/http_429_recovery_hysteresis_swarm.py \
