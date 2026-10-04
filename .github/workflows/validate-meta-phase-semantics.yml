@@ -1,0 +1,58 @@
+name: Validate Meta Phase Semantics
+
+on:
+  push:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "scripts/analyze_improvement_loop.py"
+      - "scripts/audit_meta_phase_semantics.py"
+      - "data/meta_phase_semantics_reference.json"
+      - ".github/workflows/validate-meta-phase-semantics.yml"
+  pull_request:
+    paths:
+      - "data/improvement_events.jsonl"
+      - "scripts/analyze_improvement_loop.py"
+      - "scripts/audit_meta_phase_semantics.py"
+      - "data/meta_phase_semantics_reference.json"
+      - ".github/workflows/validate-meta-phase-semantics.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Audit phase ordering without rewriting raw telemetry
+        run: |
+          python scripts/audit_meta_phase_semantics.py \
+            --output /tmp/meta-phase-semantics.json
+
+      - name: Check observation-only authority boundary
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/meta-phase-semantics.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "meta-phase-semantics-audit/v1"
+          assert r["classification"] == "raw_timestamp_preserving_phase_semantics_audit"
+          assert r["interpretation"]["raw_timestamps_modified"] is False
+          assert r["interpretation"]["negative_intervals_clamped"] is False
+          assert r["interpretation"]["negative_intervals_absolute_valued"] is False
+          assert r["authority"]["changes_existing_analyzer"] is False
+          assert r["authority"]["changes_raw_ledger"] is False
+          assert r["authority"]["changes_frozen_critic_router_evaluation"] is False
+          print("Meta phase semantics observation-only boundary: PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meta-phase-semantics-audit
+          path: /tmp/meta-phase-semantics.json
