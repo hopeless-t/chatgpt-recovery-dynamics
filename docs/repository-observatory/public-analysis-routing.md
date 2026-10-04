@@ -1,6 +1,6 @@
-# Public Analysis Observer Routing / META-003
+# Public Analysis Observer Routing / META-003 + MIL-004
 
-> Status: SHADOW OBSERVATION ONLY
+> Status: SHADOW OBSERVATION ONLY / TRIGGER-COVERAGE HARDENED
 
 The repository currently runs the full `Validate public analysis` workflow on
 every pull request. That workflow launches 13 jobs, including three Python
@@ -11,14 +11,20 @@ Recovery Helper checks.
 Recent source-proximate HTTP 429 pull requests already had dedicated promotion
 workflows, but the full 13-job public-analysis matrix still ran as well.
 
-META-003 asks a narrower question:
+The observer-routing experiment asks:
 
 > Can the repository identify a conservative candidate subset of public-analysis
-> jobs for isolated 429 changes without actually skipping anything yet?
+> jobs for isolated 429 changes without weakening the source-proximate promotion
+> gates that make that reduction defensible?
 
-## Fail-closed shadow policy
+## Two-stage fail-closed shadow policy
 
-The first safe island is intentionally narrow:
+A changed path set must pass **both** stages before it can even become a reduced
+route candidate.
+
+### Stage 1 — safe-island membership
+
+Every changed path must belong to the narrow 429 island:
 
 - `.github/workflows/validate-http-429*`
 - `data/http_429_*`
@@ -27,63 +33,96 @@ The first safe island is intentionally narrow:
 - `docs/purrtocol-429-peace-bridge/*`
 - `data/preflight_routes.json`
 
-A changed path set qualifies only if **every path** belongs to that island.
+Anything mixed, unknown, global, scientific, or shared-state routes `FULL`.
 
-For an isolated 429 path set the candidate public-analysis subset is:
+### Stage 2 — actual source-gate trigger coverage
+
+Safe-island membership is **not enough**.
+
+For every changed path, the router reads the current repository's actual:
+
+```text
+.github/workflows/validate-http-429*.yml
+```
+
+and extracts each workflow's `pull_request.paths`.
+
+A reduced route remains eligible only when **every changed path matches at least
+one real source-proximate 429 workflow trigger**.
+
+If even one path is uncovered:
+
+```text
+safe-island match        yes
+source-gate coverage     no
+final route              FULL
+coverage_fail_closed     true
+jobs actually skipped    false
+```
+
+This is deliberately stricter than file-name classification.
+
+## Candidate public-analysis subset
+
+For a fully covered isolated 429 path set:
 
 ```text
 repository-surface
 + validate (3.11), validate (3.12), validate (3.13) when Python changed
 ```
 
-Everything else is fail-closed `FULL`.
+The router still has no execution authority.
 
-That includes:
+## Historical + live specimens
 
-- unknown paths;
-- science/model paths;
-- shared Observatory state;
-- global portal/discovery surfaces;
-- mixed safe-island + shared-surface changes.
+| PR | First-stage island | Trigger coverage | Final candidate route |
+|---|---|---|---:|
+| #47 429 composition metamorphic | yes | yes | `http-429-isolated`, 4 / 13 |
+| #51 live routing probe | yes | **no** | `FULL`, 13 / 13 |
+| #45 429 + shared Observatory state | no | n/a | `FULL`, 13 / 13 |
+| #31 Peace Bridge + global portal | no | n/a | `FULL`, 13 / 13 |
+| #9 latent-timing science | no | n/a | `FULL`, 13 / 13 |
 
-## Historical specimens
+### Why PR #51 matters
 
-The predeclared regression set contains real PR path lists:
+The first live shadow probe exposed a real second-order mismatch:
 
-| PR | Classification | Candidate public-analysis jobs |
-|---|---|---:|
-| #47 429 composition metamorphic | `http-429-isolated` | 4 / 13 |
-| #45 429 + shared Observatory state | `full-fail-closed` | 13 / 13 |
-| #31 Peace Bridge + global portal | `full-fail-closed` | 13 / 13 |
-| #9 latent-timing science | `full-fail-closed` | 13 / 13 |
+```text
+router island       scripts/http_429_*
+dedicated triggers explicit narrower path lists
+```
 
-PR #47 actually launched all 13 public-analysis jobs. Under the shadow policy,
-9 of those jobs are candidate avoidable work. This is **not yet a measured
-runtime saving**, because no job is skipped during META-003.
+The new probe script was therefore recognizable as "429" by the router without
+being guaranteed to start a source-proximate 429 workflow.
+
+The hardened router now treats that exact historical path set as a negative
+regression and fails closed to the full public-analysis matrix.
 
 ## Authority boundary
 
-The router has no execution authority.
-
 ```text
 candidate route != permission to skip
-shadow PASS      != workflow optimization promoted
-unknown          -> FULL
-mixed surface    -> FULL
+coverage PASS  != permission to skip
+shadow PASS    != workflow optimization promoted
+unknown        -> FULL
+mixed surface  -> FULL
+uncovered path -> FULL
 ```
 
-The full public-analysis workflow remains authoritative during the shadow phase.
-Existing source-proximate promotion gates also remain unchanged.
+The full public-analysis workflow remains authoritative during this phase.
+Existing source-proximate promotion gates remain unchanged.
 
 ## Promotion path
 
 Before any real skip proposal:
 
-1. run the router in shadow mode on live PRs;
-2. compare every candidate route with the still-executed full result;
-3. accumulate both isolated and fail-closed cases;
-4. investigate any failure the candidate route would have missed;
-5. keep unknown/mixed surfaces fail-closed;
-6. make job-skipping a separate, reversible promotion change.
+1. keep the full 13-job matrix running;
+2. retain PR #51 as the uncovered-path negative regression;
+3. obtain another **live isolated 429 PR whose entire path set has verified
+   source-gate trigger coverage**;
+4. compare its reduced candidate route with the still-executed full result;
+5. investigate any failure the candidate route would have missed;
+6. make job-skipping a separate, reversible promotion change;
+7. unknown/mixed/uncovered paths remain permanently fail-closed.
 
 This is observer-hygiene research, not a request to weaken evidence.
