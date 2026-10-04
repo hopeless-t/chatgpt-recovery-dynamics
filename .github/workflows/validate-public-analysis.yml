@@ -3,6 +3,8 @@ name: Validate public analysis
 on:
   push:
   pull_request:
+    paths-ignore:
+      - "docs/429-conformance-lab/**"
 
 jobs:
   validate:
@@ -85,16 +87,11 @@ jobs:
           anchor = s["policies"]["anchor_10s"]
           strong = s["policies"]["strong_backoff"]
 
-          # Start anchoring should reduce pressure-feedback failures in this
-          # deliberately broad stress model.
           assert (
               anchor["pressure_feedback"]["recovery_rate"]
               > base["pressure_feedback"]["recovery_rate"]
           )
 
-          # Strong backoff should show the intended model-risk tradeoff:
-          # it helps under pressure feedback but can hurt when recovery is
-          # attempt-driven.
           assert (
               strong["pressure_feedback"]["recovery_rate"]
               > anchor["pressure_feedback"]["recovery_rate"]
@@ -389,8 +386,6 @@ jobs:
           friendly = p["server_friendly_stack"]
           foreground = p["foreground_first"]
 
-          # The observed-design stack should push the sampled pressure knee
-          # later than naive completion-coupled retries.
           assert (
               friendly["operational_knee_first_sampled_rho"]
               >= naive["operational_knee_first_sampled_rho"]
@@ -416,20 +411,16 @@ jobs:
               > r100_naive["recovery_rate"]["mean"]
           )
 
-          # Retry-After/jitter alone should reduce retry amplification.
           assert (
               retry["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
               < naive["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
           )
 
-          # Single-flight/observe should reduce it further.
           assert (
               observe["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
               < retry["by_rho"]["0.98"]["retry_amplification_per_logical_recovery"]["mean"]
           )
 
-          # Emergency foreground-first mode is allowed to defer recovery in
-          # genuine overload; it must not pretend to create capacity.
           assert (
               foreground["by_rho"]["1.05"]["recovery_rate"]["mean"]
               <= friendly["by_rho"]["1.05"]["recovery_rate"]["mean"]
@@ -582,8 +573,6 @@ jobs:
           assert "English" in html
           assert "ChatGPT Recovery Helper" in html
 
-          # External navigation by explicit anchor click is allowed.
-          # Background/network APIs are not.
           forbidden = [
               r"\bfetch\s*\(",
               r"XMLHttpRequest",
@@ -608,8 +597,6 @@ jobs:
           assert "form-action 'none'" in html
           assert 'rel="noopener noreferrer"' in html
 
-          # Any absolute HTTP(S) URL embedded anywhere in the Helper must be
-          # an explicit OpenAI Status/Help destination.
           urls = re.findall(r"https?://[^\s\"'<>]+", html)
           allowed = (
               "https://status.openai.com/",
@@ -618,7 +605,6 @@ jobs:
           for url in urls:
               assert url.startswith(allowed), url
 
-          # Official and research-derived guidance stay visibly separate.
           assert "OpenAI公式" in html
           assert "OpenAI official" in html
           assert "この研究からの提案" in html
@@ -799,8 +785,6 @@ jobs:
               for value in fold["test_mean_nll"].values():
                   assert math.isfinite(value)
 
-          # The first observed run established an intentionally asymmetric result:
-          # HMM-2 wins pooled same-sample BIC, while AR(1) wins both held-out folds.
           assert within["bic_ranking"][0]["model"] == "hmm2_latent_gaussian"
           assert within["bic_ranking"][1]["model"] == "ar1"
           assert (
