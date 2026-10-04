@@ -10,6 +10,7 @@ on:
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
       - "scripts/http_429_conformance_node.js"
+      - "scripts/http_429_conformance_go.go"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
       - "docs/purrtocol-429-peace-bridge/**"
@@ -18,12 +19,16 @@ on:
     paths:
       - "data/http_429_conformance_scenarios.json"
       - "data/http_429_conformance_reference.json"
+      - "data/http_429_cross_language_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
+      - "scripts/compare_http_429_conformance.py"
+      - "scripts/http_429_conformance_node.js"
+      - "scripts/http_429_conformance_go.go"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
+      - "docs/purrtocol-429-peace-bridge/**"
       - ".github/workflows/validate-http-429-conformance.yml"
-
 permissions:
   contents: read
 
@@ -49,12 +54,26 @@ jobs:
           node scripts/http_429_conformance_node.js \
             --output /tmp/http-429-conformance-node.json
 
+      - name: Run independent Go conformance fire drill
+        run: |
+          go version
+          go run scripts/http_429_conformance_go.go \
+            --output /tmp/http-429-conformance-go.json
+
       - name: Compare Python and Node contract semantics
         run: |
           python scripts/compare_http_429_conformance.py \
             --python-report /tmp/http-429-conformance.json \
             --node-report /tmp/http-429-conformance-node.json \
             --output /tmp/http-429-cross-language.json
+
+      - name: Compare Python and Go contract semantics
+        run: |
+          python scripts/compare_http_429_conformance.py \
+            --python-report /tmp/http-429-conformance.json \
+            --node-report /tmp/http-429-conformance-go.json \
+            --candidate-label go-standard-library \
+            --output /tmp/http-429-python-go.json
 
       - name: Compare frozen cross-language reference
         run: |
@@ -185,7 +204,9 @@ jobs:
           path: |
             /tmp/http-429-conformance.json
             /tmp/http-429-conformance-node.json
+            /tmp/http-429-conformance-go.json
             /tmp/http-429-cross-language.json
+            /tmp/http-429-python-go.json
             /tmp/purrtocol-429-peace-bridge-dom.html
             /tmp/purrtocol-429-peace-bridge.png
             /tmp/peace-bridge-http.log
