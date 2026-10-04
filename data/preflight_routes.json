@@ -70,7 +70,10 @@
         "docs/purrtocol-429-peace-bridge/*",
         "scripts/http_429_conformance_go.go",
         "scripts/generate_http_429_metamorphic_cases.py",
-        "data/http_429_metamorphic_reference.json"
+        "data/http_429_metamorphic_reference.json",
+        "data/http_429_recovery_hysteresis_contract.json",
+        "data/http_429_recovery_hysteresis_scenarios.json",
+        "scripts/http_429_recovery_hysteresis.py"
       ],
       "commands": [
         "python scripts/validate_http_429_survival.py",
@@ -80,10 +83,11 @@
         "go run scripts/http_429_conformance_go.go --output /tmp/http-429-conformance-go-preflight.json",
         "python scripts/compare_http_429_conformance.py --python-report /tmp/http-429-conformance-preflight.json --node-report /tmp/http-429-conformance-go-preflight.json --candidate-label go-standard-library --output /tmp/http-429-python-go-preflight.json",
         "python scripts/generate_http_429_metamorphic_cases.py --output /tmp/http-429-metamorphic-preflight.json",
-        "python scripts/http_429_conformance_lab.py --scenarios /tmp/http-429-metamorphic-preflight.json --output /tmp/http-429-metamorphic-python-preflight.json"
+        "python scripts/http_429_conformance_lab.py --scenarios /tmp/http-429-metamorphic-preflight.json --output /tmp/http-429-metamorphic-python-preflight.json",
+        "python scripts/http_429_recovery_hysteresis.py --output /tmp/http-429-recovery-hysteresis-preflight.json"
       ],
       "promotion_gate": "Validate HTTP 429 Survival Kit",
-      "rationale": "Catch timing-floor, authorization, budget, standards-boundary, PR-trigger drift, base multi-runtime parity, and metamorphic-generator faults close to the 429 source; full tri-runtime swarm stays in promotion CI to bound observer cost."
+      "rationale": "Catch timing-floor, authorization, budget, recovery-hysteresis, standards-boundary, PR-trigger drift, base multi-runtime parity, and metamorphic-generator faults close to the 429 source; full tri-runtime swarm stays in promotion CI to bound observer cost."
     },
     {
       "route_id": "meta-improvement-loop",
