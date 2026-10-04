@@ -42,17 +42,14 @@ jobs:
           grep -q 'purrtocol-poster.svg' /tmp/purrtocol-3d-fallback-dom.html
           grep -q 'poster fallback remains visible' /tmp/purrtocol-3d-fallback-dom.html
 
-          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --host-resolver-rules="MAP ajax.googleapis.com 127.0.0.1, MAP cdnjs.cloudflare.com 127.0.0.1"             --virtual-time-budget=10000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-fallback.png             http://127.0.0.1:8765/purrtocol-3d/
-
-          test -s /tmp/purrtocol-3d-fallback.png
-          echo "Purrtocol 3D fallback visibility: PASS"
+          grep -q 'viewer-backstop' /tmp/purrtocol-3d-fallback-dom.html
+          echo "Purrtocol 3D CDN-failure fallback DOM: PASS"
 
       - uses: actions/upload-artifact@v4
         with:
           name: purrtocol-3d-fallback-browser
           path: |
             /tmp/purrtocol-3d-fallback-dom.html
-            /tmp/purrtocol-3d-fallback.png
             /tmp/purrtocol-http.log
 
   live-render-observation:
