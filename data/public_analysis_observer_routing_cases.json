@@ -13,8 +13,22 @@
       ],
       "expected_route_id": "http-429-isolated",
       "expected_candidate_job_count": 4,
+      "expected_source_gate_coverage": true,
       "observed_public_analysis_jobs_launched": 13,
       "note": "Source-proximate 429 PR with dedicated composition/conformance workflows; no shared Observatory state file in the change set."
+    },
+    {
+      "case_id": "pr-51-live-probe-trigger-gap",
+      "source_pr": 51,
+      "paths": [
+        "docs/429-conformance-lab/observer-routing-live-probe.md",
+        "scripts/http_429_observer_routing_probe.py"
+      ],
+      "expected_route_id": "full-fail-closed",
+      "expected_candidate_job_count": 13,
+      "expected_source_gate_coverage": false,
+      "observed_public_analysis_jobs_launched": 13,
+      "note": "Live shadow specimen exposed that scripts/http_429_* was broader than the actual source-workflow path filters. The stricter router must fail closed until the probe path itself is source-gated."
     },
     {
       "case_id": "pr-45-429-plus-shared-observatory-state",
