@@ -1,0 +1,73 @@
+{
+  "schema": "public-analysis-observer-routing-cases/v1",
+  "cases": [
+    {
+      "case_id": "pr-47-429-composition-metamorphic",
+      "source_pr": 47,
+      "paths": [
+        ".github/workflows/validate-http-429-composition-metamorphic.yml",
+        "data/http_429_recovery_composition_metamorphic_reference.json",
+        "data/preflight_routes.json",
+        "docs/429-conformance-lab/composition-metamorphic.md",
+        "scripts/http_429_recovery_composition_swarm.py"
+      ],
+      "expected_route_id": "http-429-isolated",
+      "expected_candidate_job_count": 4,
+      "observed_public_analysis_jobs_launched": 13,
+      "note": "Source-proximate 429 PR with dedicated composition/conformance workflows; no shared Observatory state file in the change set."
+    },
+    {
+      "case_id": "pr-45-429-plus-shared-observatory-state",
+      "source_pr": 45,
+      "paths": [
+        ".github/workflows/validate-http-429-conformance.yml",
+        "data/http_429_recovery_composition_contract.json",
+        "data/http_429_recovery_composition_reference.json",
+        "data/preflight_routes.json",
+        "docs/429-conformance-lab/scheduler-hysteresis-composition.md",
+        "docs/repository-observatory/state.json",
+        "scripts/http_429_recovery_composition.py"
+      ],
+      "expected_route_id": "full-fail-closed",
+      "expected_candidate_job_count": 13,
+      "note": "A shared Observatory state edit intentionally ejects the PR from the isolated 429 safe island."
+    },
+    {
+      "case_id": "pr-31-peace-bridge-plus-global-portal",
+      "source_pr": 31,
+      "paths": [
+        ".github/workflows/validate-http-429-conformance.yml",
+        "data/preflight_routes.json",
+        "docs/index.html",
+        "docs/index.md",
+        "docs/llms.txt",
+        "docs/purrtocol-429-peace-bridge/index.html",
+        "docs/purrtocol-429-peace-bridge/index.md",
+        "docs/purrtocol-429-peace-bridge/llms.txt",
+        "docs/purrtocol-429-peace-bridge/reference.json",
+        "docs/sitemap.xml"
+      ],
+      "expected_route_id": "full-fail-closed",
+      "expected_candidate_job_count": 13,
+      "note": "Global portal/discovery edits are deliberately treated as a mixed surface during the shadow phase."
+    },
+    {
+      "case_id": "pr-9-latent-timing-science",
+      "source_pr": 9,
+      "paths": [
+        ".github/workflows/validate-public-analysis.yml",
+        "data/latent_timing_model_reference.json",
+        "docs/deep-validation.md",
+        "docs/evidence-ledger.md",
+        "docs/latent-timing-model-competition.md",
+        "docs/llms.txt",
+        "docs/model.md",
+        "docs/repository-observatory/state.json",
+        "scripts/latent_timing_model_competition.py"
+      ],
+      "expected_route_id": "full-fail-closed",
+      "expected_candidate_job_count": 13,
+      "note": "Science/model changes stay on the full public-analysis matrix."
+    }
+  ]
+}
