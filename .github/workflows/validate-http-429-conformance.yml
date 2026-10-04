@@ -12,6 +12,7 @@ on:
       - "scripts/http_429_conformance_node.js"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
+      - "docs/purrtocol-429-peace-bridge/**"
       - ".github/workflows/validate-http-429-conformance.yml"
   pull_request:
     paths:
@@ -78,6 +79,11 @@ jobs:
           assert observed["errors"] == frozen["errors"]
           print("HTTP 429 cross-language frozen reference: PASS")
           PY
+
+      - name: Check Peace Bridge reference mirror
+        run: |
+          cmp             data/http_429_cross_language_reference.json             docs/purrtocol-429-peace-bridge/reference.json
+          echo "Purrtocol 429 Peace Bridge receipt mirror: PASS"
 
       - name: Check local-network and recovery invariants
         run: |
