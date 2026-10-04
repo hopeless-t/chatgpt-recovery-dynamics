@@ -1,9 +1,7 @@
 name: Apply one-shot public-analysis docs-island patch
 
 on:
-  push:
-    branches:
-      - meta-public-analysis-docs-island-promotion
+  pull_request:
     paths:
       - ".github/workflows/apply-public-analysis-docs-island-patch.yml"
 
@@ -12,6 +10,7 @@ permissions:
 
 jobs:
   patch-and-self-delete:
+    if: github.head_ref == 'meta-public-analysis-docs-island-promotion' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +35,7 @@ jobs:
           )
           assert text.count(old) == 1, "unexpected public-analysis trigger shape"
           updated = text.replace(old, new, 1)
-          assert updated.count('paths-ignore:') == 1
+          assert updated.count("paths-ignore:") == 1
           assert '      - "docs/429-conformance-lab/**"' in updated
           path.write_text(updated, encoding="utf-8")
           PY
@@ -47,7 +46,6 @@ jobs:
           git rm .github/workflows/apply-public-analysis-docs-island-patch.yml
           git add .github/workflows/validate-public-analysis.yml
 
-          # Guard against accidental broad rewrite.
           git diff --cached --stat
           changed="$(git diff --cached --name-only)"
           test "$changed" = ".github/workflows/apply-public-analysis-docs-island-patch.yml
