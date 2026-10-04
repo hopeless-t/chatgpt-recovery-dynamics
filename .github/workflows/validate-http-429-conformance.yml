@@ -6,6 +6,7 @@ on:
       - "data/http_429_conformance_scenarios.json"
       - "data/http_429_conformance_reference.json"
       - "data/http_429_cross_language_reference.json"
+      - "data/http_429_go_cross_language_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -20,6 +21,7 @@ on:
       - "data/http_429_conformance_scenarios.json"
       - "data/http_429_conformance_reference.json"
       - "data/http_429_cross_language_reference.json"
+      - "data/http_429_go_cross_language_reference.json"
       - "data/preflight_routes.json"
       - "scripts/http_429_conformance_lab.py"
       - "scripts/compare_http_429_conformance.py"
@@ -74,6 +76,30 @@ jobs:
             --node-report /tmp/http-429-conformance-go.json \
             --candidate-label go-standard-library \
             --output /tmp/http-429-python-go.json
+
+      - name: Compare frozen Python-Go reference
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/http-429-python-go.json", "r", encoding="utf-8") as f:
+              observed = json.load(f)
+          with open("data/http_429_go_cross_language_reference.json", "r", encoding="utf-8") as f:
+              reference = json.load(f)
+
+          frozen = reference["observed"]
+          for key in (
+              "schema",
+              "implementations",
+              "scenario_count",
+              "semantic_parity",
+              "float_tolerance_abs",
+              "ignored_as_implementation_specific",
+              "errors",
+          ):
+              assert observed[key] == frozen[key]
+          print("HTTP 429 Python-Go frozen reference: PASS")
+          PY
 
       - name: Compare frozen cross-language reference
         run: |
@@ -207,6 +233,7 @@ jobs:
             /tmp/http-429-conformance-go.json
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
+            data/http_429_go_cross_language_reference.json
             /tmp/purrtocol-429-peace-bridge-dom.html
             /tmp/purrtocol-429-peace-bridge.png
             /tmp/peace-bridge-http.log
