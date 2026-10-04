@@ -2,21 +2,13 @@
   "schema": "repository-observatory-state/v1",
   "north_star": "Maximize useful, forkable, reproducible recovery knowledge and Purrtocol delight while keeping the evidence boundary stronger than the expansion rate.",
   "control_loop": {
-    "phases": [
-      "observe",
-      "biopsy",
-      "form competing explanations",
-      "make the smallest reversible change",
-      "verify",
-      "promote",
-      "re-observe"
-    ],
+    "phases": ["observe", "biopsy", "form competing explanations", "make the smallest reversible change", "verify", "promote", "re-observe"],
     "fast_path": "every push and pull request",
     "drift_path": "weekly repository audit",
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "ba05a436c43d82199cda58d83c4c686d0e89b9dc",
+    "baseline_main_commit": "b7125280fe9c843422b16bcf3c7850c90ebc4842",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -27,10 +19,10 @@
     "latent_timing_model_competition": "HMM-2 wins pooled same-sample BIC; AR(1) wins held-out cross-epoch mean NLL in both directions; mechanism remains unidentified",
     "http_429_survival": "vendor-neutral executable baseline implemented: RFC-stable layer, draft isolation, Retry-After floor, nonnegative herd jitter, bounded budgets, and UNKNOWN non-idempotent re-observation",
     "purrtocol_entropy": "fixed breeder regression baseline implemented; entropy collapse NOT OBSERVED in probe; external ecosystem entropy NOT_MEASURED",
-    "meta_improvement_loop": "MIL-002 PASS: Critic Router v1 validated on 3 post-tuning samples (78/109/142s; median 109s vs 488s baseline), verification integrity 1.0, observer footprint under soft budgets; Branch Convergence Gate v1 observation-only",
+    "meta_improvement_loop": "MIL-002 Critic Router v1 remains validated PASS; MIL-003 Branch Convergence Gate remains advisory; MIL-004 public-analysis observer routing reached SHADOW_BASELINE_IMPLEMENTED with zero actual job skipping and an open source-gate trigger-coverage guardrail",
     "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
     "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
-    "critic_router_post_tuning_samples": "3 of 3 minimum RIL cycles observed; Meta Loop effect evaluation now eligible",
+    "critic_router_post_tuning_samples": "3 of 3 minimum RIL cycles observed; Critic Router v1 effect evaluation passed its frozen criteria",
     "purrtocol_3d_browser": "sustained-visibility baseline implemented: static-first render survived 20s in Chrome/SwiftShader; CDN runtime loss and modeled webglcontextlost both degrade to a visible poster backstop; reported iOS/WebView root cause remains NOT_ESTABLISHED",
     "purrtocol_indexed_variants": 2,
     "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
@@ -44,108 +36,28 @@
     "http_429_hysteresis_metamorphic": "baseline implemented: deterministic 12-policy × 7-relation Recovery Hysteresis Metamorphic Kitten Swarm passed 84/84; compact artifact-backed receipt frozen; no network traffic",
     "http_429_scheduler_hysteresis_composition": "baseline implemented: 8/8 deterministic composition cases preserve scheduler authority while B/E confidence only adds conservative pacing; STOP_BUDGET, REOBSERVE and Retry-After floors remain authoritative; no network traffic",
     "http_429_scheduler_hysteresis_composition_metamorphic": "NET-429-COMP-002 implemented: 36 generated policies × 10 relation families = 360/360 deterministic relation checks; scheduler authorization remained authoritative, confidence never created replay authority or shortened scheduler floors; compact digest-bound receipt frozen; no network traffic",
-    "ci_observer_routing_candidate": "observed only: the always-on public-analysis workflow runs a 13-job full matrix on every PR, including source-proximate 429-only changes; candidate Meta optimization must preserve cross-surface safety and is NOT yet implemented"
+    "ci_observer_routing_candidate": "MIL-004 shadow baseline implemented: historical and live isolated-429 specimens route to 4/13 candidate public-analysis jobs while the actual 13/13 matrix still runs; mixed/science surfaces fail closed to FULL; actual skips remain 0; safe-island-to-source-gate trigger coverage is still OPEN",
+    "meta_timing_integrity": "RIL-011 and RIL-014 currently expose negative observation-to-first-change phase intervals in raw telemetry; raw ledger is preserved and timing-integrity classification is the next Meta priority before further speed optimization"
   },
   "frontiers": [
-    {
-      "id": "SCI-EXT-001",
-      "lane": "science",
-      "status": "open",
-      "target": "Independent capture reproducing or falsifying the cycle law and B -> E -> B rebound, with enough post-reentry trajectory depth to test recovery convergence.",
-      "promotion_gate": "independent trace with the same evidence-boundary discipline; fixed-point/contraction fitting additionally requires at least one B->E->H or longer post-reentry Accessible run"
-    },
-    {
-      "id": "SCI-LATENT-001",
-      "lane": "science",
-      "status": "within_capture_baseline_implemented",
-      "target": "Replicate or falsify the AR(1)-over-HMM cross-epoch predictive advantage on an independent capture/client before naming any physical latent state.",
-      "promotion_gate": "independent capture or cross-client predictive evidence; physical mechanism naming remains separate"
-    },
-    {
-      "id": "3D-G2-001",
-      "lane": "artifact",
-      "status": "sustained_visibility_baseline_implemented",
-      "target": "Second-generation expressive Purrtocol rig with organic silhouette, editable source, and measured mobile/runtime cost.",
-      "promotion_gate": "semantic-state readability preserved; sustained browser visibility and renderer-loss fallback remain green; runtime/mobile regressions measured against First Light"
-    },
-    {
-      "id": "VAR-EXT-001",
-      "lane": "ecosystem",
-      "status": "open",
-      "target": "Obtain the first real external Purrtocol descendant using the Nursery or a hand-designed manifest, then index it without conflating concept generation with implementation.",
-      "promotion_gate": "external repository/artifact + lineage manifest + explicit provenance + invariant declaration"
-    },
-    {
-      "id": "CRAWL-001",
-      "lane": "discovery",
-      "status": "baseline_implemented",
-      "target": "Continuously reduce agent path length while keeping root guidance concise and task-specific detail local.",
-      "promotion_gate": "root/nested AGENTS + llms/Markdown entrypoints stay concise, linked, and internally consistent"
-    },
-    {
-      "id": "REVIEW-001",
-      "lane": "governance",
-      "status": "open",
-      "target": "Increase independent review provenance without turning review volume into an evidence proxy.",
-      "promotion_gate": "review records remain distinct from empirical findings"
-    },
-    {
-      "id": "NET-429-001",
-      "lane": "resilience",
-      "status": "scheduler_hysteresis_composition_metamorphic_baseline_implemented",
-      "target": "Stress higher-order combinations of conservative scheduler/confidence transformations while preserving all frozen 429 baselines and keeping confidence unable to mint replay authority.",
-      "promotion_gate": "generated relation compositions preserve STOP_BUDGET, REOBSERVE, Retry-After/start-anchor floors, B->E/E->B/E->H semantics, timing monotonicity and authority ownership; no production traffic"
-    },
-    {
-      "id": "ENTROPY-001",
-      "lane": "ecosystem",
-      "status": "fixed_seed_baseline_implemented",
-      "target": "Preserve breeder diversity under future genome/generator changes and separately measure real external descendant diversity when external variants exist.",
-      "promotion_gate": "fixed-seed entropy/collision regression stays healthy; external diversity claims require actual external lineage observations"
-    },
-    {
-      "id": "META-001",
-      "lane": "governance",
-      "status": "validated_pass",
-      "target": "Preserve Critic Router v1 diagnosis-latency gains while accumulating more cycles; do not universalize the 3-sample result.",
-      "promotion_gate": "at least 3 post-tuning RIL cycles; post-tuning median observation->first-change < 488s; verified-before-promotion ratio remains 1.0; critical guardrails unchanged; observer footprint under warnings"
-    },
-    {
-      "id": "META-002",
-      "lane": "governance",
-      "status": "observation_baseline_implemented",
-      "target": "Detect long-lived branch/base path overlap before it becomes late reintegration rework, without adding another workflow or force-updating history.",
-      "promotion_gate": "real PR observations demonstrate useful early signal; full promotion CI remains required; no hard gate until false-positive/false-negative behavior is observed"
-    },
-    {
-      "id": "SCI-FP-001",
-      "lane": "science",
-      "status": "identifiability_baseline_implemented",
-      "target": "Test whether an observable recovery residual contracts toward stable H after reentry, but only once trajectory depth makes kappa identifiable.",
-      "promotion_gate": "independent/post-reentry trace with at least one adjacent Accessible pair after B->E; compare contraction against H/E/B, rebound/hysteresis, and no-fixed-point alternatives"
-    }
+    {"id":"SCI-EXT-001","lane":"science","status":"open","target":"Independent capture reproducing or falsifying the cycle law and B -> E -> B rebound, with enough post-reentry trajectory depth to test recovery convergence.","promotion_gate":"independent trace with the same evidence-boundary discipline; fixed-point/contraction fitting additionally requires at least one B->E->H or longer post-reentry Accessible run"},
+    {"id":"SCI-LATENT-001","lane":"science","status":"within_capture_baseline_implemented","target":"Replicate or falsify the AR(1)-over-HMM cross-epoch predictive advantage on an independent capture/client before naming any physical latent state.","promotion_gate":"independent capture or cross-client predictive evidence; physical mechanism naming remains separate"},
+    {"id":"3D-G2-001","lane":"artifact","status":"sustained_visibility_baseline_implemented","target":"Second-generation expressive Purrtocol rig with organic silhouette, editable source, and measured mobile/runtime cost.","promotion_gate":"semantic-state readability preserved; sustained browser visibility and renderer-loss fallback remain green; runtime/mobile regressions measured against First Light"},
+    {"id":"VAR-EXT-001","lane":"ecosystem","status":"open","target":"Obtain the first real external Purrtocol descendant using the Nursery or a hand-designed manifest, then index it without conflating concept generation with implementation.","promotion_gate":"external repository/artifact + lineage manifest + explicit provenance + invariant declaration"},
+    {"id":"CRAWL-001","lane":"discovery","status":"baseline_implemented","target":"Continuously reduce agent path length while keeping root guidance concise and task-specific detail local.","promotion_gate":"root/nested AGENTS + llms/Markdown entrypoints stay concise, linked, and internally consistent"},
+    {"id":"REVIEW-001","lane":"governance","status":"open","target":"Increase independent review provenance without turning review volume into an evidence proxy.","promotion_gate":"review records remain distinct from empirical findings"},
+    {"id":"NET-429-001","lane":"resilience","status":"scheduler_hysteresis_composition_metamorphic_baseline_implemented","target":"Stress higher-order combinations of conservative scheduler/confidence transformations while preserving all frozen 429 baselines and keeping confidence unable to mint replay authority.","promotion_gate":"generated relation compositions preserve STOP_BUDGET, REOBSERVE, Retry-After/start-anchor floors, B->E/E->B/E->H semantics, timing monotonicity and authority ownership; no production traffic"},
+    {"id":"ENTROPY-001","lane":"ecosystem","status":"fixed_seed_baseline_implemented","target":"Preserve breeder diversity under future genome/generator changes and separately measure real external descendant diversity when external variants exist.","promotion_gate":"fixed-seed entropy/collision regression stays healthy; external diversity claims require actual external lineage observations"},
+    {"id":"META-001","lane":"governance","status":"validated_pass","target":"Preserve Critic Router v1 diagnosis-latency gains while accumulating more cycles; do not universalize the 3-sample result.","promotion_gate":"at least 3 post-tuning RIL cycles; post-tuning median observation->first-change < 488s; verified-before-promotion ratio remains 1.0; critical guardrails unchanged; observer footprint under warnings"},
+    {"id":"META-002","lane":"governance","status":"observation_baseline_implemented","target":"Detect long-lived branch/base path overlap before it becomes late reintegration rework, without adding another workflow or force-updating history.","promotion_gate":"real PR observations demonstrate useful early signal; full promotion CI remains required; no hard gate until false-positive/false-negative behavior is observed"},
+    {"id":"SCI-FP-001","lane":"science","status":"identifiability_baseline_implemented","target":"Test whether an observable recovery residual contracts toward stable H after reentry, but only once trajectory depth makes kappa identifiable.","promotion_gate":"independent/post-reentry trace with at least one adjacent Accessible pair after B->E; compare contraction against H/E/B, rebound/hysteresis, and no-fixed-point alternatives"},
+    {"id":"META-003","lane":"governance","status":"shadow_baseline_implemented","target":"Prove every reduced public-analysis route is covered by its required source-proximate promotion gates and accumulate additional live paired observations before any real job skipping.","promotion_gate":"execution authority remains false until safe-island trigger coverage is machine-proven, mixed/unknown surfaces remain FULL, and live full-matrix observations show no missed failure outside the candidate subset"}
   ],
   "cross_repo_imports": [
-    {
-      "source": "hopeless-t/finite-ram-lab",
-      "pattern": "append-only canonical evidence plus rebuildable projections",
-      "adaptation": "improvement_events.jsonl is authority; dashboards and summaries are projections"
-    },
-    {
-      "source": "hopeless-t/finite-ram-lab",
-      "pattern": "observer-hygiene checks",
-      "adaptation": "measure whether observability machinery itself creates repository noise or stale-state coupling"
-    },
-    {
-      "source": "hopeless-t/mvca",
-      "pattern": "Attempt != Operation; Re-observation != Re-execution",
-      "adaptation": "one improvement objective may have many diagnostic attempts without minting a new objective or silently changing authority"
-    },
-    {
-      "source": "hopeless-t/finite-tool-surface-lab",
-      "pattern": "compact references bound by digests instead of retaining every large raw artifact",
-      "adaptation": "keep small receipts and hashes; regenerate or link large derived artifacts where possible"
-    }
+    {"source":"hopeless-t/finite-ram-lab","pattern":"append-only canonical evidence plus rebuildable projections","adaptation":"improvement_events.jsonl is authority; dashboards and summaries are projections"},
+    {"source":"hopeless-t/finite-ram-lab","pattern":"observer-hygiene checks","adaptation":"measure whether observability machinery itself creates repository noise or stale-state coupling"},
+    {"source":"hopeless-t/mvca","pattern":"Attempt != Operation; Re-observation != Re-execution","adaptation":"one improvement objective may have many diagnostic attempts without minting a new objective or silently changing authority"},
+    {"source":"hopeless-t/finite-tool-surface-lab","pattern":"compact references bound by digests instead of retaining every large raw artifact","adaptation":"keep small receipts and hashes; regenerate or link large derived artifacts where possible"}
   ],
   "subjective_boundary": "Delight is a design objective, not an empirical score. Do not manufacture a numeric fun metric and present it as evidence."
 }
