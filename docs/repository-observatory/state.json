@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "2482d4ee63827ca81a8a2eaf37d5eadf0dd307d8",
+    "baseline_main_commit": "43d6015ffcdf5ee77e1cad6a27f50b22b48d3f40",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -31,7 +31,7 @@
     "meta_recursion": "automatic control depth fixed at 2; no automatic third-order controller",
     "http_429_local_conformance": "8/8 loopback-only scenarios passed; frozen reference promoted; no production traffic",
     "critic_router_post_tuning_samples": "3 of 3 minimum RIL cycles observed; Meta Loop effect evaluation now eligible",
-    "purrtocol_3d_browser": "interactive GLB observed in Chrome/SwiftShader; forced viewer-runtime failure shows poster fallback instead of a dark stage",
+    "purrtocol_3d_browser": "sustained-visibility baseline implemented: static-first render survived 20s in Chrome/SwiftShader; CDN runtime loss and modeled webglcontextlost both degrade to a visible poster backstop; reported iOS/WebView root cause remains NOT_ESTABLISHED",
     "purrtocol_indexed_variants": 2,
     "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
     "branch_convergence_tuning": "v1 observation baseline implemented: real history separated BASE_NOT_AHEAD, BASE_AHEAD_NO_PATH_OVERLAP, and CONVERGENCE_RISK; remains advisory",
@@ -59,9 +59,9 @@
     {
       "id": "3D-G2-001",
       "lane": "artifact",
-      "status": "browser_observability_baseline_implemented",
+      "status": "sustained_visibility_baseline_implemented",
       "target": "Second-generation expressive Purrtocol rig with organic silhouette, editable source, and measured mobile/runtime cost.",
-      "promotion_gate": "semantic-state readability preserved and runtime regressions measured against First Light"
+      "promotion_gate": "semantic-state readability preserved; sustained browser visibility and renderer-loss fallback remain green; runtime/mobile regressions measured against First Light"
     },
     {
       "id": "VAR-EXT-001",
