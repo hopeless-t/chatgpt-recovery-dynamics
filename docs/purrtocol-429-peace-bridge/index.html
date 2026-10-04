@@ -1,52 +1,56 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Purrtocol 429 Peace Bridge</title>
-<meta name="description" content="PythonPaw and NodePaw demonstrate the same loopback HTTP 429 recovery contract. Visualization is not evidence.">
+<title>Purrtocol 429 Tri-Runtime Peace Junction</title>
+<meta name="description" content="PythonPaw, NodePaw and GoPaw visualize three independent loopback implementations of the same HTTP 429 recovery contract. Visualization is not evidence.">
 <link rel="canonical" href="https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/">
 <link rel="alternate" type="text/markdown" href="./index.md">
 <link rel="describedby" href="./llms.txt">
 <style>
-:root{--bg:#06111d;--panel:#0d1b2d;--line:#294966;--text:#edf5ff;--muted:#95aac1;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44;--violet:#b77bff;--red:#ef5f6c}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,rgba(76,218,235,.13),transparent 33%),var(--bg);color:var(--text);font:16px/1.6 system-ui,sans-serif}
-main{max-width:1100px;margin:auto;padding:48px 22px 80px}.ey{color:var(--cyan);font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,6.6rem);line-height:.9;letter-spacing:-.06em;margin:.15em 0}.lead{color:var(--muted);font-size:1.14rem;max-width:860px}
-.bridge{position:relative;margin:36px 0 24px;min-height:410px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,#0d1b2d,#07111f);overflow:hidden}
-.deck{position:absolute;left:13%;right:13%;top:50%;height:10px;background:#294966;border-radius:999px;box-shadow:0 0 30px rgba(76,218,235,.16)}
-.deck:before,.deck:after{content:"";position:absolute;top:-80px;width:8px;height:170px;background:#294966}.deck:before{left:8%}.deck:after{right:8%}
-.cat{position:absolute;top:105px;width:240px;text-align:center}.cat.left{left:25px}.cat.right{right:25px}.cat .face{font-size:5.5rem;filter:drop-shadow(0 0 16px rgba(76,218,235,.18))}.cat b{display:block;font-size:1.35rem}.cat small{color:var(--muted)}
-.token{position:absolute;top:calc(50% - 27px);left:calc(50% - 60px);width:120px;padding:9px 8px;border:1px solid var(--green);border-radius:999px;background:#07131e;text-align:center;font:800 .76rem ui-monospace,monospace;color:var(--green);box-shadow:0 0 24px rgba(76,211,132,.2)}
-.attempt{position:absolute;top:calc(50% + 28px);width:18px;height:18px;border-radius:50%;background:var(--amber);box-shadow:0 0 16px var(--amber);animation:attempt 5s ease-in-out infinite}.attempt.a2{animation-delay:2.5s;background:var(--cyan);box-shadow:0 0 16px var(--cyan)}
-@keyframes attempt{0%{left:16%;opacity:0}10%{opacity:1}48%{left:47%;opacity:1}55%{left:53%}92%{left:84%;opacity:1}100%{left:84%;opacity:0}}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.metric,.card{border:1px solid var(--line);border-radius:18px;background:rgba(13,27,45,.9);padding:16px}.metric b{display:block;font-size:2rem}.green{color:var(--green)}.amber{color:var(--amber)}.cyan{color:var(--cyan)}
+:root{--bg:#06111d;--panel:#0d1b2d;--line:#294966;--text:#edf5ff;--muted:#95aac1;--cyan:#4cdaeb;--green:#4cd384;--amber:#f6bb44;--violet:#b77bff;--blue:#79a7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -12%,rgba(76,218,235,.13),transparent 34%),var(--bg);color:var(--text);font:16px/1.6 system-ui,sans-serif}
+main{max-width:1120px;margin:auto;padding:48px 22px 80px}.ey{color:var(--cyan);font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,6.5rem);line-height:.9;letter-spacing:-.06em;margin:.15em 0}.lead{color:var(--muted);font-size:1.14rem;max-width:900px}
+.junction{position:relative;margin:36px 0 24px;min-height:520px;border:1px solid var(--line);border-radius:30px;background:linear-gradient(180deg,#0d1b2d,#07111f);overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+.cat{position:absolute;width:230px;text-align:center;z-index:3}.cat.python{left:22px;top:150px}.cat.node{right:22px;top:150px}.cat.go{left:50%;top:20px;transform:translateX(-50%)}.face{font-size:5.2rem;filter:drop-shadow(0 0 16px rgba(76,218,235,.2))}.cat b{display:block;font-size:1.25rem}.cat small{color:var(--muted)}
+.arm{position:absolute;height:10px;background:#294966;border-radius:999px;box-shadow:0 0 26px rgba(76,218,235,.16);z-index:1}.arm.left{left:17%;right:50%;top:61%}.arm.right{left:50%;right:17%;top:61%}.arm.top{width:10px;height:34%;left:calc(50% - 5px);top:25%}
+.hub{position:absolute;left:50%;top:61%;transform:translate(-50%,-50%);width:156px;padding:12px 8px;border:1px solid var(--green);border-radius:20px;background:#07131e;text-align:center;font:800 .76rem ui-monospace,monospace;color:var(--green);box-shadow:0 0 30px rgba(76,211,132,.2);z-index:4}
+.packet{position:absolute;width:17px;height:17px;border-radius:50%;z-index:2}.p1{top:calc(61% - 3px);left:19%;background:var(--amber);box-shadow:0 0 16px var(--amber);animation:leftRun 5s ease-in-out infinite}.p2{top:calc(61% - 3px);right:19%;background:var(--cyan);box-shadow:0 0 16px var(--cyan);animation:rightRun 5s ease-in-out 1.6s infinite}.p3{left:calc(50% - 8px);top:28%;background:var(--blue);box-shadow:0 0 16px var(--blue);animation:topRun 5s ease-in-out 3.2s infinite}
+@keyframes leftRun{0%{left:18%;opacity:0}12%{opacity:1}75%{left:47%;opacity:1}100%{left:47%;opacity:0}}
+@keyframes rightRun{0%{right:18%;opacity:0}12%{opacity:1}75%{right:47%;opacity:1}100%{right:47%;opacity:0}}
+@keyframes topRun{0%{top:27%;opacity:0}12%{opacity:1}75%{top:57%;opacity:1}100%{top:57%;opacity:0}}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.metric,.card{border:1px solid var(--line);border-radius:18px;background:rgba(13,27,45,.9);padding:16px}.metric b{display:block;font-size:1.9rem}.green{color:var(--green)}.cyan{color:var(--cyan)}.blue{color:var(--blue)}
 .rule{margin:18px 0;border-left:5px solid var(--violet);padding:12px 15px;background:rgba(183,123,255,.06)}.code{font-family:ui-monospace,monospace;background:#050c15;border:1px solid var(--line);border-radius:14px;padding:12px;white-space:pre-wrap}.small{font-size:.88rem;color:var(--muted)}a{color:var(--cyan)}
-@media(max-width:740px){.bridge{min-height:560px}.cat{top:55px;width:48%}.cat.left{left:2%}.cat.right{right:2%}.deck{top:62%;left:7%;right:7%}.token{top:calc(62% - 27px)}.attempt{top:calc(62% + 28px)}}
-@media(prefers-reduced-motion:reduce){.attempt{animation:none;display:none}}
+@media(max-width:760px){.junction{min-height:650px}.cat{width:44%}.cat.python{left:2%;top:240px}.cat.node{right:2%;top:240px}.cat.go{top:30px}.arm.left,.arm.right{top:67%}.arm.top{top:29%;height:36%}.hub{top:67%}.p1,.p2{top:calc(67% - 3px)}}
+@media(prefers-reduced-motion:reduce){.packet{animation:none;display:none}}
 </style>
 </head>
 <body><main>
-<div class="ey">Purrtocol · cross-language ceasefire</div>
-<h1>429 Peace<br>Bridge 😽</h1>
-<p class="lead">PythonPaw and NodePaw are separate implementations, but they cross the same bridge: one logical operation, distinct attempts, no faster retry after 429, and re-observation before ambiguous re-execution.</p>
+<div class="ey">Purrtocol · tri-runtime ceasefire</div>
+<h1>429 Peace<br>Junction 😽</h1>
+<p class="lead">Three independent standard-library implementations approach the same recovery contract from different directions. One logical operation stays one operation; attempts may change; 429 is backpressure, never permission to attack faster.</p>
 
-<section class="bridge" aria-label="Python and Node recovery cats sharing the same operation contract">
-  <div class="cat left"><div class="face">🐈‍⬛</div><b>PythonPaw</b><small>standard library implementation</small></div>
-  <div class="cat right"><div class="face">🐈</div><b>NodePaw</b><small>independent standard library implementation</small></div>
-  <div class="deck"></div>
-  <div class="token">operation_id<br>STAYS SAME</div>
-  <div class="attempt"></div><div class="attempt a2"></div>
+<section class="junction" aria-label="Python, Node and Go recovery cats joining the same operation contract">
+  <div class="cat python"><div class="face">🐈‍⬛</div><b>PythonPaw</b><small>reference implementation</small></div>
+  <div class="cat node"><div class="face">🐈</div><b>NodePaw</b><small>independent implementation</small></div>
+  <div class="cat go"><div class="face">🐱</div><b>GoPaw</b><small>third independent implementation</small></div>
+  <div class="arm left"></div><div class="arm right"></div><div class="arm top"></div>
+  <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div>
+  <div class="hub">operation_id<br>STAYS SAME</div>
 </section>
 
 <div class="metrics">
+  <div class="metric"><small>Runtimes represented</small><b class="blue">3 / 3</b></div>
   <div class="metric"><small>Shared fire drills</small><b id="scenarios">—</b></div>
-  <div class="metric"><small>Semantic parity</small><b id="parity" class="green">—</b></div>
+  <div class="metric"><small>Python ↔ Node</small><b id="nodeParity" class="green">—</b></div>
+  <div class="metric"><small>Python ↔ Go</small><b id="goParity" class="green">—</b></div>
   <div class="metric"><small>Node pass</small><b id="nodePass">—</b></div>
-  <div class="metric"><small>Comparison errors</small><b id="errors" class="green">—</b></div>
+  <div class="metric"><small>Go pass</small><b id="goPass">—</b></div>
 </div>
 
-<div class="rule"><b>Visualization ≠ Evidence.</b> The bridge is explanatory. The canonical numbers come from the frozen cross-language receipt and do not reveal provider internals or production 429 behavior.</div>
+<div class="rule"><b>Visualization ≠ Evidence.</b> The junction explains two separately frozen cross-language receipts. It does not reveal provider internals, production capacity, or universal rate-limit behavior.</div>
 
 <section class="card">
 <h2>Peace treaty</h2>
@@ -57,25 +61,30 @@ operation_id   -> stable across authorized retries
 attempt_id     -> changes every attempt
 UNKNOWN POST   -> REOBSERVE unless explicit idempotency contract exists
 retry budget   -> bounded
+transport name -> implementation-specific; do not mistake it for semantics
 first success  -> Recovering, not automatically Healthy</div>
 </section>
 
 <section class="card" style="margin-top:14px">
 <h2>What was actually observed</h2>
-<p id="summary">Loading frozen receipt…</p>
-<p class="small">Implementation-specific transport error names and descriptive classification labels are excluded from semantic equality. The comparator checks contract meaning, not incidental wording.</p>
-<p><a href="./reference.json">Frozen receipt</a> · <a href="../429-conformance-lab/cross-language.md">Technical notes</a> · <a href="../429-survival-kit/">429 Survival Kit</a></p>
+<p id="summary">Loading frozen receipts…</p>
+<p class="small">Node and Go were compared separately against the Python reference. The older Python/Node receipt remains frozen; Go has its own later receipt. No retroactive three-way cohort was invented.</p>
+<p><a href="./reference.json">Python/Node receipt</a> · <a href="./go-reference.json">Python/Go receipt</a> · <a href="../429-conformance-lab/tri-runtime.md">Tri-runtime notes</a> · <a href="../429-survival-kit/">429 Survival Kit</a></p>
 </section>
 
 <script>
-fetch('./reference.json').then(r=>r.json()).then(x=>{
-  document.getElementById('scenarios').textContent=x.observed.scenario_count;
-  document.getElementById('parity').textContent=x.observed.semantic_parity?'TRUE':'FALSE';
-  document.getElementById('nodePass').textContent=x.node_implementation.passed+' / '+x.node_implementation.scenarios;
-  document.getElementById('errors').textContent=x.observed.errors.length;
-  document.getElementById('summary').textContent=x.interpretation.conclusion;
+Promise.all([
+  fetch('./reference.json').then(r=>r.json()),
+  fetch('./go-reference.json').then(r=>r.json())
+]).then(([nodeRef,goRef])=>{
+  document.getElementById('scenarios').textContent=nodeRef.observed.scenario_count;
+  document.getElementById('nodeParity').textContent=nodeRef.observed.semantic_parity?'TRUE':'FALSE';
+  document.getElementById('goParity').textContent=goRef.observed.semantic_parity?'TRUE':'FALSE';
+  document.getElementById('nodePass').textContent=nodeRef.node_implementation.passed+' / '+nodeRef.node_implementation.scenarios;
+  document.getElementById('goPass').textContent=goRef.go_implementation.passed+' / '+goRef.go_implementation.scenarios;
+  document.getElementById('summary').textContent='Python/Node and Python/Go each reproduced the same eight local recovery semantics with zero comparator errors.';
 }).catch(()=>{
-  document.getElementById('summary').textContent='Receipt failed to load; do not infer parity from the visualization alone.';
+  document.getElementById('summary').textContent='A receipt failed to load; do not infer parity from the visualization alone.';
 });
 </script>
 </main></body></html>
