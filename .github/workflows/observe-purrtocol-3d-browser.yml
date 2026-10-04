@@ -70,26 +70,45 @@ jobs:
           echo $! > /tmp/purrtocol-http-live.pid
           sleep 1
 
-      - name: Observe real model-viewer load in Chrome
+      - name: Observe sustained model-viewer visibility in Chrome
         run: |
           CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
           test -n "$CHROME"
 
-          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=15000             --dump-dom             http://127.0.0.1:8765/purrtocol-3d/             > /tmp/purrtocol-3d-live-dom.html
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=26000             --dump-dom             http://127.0.0.1:8765/purrtocol-3d/             > /tmp/purrtocol-3d-live-dom.html
 
-          if grep -q 'data-purrtocol3d="loaded"' /tmp/purrtocol-3d-live-dom.html; then
-            echo "LIVE_RENDER_STATUS=GLB_LOADED"
+          if grep -q 'data-purrtocol3d="sustained"' /tmp/purrtocol-3d-live-dom.html; then
+            echo "LIVE_RENDER_STATUS=SUSTAINED_20S"
           else
-            echo "LIVE_RENDER_STATUS=NOT_LOADED"
-            grep -o 'Runtime diagnostics:[^<]*\|3D load error:[^<]*\|Interactive 3D did not become ready[^<]*'               /tmp/purrtocol-3d-live-dom.html || true
+            echo "LIVE_RENDER_STATUS=NOT_SUSTAINED"
+            grep -o 'Runtime diagnostics:[^<]*\|3D renderer fallback:[^<]*\|GLB sustained[^<]*' /tmp/purrtocol-3d-live-dom.html || true
             exit 1
           fi
 
-          grep -q 'interactive 3D active' /tmp/purrtocol-3d-live-dom.html
+          grep -q 'data-purrtocol3d-sustained="true"' /tmp/purrtocol-3d-live-dom.html
+          grep -q 'data-purrtocol3d-mode="static-first"' /tmp/purrtocol-3d-live-dom.html
+          grep -q 'GLB sustained · static-first renderer remained healthy for 20s' /tmp/purrtocol-3d-live-dom.html
 
-          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=15000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-live.png             http://127.0.0.1:8765/purrtocol-3d/
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=26000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-live.png             http://127.0.0.1:8765/purrtocol-3d/
 
           test -s /tmp/purrtocol-3d-live.png
+
+      - name: Force WebGL context loss and verify visible fallback
+        run: |
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME"
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=10000             --dump-dom             "http://127.0.0.1:8765/purrtocol-3d/?forceWebglLoss=1"             > /tmp/purrtocol-3d-context-loss-dom.html
+
+          grep -q 'data-purrtocol3d="fallback"' /tmp/purrtocol-3d-context-loss-dom.html
+          grep -q 'data-purrtocol3d-fallback-reason="webglcontextlost"' /tmp/purrtocol-3d-context-loss-dom.html
+          grep -q 'fallback-active' /tmp/purrtocol-3d-context-loss-dom.html
+          grep -q 'stable poster remains visible' /tmp/purrtocol-3d-context-loss-dom.html
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --use-gl=angle             --use-angle=swiftshader-webgl             --enable-unsafe-swiftshader             --ignore-gpu-blocklist             --virtual-time-budget=10000             --window-size=1200,900             --screenshot=/tmp/purrtocol-3d-context-loss.png             "http://127.0.0.1:8765/purrtocol-3d/?forceWebglLoss=1"
+
+          test -s /tmp/purrtocol-3d-context-loss.png
+          echo "Purrtocol 3D forced context-loss fallback: PASS"
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -98,4 +117,6 @@ jobs:
           path: |
             /tmp/purrtocol-3d-live-dom.html
             /tmp/purrtocol-3d-live.png
+            /tmp/purrtocol-3d-context-loss-dom.html
+            /tmp/purrtocol-3d-context-loss.png
             /tmp/purrtocol-http-live.log
