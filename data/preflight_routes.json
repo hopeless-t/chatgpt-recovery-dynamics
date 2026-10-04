@@ -69,7 +69,8 @@
         "data/http_429_cross_language_reference.json",
         "docs/purrtocol-429-peace-bridge/*",
         "scripts/http_429_conformance_go.go",
-        "scripts/generate_http_429_metamorphic_cases.py"
+        "scripts/generate_http_429_metamorphic_cases.py",
+        "data/http_429_metamorphic_reference.json"
       ],
       "commands": [
         "python scripts/validate_http_429_survival.py",
