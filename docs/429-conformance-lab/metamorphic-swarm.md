@@ -1,6 +1,6 @@
 # HTTP 429 Metamorphic Kitten Swarm
 
-> Status: FIRST SWARM OBSERVATION PENDING
+> Status: FIRST SWARM BASELINE OBSERVED
 
 The frozen eight-case conformance baseline is intentionally left unchanged.
 
@@ -46,3 +46,43 @@ provider-behavior claim.
 Preflight intentionally runs only generator + Python swarm in addition to the
 existing base checks. Full three-runtime swarm execution stays in promotion CI
 to limit observer cost.
+
+
+## First observed result
+
+Source:
+
+```text
+workflow run 37195222630
+job          111415574176
+head         e0117110f371a8e903b5395c9ccf9d565042fdaa
+artifact     11300686289
+```
+
+Observed:
+
+```text
+generated cases              30
+runtime executions           90
+
+Python                       30 / 30
+Node                         30 / 30
+Go                           30 / 30
+
+Python / Node parity         true
+Python / Go parity           true
+comparison errors            0 / 0
+
+scenario SHA-256
+2886f662e1f635e0ded7195a0007390ae9f1786979eea7d81cb0153ae84c4f05
+```
+
+The generator is now run twice in CI and both outputs must be byte-identical.
+
+Raw runtime report bytes are **not** frozen because intentionally dropped
+loopback responses can include ephemeral local port numbers in implementation-
+specific transport diagnostics. Those strings are outside semantic equality.
+
+Frozen receipt:
+
+- `data/http_429_metamorphic_reference.json`
