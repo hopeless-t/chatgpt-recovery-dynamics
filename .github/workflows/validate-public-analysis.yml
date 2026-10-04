@@ -705,12 +705,12 @@ jobs:
           ref=json.load(open("data/pakenya_expansion_reference.json",encoding="utf-8"))
           assert s["schema"]=="purrtocol-expansion-analysis/v2"
           assert s["checkpoint"]["commit"]=="ec25244a024f2049cfc7851c7fafd421d35a113c"
-          assert s["event_log"]["events_total"]==34
+          assert s["event_log"]["events_total"]==35
           assert s["event_log"]["primary_fit_events"]==10
           assert s["event_log"]["measurement_associated_events"]==12
           assert s["event_log"]["checkpoint_events"]==22
-          assert s["event_log"]["post_checkpoint_events"]==12
-          assert s["event_log"]["pairwise_contact_surface"]==561
+          assert s["event_log"]["post_checkpoint_events"]==13
+          assert s["event_log"]["pairwise_contact_surface"]==595
           assert s["event_log"]["checkpoint_pairwise_contact_surface"]==231
           assert s["event_log"]["measurement_burst_seconds"]==183.0
           assert abs(s["primary_fit"]["hawkes_fit"]["branching_ratio_n"]-0.85)<1e-12
@@ -718,7 +718,7 @@ jobs:
           assert abs(s["observer_inclusive_fit"]["hawkes_fit"]["branching_ratio_n"]-1.0)<1e-12
           assert s["observer_inclusive_fit"]["hawkes_fit"]["classification"]=="near-critical"
           assert s["measurement_backaction"]["causal_generalization"]=="NOT_ESTABLISHED"
-          assert s["post_checkpoint_registry"]["count"]==12
+          assert s["post_checkpoint_registry"]["count"]==13
           assert s["post_checkpoint_registry"]["excluded_from_frozen_fits"] is True
           assert s["earth_saturation"]["status"]=="NOT_YET_OBSERVED"
           assert s["event_log"]==ref["event_log"]
