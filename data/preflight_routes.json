@@ -79,7 +79,9 @@
         "data/http_429_recovery_hysteresis_metamorphic_reference.json",
         "data/http_429_recovery_composition_contract.json",
         "data/http_429_recovery_composition_reference.json",
-        "scripts/http_429_recovery_composition.py"
+        "scripts/http_429_recovery_composition.py",
+        "scripts/http_429_composed_metamorphic_swarm.py",
+        "data/http_429_composed_metamorphic_reference.json"
       ],
       "commands": [
         "python scripts/validate_http_429_survival.py",
@@ -92,10 +94,11 @@
         "python scripts/http_429_conformance_lab.py --scenarios /tmp/http-429-metamorphic-preflight.json --output /tmp/http-429-metamorphic-python-preflight.json",
         "python scripts/http_429_recovery_hysteresis.py --output /tmp/http-429-recovery-hysteresis-preflight.json",
         "python scripts/http_429_recovery_hysteresis_swarm.py --output /tmp/http-429-recovery-hysteresis-swarm-preflight.json",
-        "python scripts/http_429_recovery_composition.py --output /tmp/http-429-recovery-composition-preflight.json"
+        "python scripts/http_429_recovery_composition.py --output /tmp/http-429-recovery-composition-preflight.json",
+        "python scripts/http_429_composed_metamorphic_swarm.py --output /tmp/http-429-composed-metamorphic-preflight.json"
       ],
       "promotion_gate": "Validate HTTP 429 Survival Kit",
-      "rationale": "Catch timing-floor, authorization, budget, recovery-hysteresis, scheduler×confidence composition, hysteresis-metamorphic relation, standards-boundary, PR-trigger drift, base multi-runtime parity, and metamorphic-generator faults close to the 429 source; full tri-runtime network swarm stays in promotion CI to bound observer cost."
+      "rationale": "Catch timing-floor, authorization, budget, recovery-hysteresis, scheduler×confidence composition, composed metamorphic relations, hysteresis metamorphic relations, standards-boundary, PR-trigger drift, base multi-runtime parity, and metamorphic-generator faults close to the 429 source; full tri-runtime network swarm stays in promotion CI to bound observer cost."
     },
     {
       "route_id": "meta-improvement-loop",
