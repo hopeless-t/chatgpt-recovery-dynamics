@@ -1,0 +1,85 @@
+{
+  "schema": "http-429-recovery-hysteresis-reference/v1",
+  "experiment_id": "NET-429-HYS-001",
+  "source": {
+    "workflow_run_id": 37210089256,
+    "job_id": 111459333291,
+    "head_sha": "31d53bf740119118059cb0ca25088b3ce8e60d1e",
+    "artifact_id": 11306595288,
+    "observation_class": "first_clean_executable_baseline_after_pre_freeze_metadata_cleanup"
+  },
+  "lab_policy": {
+    "confirmation_successes_required": 2,
+    "minimum_recovering_duration_s": 5,
+    "production_recommendation": false
+  },
+  "observed": {
+    "summary": {
+      "scenarios": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    "state_sequences": {
+      "first-success-is-recovering": [
+        "E"
+      ],
+      "rebound-before-confirmation": [
+        "E",
+        "B"
+      ],
+      "count-met-window-not-met": [
+        "E",
+        "E"
+      ],
+      "window-met-count-met-promotes": [
+        "E",
+        "H"
+      ],
+      "extra-confirmation-after-window-promotes": [
+        "E",
+        "E",
+        "H"
+      ],
+      "healthy-success-stays-healthy": [
+        "H"
+      ],
+      "healthy-throttle-enters-blocked": [
+        "B"
+      ],
+      "promote-then-reblock": [
+        "E",
+        "H",
+        "B"
+      ]
+    },
+    "failure_history_resets": {
+      "first-success-is-recovering": 0,
+      "rebound-before-confirmation": 0,
+      "count-met-window-not-met": 0,
+      "window-met-count-met-promotes": 1,
+      "extra-confirmation-after-window-promotes": 1,
+      "healthy-success-stays-healthy": 0,
+      "healthy-throttle-enters-blocked": 0,
+      "promote-then-reblock": 1
+    },
+    "invariants": {
+      "first_success_after_blocked_is_recovering": true,
+      "first_success_resets_failure_history": false,
+      "recovering_429_returns_blocked": true,
+      "healthy_requires_configured_stability_confirmation": true,
+      "failure_history_reset_only_on_e_to_h": true
+    }
+  },
+  "safety": {
+    "production_traffic": false,
+    "network_access": false,
+    "operation_replay_authority": false
+  },
+  "interpretation": {
+    "conclusion": "The executable lab state machine preserves the repository recovery-hysteresis invariants across eight deterministic cases.",
+    "observed_capture_motivation": "B->E->B was observed 8/8 and B->E->H 0/8 in the current sanitized capture.",
+    "universal_rebound_claim": "NOT_ESTABLISHED",
+    "production_thresholds": "NOT_ESTABLISHED",
+    "provider_root_cause": "NOT_ESTABLISHED"
+  }
+}
