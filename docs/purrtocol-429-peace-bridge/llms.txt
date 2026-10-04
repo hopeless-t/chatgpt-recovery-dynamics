@@ -1,0 +1,23 @@
+# Purrtocol 429 Peace Bridge
+
+> Visualization-only explanation of the frozen Python/Node loopback conformance baseline.
+
+Observed receipt:
+- shared scenarios: 8
+- Python: 8/8
+- independent Node: 8/8
+- semantic parity: true
+- errors: 0
+- production traffic: false
+
+Interpretation:
+- operation_id stays stable across authorized retry attempts
+- attempt_id changes
+- Retry-After is a floor
+- UNKNOWN non-idempotent POST re-observes unless explicit idempotency semantics exist
+- this page is not evidence by itself
+
+Surfaces:
+- [Interactive bridge](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/)
+- [Frozen receipt](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/reference.json)
+- [Technical notes](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-conformance-lab/cross-language.md)
