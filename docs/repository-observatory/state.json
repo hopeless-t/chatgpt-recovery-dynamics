@@ -34,15 +34,16 @@
     "purrtocol_3d_browser": "interactive GLB observed in Chrome/SwiftShader; forced viewer-runtime failure shows poster fallback instead of a dark stage",
     "purrtocol_indexed_variants": 2,
     "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
-    "branch_convergence_tuning": "v1 observation-only diagnostic integrated into existing Meta Improvement Loop workflow; no new workflow"
+    "branch_convergence_tuning": "v1 observation-only diagnostic integrated into existing Meta Improvement Loop workflow; no new workflow",
+    "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture"
   },
   "frontiers": [
     {
       "id": "SCI-EXT-001",
       "lane": "science",
       "status": "open",
-      "target": "Independent capture reproducing or falsifying the cycle law and B -> E -> B rebound.",
-      "promotion_gate": "independent trace with the same evidence-boundary discipline"
+      "target": "Independent capture reproducing or falsifying the cycle law and B -> E -> B rebound, with enough post-reentry trajectory depth to test recovery convergence.",
+      "promotion_gate": "independent trace with the same evidence-boundary discipline; fixed-point/contraction fitting additionally requires at least one B->E->H or longer post-reentry Accessible run"
     },
     {
       "id": "SCI-LATENT-001",
@@ -106,6 +107,13 @@
       "status": "observation_only_tuning",
       "target": "Detect long-lived branch/base path overlap before it becomes late reintegration rework, without adding another workflow or force-updating history.",
       "promotion_gate": "real PR observations demonstrate useful early signal; full promotion CI remains required; no hard gate until false-positive/false-negative behavior is observed"
+    },
+    {
+      "id": "SCI-FP-001",
+      "lane": "science",
+      "status": "identifiability_baseline_implemented",
+      "target": "Test whether an observable recovery residual contracts toward stable H after reentry, but only once trajectory depth makes kappa identifiable.",
+      "promotion_gate": "independent/post-reentry trace with at least one adjacent Accessible pair after B->E; compare contraction against H/E/B, rebound/hysteresis, and no-fixed-point alternatives"
     }
   ],
   "cross_repo_imports": [
