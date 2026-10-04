@@ -203,10 +203,13 @@ viewer.addEventListener('load',()=>{
           const gl=canvas.getContext('webgl2')||canvas.getContext('webgl');
           const ext=gl?.getExtension('WEBGL_lose_context');
           if(ext){
-            document.documentElement.dataset.purrtocol3dForcedLoss='requested';
+            document.documentElement.dataset.purrtocol3dForcedLoss='native-extension';
             ext.loseContext();
           }else{
-            activateFallback('webgl-loss-extension-unavailable');
+            document.documentElement.dataset.purrtocol3dForcedLoss='synthetic-model-viewer-error';
+            viewer.dispatchEvent(new CustomEvent('error',{
+              detail:{type:'webglcontextlost',synthetic:true}
+            }));
           }
         },1500);
       }
