@@ -1,0 +1,59 @@
+name: Apply one-shot public-analysis docs-island patch
+
+on:
+  push:
+    branches:
+      - meta-public-analysis-docs-island-promotion
+    paths:
+      - ".github/workflows/apply-public-analysis-docs-island-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-self-delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: meta-public-analysis-docs-island-promotion
+          fetch-depth: 0
+
+      - name: Patch only the pull-request trigger
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path(".github/workflows/validate-public-analysis.yml")
+          text = path.read_text(encoding="utf-8")
+          old = "on:\n  push:\n  pull_request:\n"
+          new = (
+              "on:\n"
+              "  push:\n"
+              "  pull_request:\n"
+              "    paths-ignore:\n"
+              "      - \"docs/429-conformance-lab/**\"\n"
+          )
+          assert text.count(old) == 1, "unexpected public-analysis trigger shape"
+          updated = text.replace(old, new, 1)
+          assert updated.count('paths-ignore:') == 1
+          assert '      - "docs/429-conformance-lab/**"' in updated
+          path.write_text(updated, encoding="utf-8")
+          PY
+
+      - name: Self-delete patch workflow and commit exact change
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/apply-public-analysis-docs-island-patch.yml
+          git add .github/workflows/validate-public-analysis.yml
+
+          # Guard against accidental broad rewrite.
+          git diff --cached --stat
+          changed="$(git diff --cached --name-only)"
+          test "$changed" = ".github/workflows/apply-public-analysis-docs-island-patch.yml
+.github/workflows/validate-public-analysis.yml"
+
+          git config user.name "Catfood Meta Loop"
+          git config user.email "274503048+hopeless-t@users.noreply.github.com"
+          git commit -m "Route pure 429 lab docs through the lightweight public-analysis lane"
+          git push origin HEAD:meta-public-analysis-docs-island-promotion
