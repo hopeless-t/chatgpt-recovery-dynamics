@@ -99,6 +99,42 @@ jobs:
           print("HTTP 429 Scheduler x Confidence Metamorphic Kitten Swarm: PASS (360/360)")
           PY
 
+      - name: Compare frozen first observation
+        run: |
+          python - <<'PY'
+          import json
+
+          observed = json.load(open(
+              "/tmp/http-429-recovery-composition-swarm.json",
+              encoding="utf-8",
+          ))
+          reference = json.load(open(
+              "data/http_429_recovery_composition_metamorphic_reference.json",
+              encoding="utf-8",
+          ))
+          frozen = reference["observed"]
+
+          assert reference["schema"] == (
+              "http-429-recovery-composition-metamorphic-reference/v1"
+          )
+          assert reference["experiment_id"] == "NET-429-COMP-002"
+          assert observed["generator"]["id"] == frozen["generator_id"]
+          assert observed["generator"]["generated_input_sha256"] == (
+              frozen["generated_input_sha256"]
+          )
+          assert observed["generator"]["policy_count"] == frozen["policy_count"]
+          assert observed["generator"]["relation_checks"] == frozen["relation_checks"]
+          assert observed["generator"]["relation_families"] == (
+              frozen["relation_families"]
+          )
+          assert observed["summary"]["passed"] == frozen["passed"]
+          assert observed["summary"]["failed"] == frozen["failed"]
+          assert observed["authority_boundary"] == frozen["authority_boundary"]
+          assert observed["safety"] == frozen["safety"]
+
+          print("NET-429-COMP-002 frozen first observation: PASS")
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: http-429-composition-metamorphic
