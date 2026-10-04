@@ -1,0 +1,91 @@
+{
+  "schema": "public-analysis-observer-routing-reference/v1",
+  "meta_cycle_id": "MIL-004",
+  "classification": "shadow_baseline_no_execution_authority",
+  "historical_cases": [
+    {
+      "source_pr": 47,
+      "route_id": "http-429-isolated",
+      "candidate_jobs": 4,
+      "full_jobs": 13,
+      "candidate_avoided_jobs": 9,
+      "actual_jobs_skipped": 0
+    },
+    {
+      "source_pr": 45,
+      "route_id": "full-fail-closed",
+      "candidate_jobs": 13,
+      "full_jobs": 13,
+      "actual_jobs_skipped": 0
+    },
+    {
+      "source_pr": 31,
+      "route_id": "full-fail-closed",
+      "candidate_jobs": 13,
+      "full_jobs": 13,
+      "actual_jobs_skipped": 0
+    },
+    {
+      "source_pr": 9,
+      "route_id": "full-fail-closed",
+      "candidate_jobs": 13,
+      "full_jobs": 13,
+      "actual_jobs_skipped": 0
+    }
+  ],
+  "live_cases": [
+    {
+      "source_pr": 50,
+      "merge_commit": "e843cc892d3776f37404e5daeea5811d122e8bf9",
+      "route_id": "full-fail-closed",
+      "candidate_jobs": 13,
+      "full_jobs": 13,
+      "actual_jobs_skipped": 0,
+      "purpose": "router self-test on a Meta workflow change"
+    },
+    {
+      "source_pr": 51,
+      "merge_commit": "b7125280fe9c843422b16bcf3c7850c90ebc4842",
+      "route_id": "http-429-isolated",
+      "candidate_jobs": 4,
+      "full_jobs": 13,
+      "candidate_avoided_jobs": 9,
+      "candidate_avoided_fraction": 0.6923076923076923,
+      "actual_jobs_skipped": 0,
+      "workflow_runs": {
+        "meta_improvement_loop": 37240709903,
+        "repository_observatory": 37240709915,
+        "http_429_local_conformance": 37240709920,
+        "public_analysis": 37240709938
+      },
+      "full_public_analysis_jobs_passed": 13,
+      "source_proximate_429_gate_passed": true,
+      "meta_gate_passed": true,
+      "observatory_gate_passed": true
+    }
+  ],
+  "observed": {
+    "isolated_429_candidate_jobs": 4,
+    "full_public_analysis_jobs": 13,
+    "candidate_avoided_jobs": 9,
+    "candidate_avoided_fraction": 0.6923076923076923,
+    "actual_runtime_savings": "NOT_MEASURED",
+    "zero_false_negative_claim": "NOT_ESTABLISHED",
+    "execution_authority": false,
+    "jobs_actually_skipped": false
+  },
+  "open_guardrails": {
+    "safe_island_trigger_coverage": "OPEN",
+    "description": "The router safe island is broader than the explicitly enumerated paths of some source-proximate HTTP 429 workflows. A machine-checkable inclusion relation is required before any real skip authority can be proposed.",
+    "unknown_or_mixed_surface": "FULL"
+  },
+  "promotion_boundary": {
+    "status": "SHADOW_BASELINE_IMPLEMENTED",
+    "actual_job_skipping": "FORBIDDEN_PENDING_FURTHER_EVIDENCE",
+    "next_evidence": [
+      "prove reduced-route safe-island paths are covered by required source-proximate gates",
+      "accumulate additional live paired observations while the full matrix still runs",
+      "investigate any failure outside the candidate subset before proposing execution authority"
+    ]
+  }
+}
