@@ -1,0 +1,74 @@
+{
+  "schema": "http-429-recovery-hysteresis-contract/v1",
+  "experiment_id": "NET-429-HYS-001",
+  "purpose": "Keep a first successful observation after Blocked in Recovering/E until explicit stability criteria are satisfied.",
+  "evidence_boundary": {
+    "motivation": "Within the public capture, B->E->B occurred 8/8 times and B->E->H 0/8 times.",
+    "claim_ceiling": "This supports hysteresis within the capture; it does not identify a provider limiter or establish universal recovery thresholds.",
+    "production_traffic": false
+  },
+  "states": {
+    "H": "Healthy / established success",
+    "B": "Blocked / throttled",
+    "E": "Recovering / provisional"
+  },
+  "transitions": [
+    {
+      "from": "H",
+      "event": "429",
+      "to": "B",
+      "reset_failure_history": false
+    },
+    {
+      "from": "B",
+      "event": "2xx",
+      "to": "E",
+      "reset_failure_history": false
+    },
+    {
+      "from": "E",
+      "event": "429",
+      "to": "B",
+      "reset_failure_history": false
+    },
+    {
+      "from": "E",
+      "event": "2xx_confirmation",
+      "to": "H",
+      "reset_failure_history": true
+    },
+    {
+      "from": "H",
+      "event": "2xx",
+      "to": "H",
+      "reset_failure_history": false
+    }
+  ],
+  "invariants": [
+    "The first successful observation after B MUST enter E, never H.",
+    "Entering E MUST NOT reset accumulated failure history.",
+    "Any 429 while E MUST return to B.",
+    "H may be declared only after the configured confirmation-count and minimum-recovering-duration conditions are both satisfied.",
+    "Failure history may be reset only on E->H promotion.",
+    "This gate classifies recovery state; it does not authorize unsafe operation replay.",
+    "UNKNOWN operation outcomes remain governed by the existing re-observation rule."
+  ],
+  "parameterization": {
+    "confirmation_successes_required": {
+      "type": "integer >= 2",
+      "note": "Policy parameter. The repository does not claim a universal production value."
+    },
+    "minimum_recovering_duration_s": {
+      "type": "number >= 0",
+      "note": "Policy parameter. Lab fixtures are not production recommendations."
+    }
+  },
+  "relation_to_existing_429_plane": {
+    "scheduler": "unchanged",
+    "retry_budget": "unchanged",
+    "operation_attempt_identity": "unchanged",
+    "ambiguous_non_idempotent_policy": "unchanged",
+    "frozen_8_case_baseline": "unchanged",
+    "frozen_30_case_metamorphic_baseline": "unchanged"
+  }
+}

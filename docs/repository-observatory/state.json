@@ -39,7 +39,8 @@
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
     "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
-    "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded"
+    "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
+    "http_429_recovery_hysteresis": "NET-429-HYS-001 observed baseline pending promotion: 8/8 deterministic state-machine cases pass; first post-Blocked success enters E, E+429 returns B, failure history resets only on configured E->H confirmation"
   },
   "frontiers": [
     {
@@ -87,9 +88,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "metamorphic_swarm_baseline_implemented",
-      "target": "Test metamorphic relations between paired scenarios (monotonicity and non-interference), not merely more parameter points or languages.",
-      "promotion_gate": "relation generator is deterministic; transformations preserve intended preconditions; relation assertions hold across Python/Node/Go; frozen base and swarm references remain unchanged; no production traffic"
+      "status": "recovery_hysteresis_baseline_observed_pending_promotion",
+      "target": "Promote executable first-success hysteresis while preserving frozen base/cross-language/metamorphic references; then test hysteresis relations across broader generated state sequences.",
+      "promotion_gate": "8/8 deterministic H/E/B cases stay green; frozen 429 baselines unchanged; lab thresholds remain explicitly non-production; no network traffic from the hysteresis layer"
     },
     {
       "id": "ENTROPY-001",
