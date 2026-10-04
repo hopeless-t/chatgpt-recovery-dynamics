@@ -198,6 +198,18 @@ viewer.addEventListener('load',()=>{
         event.preventDefault?.();
         activateFallback('webglcontextlost');
       },{capture:true});
+      if(new URLSearchParams(location.search).get('forceWebglLoss')==='1'){
+        setTimeout(()=>{
+          const gl=canvas.getContext('webgl2')||canvas.getContext('webgl');
+          const ext=gl?.getExtension('WEBGL_lose_context');
+          if(ext){
+            document.documentElement.dataset.purrtocol3dForcedLoss='requested';
+            ext.loseContext();
+          }else{
+            activateFallback('webgl-loss-extension-unavailable');
+          }
+        },1500);
+      }
     }
   });
 });
