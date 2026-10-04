@@ -49,7 +49,7 @@ class Gate:
     def __post_init__(self) -> None:
         if self.state not in {"H", "E", "B"}:
             raise ValueError(f"invalid initial state: {self.state}")
-        if self.state == "B":
+        if self.state in {"B", "E"}:
             self.failure_history_active = True
 
     def observe(self, at_s: float, outcome: str) -> dict[str, Any]:
@@ -61,6 +61,7 @@ class Gate:
         before = self.state
         reset = False
         promoted = False
+        recovering_duration_s: float | None = None
         reason = ""
 
         if outcome == "429":
@@ -86,6 +87,7 @@ class Gate:
             assert self.recovering_since_s is not None
             self.recovering_successes += 1
             duration = at_s - self.recovering_since_s
+            recovering_duration_s = duration
             count_ok = (
                 self.recovering_successes
                 >= self.policy.confirmation_successes_required
@@ -103,6 +105,8 @@ class Gate:
                     "confirmation count and recovering-duration conditions "
                     "both satisfied"
                 )
+                self.recovering_since_s = None
+                self.recovering_successes = 0
             else:
                 self.state = "E"
                 reason = (
@@ -117,6 +121,7 @@ class Gate:
             "to_state": self.state,
             "recovering_since_s": self.recovering_since_s,
             "recovering_successes": self.recovering_successes,
+            "recovering_duration_s": recovering_duration_s,
             "failure_history_active": self.failure_history_active,
             "failure_history_reset": reset,
             "promoted_to_healthy": promoted,
