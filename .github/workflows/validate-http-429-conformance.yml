@@ -12,6 +12,9 @@ on:
       - "data/http_429_recovery_hysteresis_scenarios.json"
       - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
+      - "scripts/http_429_recovery_composition.py"
+      - "data/http_429_recovery_composition_reference.json"
+      - "data/http_429_recovery_composition_contract.json"
       - "scripts/http_429_recovery_hysteresis_swarm.py"
       - "data/http_429_recovery_hysteresis_metamorphic_reference.json"
       - "data/preflight_routes.json"
@@ -35,6 +38,9 @@ on:
       - "data/http_429_recovery_hysteresis_scenarios.json"
       - "data/http_429_recovery_hysteresis_reference.json"
       - "scripts/http_429_recovery_hysteresis.py"
+      - "scripts/http_429_recovery_composition.py"
+      - "data/http_429_recovery_composition_reference.json"
+      - "data/http_429_recovery_composition_contract.json"
       - "scripts/http_429_recovery_hysteresis_swarm.py"
       - "data/http_429_recovery_hysteresis_metamorphic_reference.json"
       - "data/preflight_routes.json"
@@ -210,6 +216,51 @@ jobs:
           assert reference["interpretation"]["provider_root_cause"] == "NOT_ESTABLISHED"
 
           print("HTTP 429 Recovery Hysteresis frozen reference: PASS")
+          PY
+
+      - name: Run Scheduler x Hysteresis composition lab
+        run: |
+          python scripts/http_429_recovery_composition.py \
+            --output /tmp/http-429-recovery-composition.json
+
+      - name: Check Scheduler x Hysteresis composition invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          r = json.load(open(
+              "/tmp/http-429-recovery-composition.json",
+              encoding="utf-8",
+          ))
+          assert r["schema"] == "http-429-recovery-composition-report/v1"
+          assert r["experiment_id"] == "NET-429-COMP-001"
+          assert r["classification"] == (
+              "deterministic_control_plane_composition_not_provider_behavior"
+          )
+          assert r["summary"] == {"scenarios": 8, "passed": 8, "failed": 0}
+          assert r["authority_boundary"] == {
+              "scheduler_owns_retry_authorization": True,
+              "hysteresis_owns_recovery_confidence": True,
+              "confidence_can_create_replay_authority": False,
+              "confidence_can_shorten_scheduler_floor": False,
+          }
+          assert r["safety"] == {
+              "network_access": False,
+              "production_traffic": False,
+              "operation_replay_authority": False,
+          }
+
+          by_id = {row["scenario_id"]: row for row in r["results"]}
+          assert by_id["first-success-keeps-recovery-floor"]["pass"] is True
+          assert by_id["recovering-reblock-keeps-pacing-floor"]["pass"] is True
+          assert by_id["confidence-floor-is-monotone-conservative"]["pass"] is True
+          assert by_id["retry-after-remains-stronger-floor"]["pass"] is True
+          assert by_id["confidence-cannot-override-budget-stop"]["pass"] is True
+          assert by_id["confidence-cannot-override-reobserve"]["pass"] is True
+          assert by_id["failure-history-clears-only-on-healthy-promotion"]["pass"] is True
+          assert by_id["pacing-relaxes-only-after-healthy"]["pass"] is True
+
+          print("HTTP 429 Scheduler x Hysteresis composition: PASS (8/8)")
           PY
 
       - name: Run Recovery Hysteresis Metamorphic Kitten Swarm
@@ -550,6 +601,7 @@ jobs:
             /tmp/http-429-cross-language.json
             /tmp/http-429-python-go.json
             /tmp/http-429-recovery-hysteresis.json
+            /tmp/http-429-recovery-composition.json
             /tmp/http-429-recovery-hysteresis-swarm.json
             data/http_429_recovery_hysteresis_reference.json
             /tmp/http-429-metamorphic-scenarios.json
