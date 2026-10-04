@@ -496,6 +496,7 @@ See:
 
 - [A -> B transition biopsy](transition-biopsy.md)
 - [transition model competition](transition-model-competition.md)
+- [fixed-point recovery correspondence / REC-FP-001](fixed-point-recovery-correspondence.md)
 
 ## H8 — recovery-path cost model
 

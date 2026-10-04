@@ -831,6 +831,7 @@ See [docs/validation.md](docs/validation.md) for the numerical audit.
 - data/server_congestion_reference.json — popular-server congestion reference summary
 - data/deep_validation_reference.json — sensitivity / residual / change-point reference
 - docs/model.md — revised DCS / feedback model
+- docs/fixed-point-recovery-correspondence.md — REC-FP-001 convergence identifiability / competing fixed-point correspondence
 - docs/validation.md — independent recomputation and model audit
 - docs/recovery-design.md — concrete client-side recovery proposal
 - docs/monte-carlo.md — robust policy stress test under causal-model uncertainty

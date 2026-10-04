@@ -1,0 +1,43 @@
+{
+  "schema": "recovery-convergence-reference/v1",
+  "experiment_id": "REC-FP-001",
+  "source": {
+    "workflow_run_id": 37176898694,
+    "job_id": 111361292283,
+    "head_sha": "3c371b7e542623dee5176ad24b42ddb83b381729",
+    "artifact_id": 11293103024,
+    "artifact_name": "transition-biopsy-reference",
+    "observation_class": "first_ci_observation_before_reference_freeze"
+  },
+  "observed": {
+    "b_to_e_events": 8,
+    "e_to_b_next": 8,
+    "e_to_h_observed": 0,
+    "post_reentry_run_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "max_post_reentry_accessible_run_length": 1,
+    "adjacent_post_reentry_accessible_pairs": 0,
+    "empirical_kappa_samples_available": 0,
+    "contraction_status": "CONTRACTION_NOT_IDENTIFIABLE_FROM_CURRENT_CAPTURE",
+    "model_status": {
+      "M_A_categorical_H_E_B": "SUPPORTED_WITHIN_CAPTURE",
+      "M_C_observable_contraction": "UNIDENTIFIABLE_FROM_CURRENT_CAPTURE",
+      "M_D_rebound_hysteresis": "SUPPORTED_WITHIN_CAPTURE",
+      "M_E_no_fixed_point_structure": "NOT_REJECTED"
+    }
+  },
+  "interpretation": {
+    "conclusion": "The current sanitized capture cannot identify post-reentry contraction because no B->E reentry survives to a second consecutive Accessible observation.",
+    "external_validity": "NOT_ESTABLISHED",
+    "next_evidence": "Independent capture containing at least one B->E->H or longer post-reentry Accessible run.",
+    "production_root_cause": "NOT_ESTABLISHED"
+  }
+}
