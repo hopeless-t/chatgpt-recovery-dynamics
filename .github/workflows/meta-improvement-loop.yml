@@ -14,6 +14,11 @@ on:
       - "scripts/check_branch_convergence.py"
       - "data/critic_router_v1_evaluation.json"
       - "docs/repository-observatory/branch-convergence.md"
+      - "data/public_analysis_observer_routing_policy.json"
+      - "data/public_analysis_observer_routing_cases.json"
+      - "scripts/route_public_analysis_jobs.py"
+      - "scripts/evaluate_public_analysis_observer_routing.py"
+      - "docs/repository-observatory/public-analysis-routing.md"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   pull_request:
@@ -28,6 +33,11 @@ on:
       - "scripts/preflight_router.py"
       - "docs/repository-observatory/critic-router.md"
       - "docs/repository-observatory/branch-convergence.md"
+      - "data/public_analysis_observer_routing_policy.json"
+      - "data/public_analysis_observer_routing_cases.json"
+      - "scripts/route_public_analysis_jobs.py"
+      - "scripts/evaluate_public_analysis_observer_routing.py"
+      - "docs/repository-observatory/public-analysis-routing.md"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   workflow_dispatch:
@@ -178,6 +188,41 @@ jobs:
           )
           PY
 
+      - name: Observe public-analysis routing candidate
+        run: |
+          python scripts/evaluate_public_analysis_observer_routing.py \
+            --output /tmp/public-analysis-routing.json
+          python - <<'PY'
+          import json
+
+          with open("/tmp/public-analysis-routing.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+
+          assert r["schema"] == "public-analysis-observer-routing-evaluation/v1"
+          assert r["classification"] == "shadow_counterfactual_not_execution_authority"
+          assert r["expectations_pass"] is True
+          assert r["authority"]["execution_authority"] is False
+          assert r["authority"]["jobs_actually_skipped"] is False
+          assert r["authority"]["full_public_analysis_still_runs"] is True
+
+          cases = {case["case_id"]: case for case in r["cases"]}
+          isolated = cases["pr-47-429-composition-metamorphic"]
+          assert isolated["route_id"] == "http-429-isolated"
+          assert isolated["candidate_job_count"] == 4
+          assert isolated["candidate_avoided_job_count"] == 9
+
+          science = cases["pr-9-latent-timing-science"]
+          assert science["route_id"] == "full-fail-closed"
+          assert science["candidate_job_count"] == 13
+
+          print(
+              "Public-analysis observer routing shadow: PASS",
+              "PR47 candidate jobs=", isolated["candidate_job_count"],
+              "avoided candidates=", isolated["candidate_avoided_job_count"],
+              "jobs actually skipped=", r["authority"]["jobs_actually_skipped"],
+          )
+          PY
+
       - name: Check second-order guardrails
         run: |
           python - <<'PY'
@@ -201,7 +246,6 @@ jobs:
               for cycle in r["cycles"]
           )
 
-          # Observe before freezing any particular bottleneck.
           print("meta improvement structural invariants: PASS")
           PY
       - uses: actions/upload-artifact@v4
@@ -212,3 +256,4 @@ jobs:
             /tmp/branch-convergence.json
             /tmp/branch-convergence-pr14.json
             /tmp/branch-convergence-pr10.json
+            /tmp/public-analysis-routing.json
