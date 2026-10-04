@@ -1,0 +1,47 @@
+{
+  "schema": "branch-convergence-reference/v1",
+  "tuning_id": "branch-convergence-gate-v1",
+  "source": {
+    "workflow_run_id": 37176674692,
+    "job_id": 111360614495,
+    "head_sha": "52f330370015918361a656069d897cdafeea1cdb",
+    "merged_pr": 26,
+    "merge_commit_sha": "44cd37caeac7c11f59d7b666572a0e8f29dfc2e1"
+  },
+  "cases": [
+    {
+      "case_id": "current-pr-control",
+      "classification": "BASE_NOT_AHEAD",
+      "overlap_count": 0,
+      "interpretation": "Current PR #26 was not stale relative to its base."
+    },
+    {
+      "case_id": "historical-pr-14",
+      "pr_number": 14,
+      "classification": "CONVERGENCE_RISK",
+      "expected_overlap_paths": [
+        "data/improvement_events.jsonl",
+        "docs/repository-observatory/state.json"
+      ],
+      "observed_action": "closed_unmerged_as_superseded",
+      "outcome": "RIL-004 was already canonically closed on main; importing stale ledger/state would have created competing historical details."
+    },
+    {
+      "case_id": "historical-pr-10",
+      "pr_number": 10,
+      "classification": "BASE_AHEAD_NO_PATH_OVERLAP",
+      "overlap_count": 0,
+      "observed_action": "rebuilt_on_current_main",
+      "replacement_pr": 27,
+      "replacement_merge_commit_sha": "1f6d9b86d3d6d0f8724490883e20866dc46b5d5d",
+      "outcome": "Useful fixed-point correspondence was recovered, extended into REC-FP-001 executable identifiability CI, and merged without force-updating stale history."
+    }
+  ],
+  "interpretation": {
+    "claim": "The diagnostic distinguished current, stale-nonoverlap, and stale-same-path cases on real repository history.",
+    "conflict_oracle": false,
+    "hard_gate_status": "NOT_PROMOTED",
+    "reason": "Three-case discrimination is useful early evidence but insufficient to justify blocking pull requests automatically.",
+    "next_evidence": "Accumulate additional real pull-request outcomes and audit false-positive/false-negative behavior before any hard-gate proposal."
+  }
+}
