@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "4a4ddcfe87e7544167a7604b5b48b5ecadeb1bf3",
+    "baseline_main_commit": "ba05a436c43d82199cda58d83c4c686d0e89b9dc",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -42,7 +42,9 @@
     "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded",
     "http_429_recovery_hysteresis": "baseline implemented: executable H/E/B state machine passes 8/8 deterministic cases; first post-Blocked success enters E, E+429 returns B, and failure history resets only after configured stable E->H confirmation; fixture thresholds are not production recommendations",
     "http_429_hysteresis_metamorphic": "baseline implemented: deterministic 12-policy × 7-relation Recovery Hysteresis Metamorphic Kitten Swarm passed 84/84; compact artifact-backed receipt frozen; no network traffic",
-    "http_429_scheduler_hysteresis_composition": "baseline implemented: 8/8 deterministic composition cases preserve scheduler authority while B/E confidence only adds conservative pacing; STOP_BUDGET, REOBSERVE and Retry-After floors remain authoritative; no network traffic"
+    "http_429_scheduler_hysteresis_composition": "baseline implemented: 8/8 deterministic composition cases preserve scheduler authority while B/E confidence only adds conservative pacing; STOP_BUDGET, REOBSERVE and Retry-After floors remain authoritative; no network traffic",
+    "http_429_scheduler_hysteresis_composition_metamorphic": "NET-429-COMP-002 implemented: 36 generated policies × 10 relation families = 360/360 deterministic relation checks; scheduler authorization remained authoritative, confidence never created replay authority or shortened scheduler floors; compact digest-bound receipt frozen; no network traffic",
+    "ci_observer_routing_candidate": "observed only: the always-on public-analysis workflow runs a 13-job full matrix on every PR, including source-proximate 429-only changes; candidate Meta optimization must preserve cross-surface safety and is NOT yet implemented"
   },
   "frontiers": [
     {
@@ -90,9 +92,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "scheduler_hysteresis_composition_baseline_implemented",
-      "target": "Stress the composed scheduler×confidence controller across generated timing/confidence sequences, preserving all frozen 429 baselines and preventing first-success pacing reset.",
-      "promotion_gate": "generated composition relations preserve STOP_BUDGET, REOBSERVE, Retry-After/start-anchor floors, B->E/E->B/E->H semantics and confidence monotonicity; no production traffic"
+      "status": "scheduler_hysteresis_composition_metamorphic_baseline_implemented",
+      "target": "Stress higher-order combinations of conservative scheduler/confidence transformations while preserving all frozen 429 baselines and keeping confidence unable to mint replay authority.",
+      "promotion_gate": "generated relation compositions preserve STOP_BUDGET, REOBSERVE, Retry-After/start-anchor floors, B->E/E->B/E->H semantics, timing monotonicity and authority ownership; no production traffic"
     },
     {
       "id": "ENTROPY-001",
