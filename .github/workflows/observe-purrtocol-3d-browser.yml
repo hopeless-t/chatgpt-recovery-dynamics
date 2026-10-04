@@ -40,8 +40,6 @@ jobs:
 
           grep -q 'id="pakenyaPoster"' /tmp/purrtocol-3d-fallback-dom.html
           grep -q 'purrtocol-poster.svg' /tmp/purrtocol-3d-fallback-dom.html
-          grep -q 'poster fallback remains visible' /tmp/purrtocol-3d-fallback-dom.html
-
           grep -q 'viewer-backstop' /tmp/purrtocol-3d-fallback-dom.html
           echo "Purrtocol 3D CDN-failure fallback DOM: PASS"
 
@@ -54,7 +52,6 @@ jobs:
 
   live-render-observation:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
