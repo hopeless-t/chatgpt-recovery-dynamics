@@ -1,0 +1,32 @@
+{
+  "schema": "http-429-recovery-composition-contract/v1",
+  "experiment_id": "NET-429-COMP-001",
+  "purpose": "Compose retry timing/authorization with recovery-confidence hysteresis without allowing confidence state to create retry authority or shorten pacing.",
+  "planes": {
+    "scheduler": "http_429_survival.py controls retry authorization, timing floors, identity, and budget",
+    "confidence": "http_429_recovery_hysteresis.py controls B/E/H recovery confidence",
+    "composition": "confidence may add a conservative pacing floor while B/E; it may never override STOP/REOBSERVE or shorten a scheduler floor"
+  },
+  "invariants": [
+    "First post-Blocked success enters E and does not reset failure history.",
+    "While B or E, recovery_probe_period may only increase the scheduler minimum-period floor.",
+    "A 429 is classified into B before retry timing is computed.",
+    "Confidence state never overrides STOP_BUDGET.",
+    "Confidence state never overrides REOBSERVE for ambiguous non-idempotent outcomes.",
+    "E->H is the only hysteresis transition that clears failure history.",
+    "No first-success transition may make the next recovery observation start earlier than the recovery pacing floor.",
+    "The composition layer creates no new operation replay authority."
+  ],
+  "lab_policy": {
+    "confirmation_successes_required": 2,
+    "minimum_recovering_duration_s": 5,
+    "base_minimum_period_s": 1,
+    "recovery_probe_period_s": 5,
+    "note": "Deterministic fixtures only; not production recommendations."
+  },
+  "safety": {
+    "network_access": false,
+    "production_traffic": false,
+    "operation_replay_authority": false
+  }
+}
