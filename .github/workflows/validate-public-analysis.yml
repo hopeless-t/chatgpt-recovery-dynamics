@@ -254,6 +254,38 @@ jobs:
           )
           assert fp["candidate_model_status"]["M_E_no_fixed_point_structure"] == "NOT_REJECTED"
 
+          with open("data/recovery_convergence_reference.json", "r", encoding="utf-8") as f:
+              ref = json.load(f)
+
+          assert ref["schema"] == "recovery-convergence-reference/v1"
+          assert ref["experiment_id"] == "REC-FP-001"
+          observed = ref["observed"]
+          assert observed["b_to_e_events"] == fp["reentry"]["b_to_e_events"]
+          assert observed["e_to_b_next"] == fp["reentry"]["e_to_b_next"]
+          assert observed["e_to_h_observed"] == fp["reentry"]["e_to_h_observed"]
+          assert (
+              observed["post_reentry_run_lengths"]
+              == fp["reentry"]["post_reentry_run_lengths"]
+          )
+          assert (
+              observed["adjacent_post_reentry_accessible_pairs"]
+              == fp["contraction_identifiability"][
+                  "adjacent_post_reentry_accessible_pairs"
+              ]
+          )
+          assert (
+              observed["empirical_kappa_samples_available"]
+              == fp["contraction_identifiability"][
+                  "empirical_kappa_samples_available"
+              ]
+          )
+          assert (
+              observed["contraction_status"]
+              == fp["contraction_identifiability"]["status"]
+          )
+          for key, value in observed["model_status"].items():
+              assert fp["candidate_model_status"][key] == value
+
           print("A-to-B transition biopsy/model competition: PASS")
           print("REC-FP-001 identifiability audit: PASS")
           PY
