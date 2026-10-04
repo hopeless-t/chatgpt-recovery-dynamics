@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "d476bc6b66792c140066cfcd6ee1a07bf717d8b4",
+    "baseline_main_commit": "2482d4ee63827ca81a8a2eaf37d5eadf0dd307d8",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-036 tri-runtime 429 Peace Junction implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -39,7 +39,7 @@
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
     "purrtocol_429_peace_bridge": "upgraded to browser-observed tri-runtime Peace Junction: PythonPaw, NodePaw, and GoPaw converge on stable operation identity while Python/Node and Python/Go receipts remain separately frozen",
     "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately",
-    "http_429_metamorphic_swarm": "first baseline observed: 30 deterministic cases × 3 runtimes = 90 local executions, all passed; Python/Node and Python/Go semantic parity true; promotion pending"
+    "http_429_metamorphic_swarm": "baseline implemented: deterministic 30-case swarm × Python/Node/Go = 90 local executions, all passed; both semantic comparisons true; generated scenario digest frozen; ephemeral transport diagnostics excluded"
   },
   "frontiers": [
     {
@@ -87,9 +87,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "metamorphic_swarm_observed_pending_promotion",
-      "target": "Promote the 30-case tri-runtime metamorphic baseline, then expand relation coverage rather than merely adding more languages.",
-      "promotion_gate": "deterministic generated scenario digest stays fixed; 30/30 per runtime; both semantic comparisons stay green; raw ephemeral transport diagnostics remain outside the freeze"
+      "status": "metamorphic_swarm_baseline_implemented",
+      "target": "Test metamorphic relations between paired scenarios (monotonicity and non-interference), not merely more parameter points or languages.",
+      "promotion_gate": "relation generator is deterministic; transformations preserve intended preconditions; relation assertions hold across Python/Node/Go; frozen base and swarm references remain unchanged; no production traffic"
     },
     {
       "id": "ENTROPY-001",
