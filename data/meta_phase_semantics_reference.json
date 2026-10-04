@@ -1,0 +1,47 @@
+{
+  "schema": "meta-phase-semantics-reference/v1",
+  "source": {
+    "workflow_run_id": 37241955305,
+    "job_id": 111552288084,
+    "head_sha": "74a68ad6cd0ed5bb14b82b93b5df3a62db96fdcf",
+    "artifact_id": 11317018169,
+    "artifact_sha256": "77c4a4cb720b4c90628236fbd550d309e17953d57577cb76bd1e81447ae278d1",
+    "observation_class": "first_ci_observation_before_reference_freeze"
+  },
+  "observed": {
+    "classified_cycle_count": 17,
+    "diagnosis_latency_sample_count": 15,
+    "change_before_first_observation_count": 2,
+    "change_before_first_observation_cycle_ids": [
+      "RIL-011",
+      "RIL-014"
+    ],
+    "raw_change_first_intervals_s": {
+      "RIL-011": -84.0,
+      "RIL-014": -122.0
+    },
+    "median_applicable_observation_to_first_change_s": 132.0,
+    "min_applicable_observation_to_first_change_s": 70.0,
+    "incomplete_phase_cycle_ids": []
+  },
+  "semantics": {
+    "change_before_first_observation": "diagnosis latency not applicable; preserve signed raw interval but exclude it from diagnosis-latency aggregates",
+    "raw_timestamps_modified": false,
+    "negative_intervals_clamped": false,
+    "negative_intervals_absolute_valued": false
+  },
+  "frozen_evaluation_boundary": {
+    "critic_router_cycle_ids": [
+      "RIL-005",
+      "RIL-006",
+      "RIL-007"
+    ],
+    "critic_router_observation_to_change_s": [
+      78.0,
+      109.0,
+      142.0
+    ],
+    "all_critic_router_cycles_diagnosis_latency_applicable": true,
+    "critic_router_evaluation_changes": false
+  }
+}
