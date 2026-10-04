@@ -37,7 +37,8 @@
     "branch_convergence_tuning": "v1 observation baseline implemented: real history separated BASE_NOT_AHEAD, BASE_AHEAD_NO_PATH_OVERLAP, and CONVERGENCE_RISK; remains advisory",
     "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
-    "purrtocol_429_peace_bridge": "browser-observed visualization implemented; frozen Python/Node 8/8 semantic parity receipt mirrored; visualization remains non-evidence"
+    "purrtocol_429_peace_bridge": "browser-observed visualization implemented; frozen Python/Node 8/8 semantic parity receipt mirrored; visualization remains non-evidence",
+    "http_429_tri_runtime": "first Go baseline observed: Python/Go semantic parity true across 8/8 loopback scenarios; Python/Node frozen baseline remains unchanged; promotion pending"
   },
   "frontiers": [
     {
@@ -85,9 +86,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "cross_language_baseline_implemented",
-      "target": "Extend the Survival Plane across another independent runtime/client library or a provider-specific adapter while keeping provider behavior separate from the vendor-neutral core.",
-      "promotion_gate": "new implementation reproduces timing/budget/authorization/identity invariants locally; deviations are reported rather than normalized away; no production load testing"
+      "status": "tri_runtime_baseline_observed_pending_promotion",
+      "target": "Promote the independent Go runtime baseline while preserving the separately frozen Python/Node baseline, then explore provider-adapter deltas or a fourth runtime.",
+      "promotion_gate": "Go local/mock implementation reproduces timing/budget/authorization/identity invariants; Python-Go comparison stays green; prior Python-Node reference remains green; no production load testing"
     },
     {
       "id": "ENTROPY-001",
