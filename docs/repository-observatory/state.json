@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "168501584ac39a5bf6bdb7a3bef5d1996dd0ffe9",
+    "baseline_main_commit": "3e015a1e3bf1ce6f9eee9ccb6d6d81b252c5a511",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; canonical 3D First Light implemented; ObserverPaw indexed; PKE-035 429 Peace Bridge implemented as visualization-only",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -38,7 +38,7 @@
     "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
     "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic",
     "purrtocol_429_peace_bridge": "browser-observed visualization implemented; frozen Python/Node 8/8 semantic parity receipt mirrored; visualization remains non-evidence",
-    "http_429_tri_runtime": "first Go baseline observed: Python/Go semantic parity true across 8/8 loopback scenarios; Python/Node frozen baseline remains unchanged; promotion pending"
+    "http_429_tri_runtime": "baseline implemented: Python, Node, and Go standard-library implementations reproduce the same 8/8 local recovery contract semantics; Python-Node and Python-Go receipts frozen separately"
   },
   "frontiers": [
     {
@@ -86,9 +86,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "tri_runtime_baseline_observed_pending_promotion",
-      "target": "Promote the independent Go runtime baseline while preserving the separately frozen Python/Node baseline, then explore provider-adapter deltas or a fourth runtime.",
-      "promotion_gate": "Go local/mock implementation reproduces timing/budget/authorization/identity invariants; Python-Go comparison stays green; prior Python-Node reference remains green; no production load testing"
+      "status": "tri_runtime_baseline_implemented",
+      "target": "Characterize provider-adapter differences or add a fourth independent runtime without weakening the vendor-neutral core.",
+      "promotion_gate": "new adapter/runtime reports deviations explicitly, preserves local timing/budget/authorization/identity invariants where applicable, and never uses production load testing"
     },
     {
       "id": "ENTROPY-001",
