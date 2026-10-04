@@ -1,6 +1,7 @@
 {
   "schema": "public-analysis-observer-routing-policy/v1",
   "classification": "observation_only_candidate_not_execution_authority",
+  "source_gate_trigger_coverage_required": true,
   "full_job_set": [
     "validate (3.11)",
     "validate (3.12)",
@@ -19,7 +20,7 @@
   "safe_islands": [
     {
       "route_id": "http-429-isolated",
-      "description": "Changes confined to HTTP 429 implementation/lab surfaces that already have dedicated source-proximate promotion workflows.",
+      "description": "Changes confined to HTTP 429 implementation/lab surfaces and proven to be covered by actual source-proximate HTTP 429 pull-request workflow triggers.",
       "prefixes": [
         ".github/workflows/validate-http-429",
         "data/http_429_",
@@ -48,9 +49,10 @@
   "fallback": {
     "route_id": "full-fail-closed",
     "candidate_jobs": "FULL",
-    "reason": "Any path outside a single known safe island requires the full public-analysis matrix during the observation phase."
+    "reason": "Any path outside a single known safe island, or any reduced-route path lacking actual source-gate trigger coverage, requires the full public-analysis matrix during the observation phase."
   },
-  "promotion_rule": "This policy is diagnostic only. It may not skip GitHub Actions jobs until historical and live shadow observations establish acceptable false-negative behavior and a separate promotion change is approved by existing CI.",
+  "coverage_rule": "For a reduced route, every changed path must match pull_request.paths in at least one current .github/workflows/validate-http-429*.yml workflow. The router reads those triggers from the repository at evaluation time. Any uncovered path fails closed to FULL.",
+  "promotion_rule": "This policy remains diagnostic only. Real job skipping requires a separate reversible promotion after trigger-coverage regressions and paired live observations remain green under the still-authoritative full public-analysis matrix.",
   "unknown_is_full": true,
   "single_safe_island_required": true
 }
