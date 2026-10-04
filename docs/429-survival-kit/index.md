@@ -123,6 +123,8 @@ Blocked
 
 One green response is not automatically stable recovery.
 
+The executable companion is [NET-429-HYS-001 Recovery Hysteresis Gate](../429-conformance-lab/recovery-hysteresis.md). It keeps retry timing/authorization separate from recovery-confidence classification.
+
 ## Reproduce
 
 ```bash
