@@ -16,7 +16,7 @@
     "fail_closed_rule": "A critical invariant failure blocks promotion; uncertainty creates more observation, not permission to weaken the check."
   },
   "current_state": {
-    "baseline_main_commit": "1f6d9b86d3d6d0f8724490883e20866dc46b5d5d",
+    "baseline_main_commit": "9e2fba57809a618f1d716cec71809a19ea099a20",
     "recovery_science": "mature single-capture evidence base with explicit external-validity limits",
     "purrtocol_world": "Cambrian Mode active; original 7 concepts promoted; canonical 3D First Light implemented",
     "variant_ecology": "fork/lineage substrate implemented; external descendants not yet required for canonical success",
@@ -36,7 +36,7 @@
     "schrodinger_purrtocol": "first deterministic sealed-box observation selected A / ObserverPaw; A promoted as PKV-SCHRODINGER-OBS-001; B remains concept",
     "branch_convergence_tuning": "v1 observation baseline implemented: real history separated BASE_NOT_AHEAD, BASE_AHEAD_NO_PATH_OVERLAP, and CONVERGENCE_RISK; remains advisory",
     "recovery_convergence_identifiability": "REC-FP-001: current capture has 8 B->E reentries, 8 immediate E->B rebounds, 0 E->H, and 0 post-reentry A/A pairs; contraction is unidentifiable from this capture",
-    "http_429_cross_language": "first baseline observed: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; promotion pending"
+    "http_429_cross_language": "baseline implemented: independent Python and Node standard-library implementations achieved semantic parity across 8/8 loopback scenarios; no production traffic"
   },
   "frontiers": [
     {
@@ -84,9 +84,9 @@
     {
       "id": "NET-429-001",
       "lane": "resilience",
-      "status": "cross_language_baseline_observed_pending_promotion",
-      "target": "Promote and then extend the Survival Plane across additional independent runtimes/client libraries without production load testing.",
-      "promotion_gate": "independent local/mock implementation reproduces floor/budget/authorization/identity invariants; cross-language comparison stays green; provider-specific differences remain separate"
+      "status": "cross_language_baseline_implemented",
+      "target": "Extend the Survival Plane across another independent runtime/client library or a provider-specific adapter while keeping provider behavior separate from the vendor-neutral core.",
+      "promotion_gate": "new implementation reproduces timing/budget/authorization/identity invariants locally; deviations are reported rather than normalized away; no production load testing"
     },
     {
       "id": "ENTROPY-001",
