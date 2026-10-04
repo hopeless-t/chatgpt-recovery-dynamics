@@ -52,6 +52,56 @@ jobs:
           print("Meta phase semantics observation-only boundary: PASS")
           PY
 
+      - name: Compare frozen first observation
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/meta-phase-semantics.json", "r", encoding="utf-8") as f:
+              observed = json.load(f)
+          with open("data/meta_phase_semantics_reference.json", "r", encoding="utf-8") as f:
+              reference = json.load(f)
+
+          frozen = reference["observed"]
+          aggregate = observed["aggregate"]
+          assert aggregate["classified_cycle_count"] == frozen["classified_cycle_count"]
+          assert aggregate["diagnosis_latency_sample_count"] == frozen["diagnosis_latency_sample_count"]
+          assert (
+              aggregate["change_before_first_observation_count"]
+              == frozen["change_before_first_observation_count"]
+          )
+          assert (
+              aggregate["change_before_first_observation_cycle_ids"]
+              == frozen["change_before_first_observation_cycle_ids"]
+          )
+          assert (
+              aggregate["median_applicable_observation_to_first_change_s"]
+              == frozen["median_applicable_observation_to_first_change_s"]
+          )
+          assert (
+              aggregate["min_applicable_observation_to_first_change_s"]
+              == frozen["min_applicable_observation_to_first_change_s"]
+          )
+          assert aggregate["incomplete_phase_cycle_ids"] == frozen["incomplete_phase_cycle_ids"]
+
+          cycles = {cycle["cycle_id"]: cycle for cycle in observed["cycles"]}
+          for cycle_id, raw_s in frozen["raw_change_first_intervals_s"].items():
+              cycle = cycles[cycle_id]
+              assert cycle["raw_observation_to_first_change_s"] == raw_s
+              assert cycle["phase_order"] == "CHANGE_BEFORE_FIRST_OBSERVATION"
+              assert cycle["diagnosis_latency_applicable"] is False
+
+          for cycle_id, value in zip(
+              reference["frozen_evaluation_boundary"]["critic_router_cycle_ids"],
+              reference["frozen_evaluation_boundary"]["critic_router_observation_to_change_s"],
+          ):
+              cycle = cycles[cycle_id]
+              assert cycle["raw_observation_to_first_change_s"] == value
+              assert cycle["diagnosis_latency_applicable"] is True
+
+          print("Meta phase semantics frozen reference: PASS")
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: meta-phase-semantics-audit
