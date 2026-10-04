@@ -42,13 +42,13 @@ main{max-width:1120px;margin:auto;padding:42px 22px 80px}.ey{color:var(--cyan);f
 h1{font-size:clamp(3rem,8vw,7rem);line-height:.9;letter-spacing:-.06em;margin:.12em 0}.lead{font-size:1.15rem;color:var(--muted);max-width:780px}
 .stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:16px;margin-top:26px}
 .card{border:1px solid var(--line);border-radius:22px;background:rgba(13,27,45,.9);padding:18px}
-model-viewer{display:block;width:100%;height:min(66vh,620px);min-height:420px;background:linear-gradient(#0b1e31,#07111f);border-radius:16px;--poster-color:transparent;overflow:hidden}.poster-fallback{width:100%;height:100%;object-fit:contain;background:linear-gradient(#0b1e31,#07111f)}.diag{margin-top:10px;font-size:.82rem;color:var(--muted)}.diag strong{color:var(--cyan)}.runtime-warning{display:none;margin-top:10px;border-left:4px solid var(--amber);padding:8px 10px;background:rgba(246,187,68,.08);color:var(--text)}html[data-viewer-runtime="fallback"] .runtime-warning{display:block}
+.viewer-shell{position:relative;width:100%;height:min(66vh,620px);min-height:420px;border-radius:16px;overflow:hidden;background:linear-gradient(#0b1e31,#07111f)}.viewer-backstop{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:linear-gradient(#0b1e31,#07111f);z-index:0;opacity:1}.viewer-shell model-viewer{position:relative;z-index:1;display:block;width:100%;height:100%;min-height:inherit;background:transparent;border-radius:16px;--poster-color:transparent;overflow:hidden;transition:opacity .18s ease}.viewer-shell.fallback-active model-viewer{opacity:0;pointer-events:none}.viewer-shell.fallback-active .viewer-backstop{opacity:1}.poster-fallback{width:100%;height:100%;object-fit:contain;background:transparent}.diag{margin-top:10px;font-size:.82rem;color:var(--muted)}.diag strong{color:var(--cyan)}.runtime-warning{display:none;margin-top:10px;border-left:4px solid var(--amber);padding:8px 10px;background:rgba(246,187,68,.08);color:var(--text)}html[data-viewer-runtime="fallback"] .runtime-warning,.viewer-shell.fallback-active~.runtime-warning{display:block}
 .buttons{display:grid;gap:8px}.buttons button{border:1px solid var(--line);background:#081827;color:var(--text);border-radius:12px;padding:10px;text-align:left;cursor:pointer;font:inherit}.buttons button:hover{border-color:var(--cyan)}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.badge{border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:.8rem}.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.c{color:var(--cyan)}
 .code{font-family:ui-monospace,monospace;background:#050c15;border:1px solid var(--line);border-radius:14px;padding:12px;white-space:pre-wrap}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.metric{border:1px solid var(--line);border-radius:16px;padding:14px;background:#091827}.metric b{display:block;font-size:1.6rem}
 a{color:var(--cyan)}footer{margin-top:28px;color:var(--muted)}
-@media(max-width:800px){.stage{grid-template-columns:1fr}.grid{grid-template-columns:1fr}model-viewer{min-height:360px}}
+@media(max-width:800px){.stage{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.viewer-shell{min-height:360px}}
 </style>
 </head>
 <body>
@@ -66,6 +66,10 @@ a{color:var(--cyan)}footer{margin-top:28px;color:var(--muted)}
 
 <div class="stage">
 <section class="card">
+<div class="viewer-shell" id="viewerShell">
+<img class="viewer-backstop" id="viewerBackstop"
+     src="../assets/purrtocol/purrtocol-poster.svg"
+     alt="" aria-hidden="true">
 <model-viewer id="pakenya"
  src="../assets/purrtocol/purrtocol.glb"
  alt="Low-poly 3D Purrtocol recovery cat"
@@ -82,8 +86,9 @@ a{color:var(--cyan)}footer{margin-top:28px;color:var(--muted)}
       alt="3D Purrtocol First Light fallback poster">
  <noscript><img class="poster-fallback" src="../assets/purrtocol/purrtocol-poster.svg" alt="3D Purrtocol fallback poster"></noscript>
 </model-viewer>
+</div>
 <div class="diag" id="diag">Runtime diagnostics: checking…</div>
-<div class="runtime-warning" id="runtimeWarning">Interactive 3D runtime could not be loaded. The poster is shown instead, so Purrtocol never disappears into a dark box.</div>
+<div class="runtime-warning" id="runtimeWarning">Interactive 3D is unavailable or the renderer was lost. The stable poster is shown instead, so Purrtocol never disappears into a dark box.</div>
 </section>
 
 <aside class="card">
@@ -91,6 +96,7 @@ a{color:var(--cyan)}footer{margin-top:28px;color:var(--muted)}
 <p id="status">Loading interactive GLB… poster fallback is visible meanwhile.</p>
 <div class="buttons" id="buttons">
 <button id="retryViewer" type="button">🔄 retry 3D runtime / GLB</button>
+<button id="staticViewer" type="button">🧊 static-first — pause GPU animation loop</button>
 <button data-animation="idle_observe">📡 idle_observe — tiny probe bob</button>
 <button data-animation="blocked_429">🛑 blocked_429 — head drops</button>
 <button data-animation="provisional_step_E">🟠 provisional_step_E — one cautious step</button>
@@ -125,7 +131,27 @@ cute cat ≠ privileged backend access</div>
 const viewer=document.getElementById('pakenya');
 const status=document.getElementById('status');
 const diag=document.getElementById('diag');
+const viewerShell=document.getElementById('viewerShell');
 let glbLoaded=false;
+let fallbackReason=null;
+let contextLossCount=0;
+let sustainedTimer=null;
+
+function activateFallback(reason){
+  fallbackReason=reason||'unknown';
+  contextLossCount += reason==='webglcontextlost' ? 1 : 0;
+  viewerShell.classList.add('fallback-active');
+  document.documentElement.dataset.purrtocol3d='fallback';
+  document.documentElement.dataset.purrtocol3dFallbackReason=fallbackReason;
+  try{ viewer.pause(); }catch(_){}
+  status.textContent='3D renderer fallback: '+fallbackReason+' · stable poster remains visible';
+  runtimeStatus();
+}
+function clearFallback(){
+  fallbackReason=null;
+  viewerShell.classList.remove('fallback-active');
+  delete document.documentElement.dataset.purrtocol3dFallbackReason;
+}
 
 function webglStatus(){
   try{
@@ -141,26 +167,58 @@ function runtimeStatus(){
   const rt=window.__pakenyaViewerRuntime;
   const source=rt?.source ? new URL(rt.source).host : 'not loaded';
   const defined=customElements.get('model-viewer') ? 'defined' : 'not defined';
-  diag.innerHTML='Runtime diagnostics: <strong>'+webglStatus()+'</strong> · model-viewer '+defined+' · source '+source+' · GLB '+(glbLoaded?'loaded':'waiting');
+  const visible=typeof viewer.modelIsVisible==='boolean' ? viewer.modelIsVisible : 'n/a';
+  diag.innerHTML='Runtime diagnostics: <strong>'+webglStatus()+'</strong> · model-viewer '+defined+' · source '+source+' · GLB '+(glbLoaded?'loaded':'waiting')+' · modelIsVisible '+visible+' · context losses '+contextLossCount+(fallbackReason?' · fallback '+fallbackReason:'');
 }
 window.addEventListener('pakenya-viewer-runtime',runtimeStatus);
 runtimeStatus();
 
 viewer.addEventListener('load',()=>{
   glbLoaded=true;
+  clearFallback();
   document.documentElement.dataset.purrtocol3d='loaded';
-  status.textContent='GLB loaded · '+viewer.availableAnimations.length+' animations · interactive 3D active';
+  document.documentElement.dataset.purrtocol3dMode='static-first';
+  try{ viewer.pause(); }catch(_){}
+  status.textContent='GLB loaded · '+viewer.availableAnimations.length+' animations · static-first mode active';
   runtimeStatus();
-  if(viewer.availableAnimations.includes('idle_observe')){
-    viewer.animationName='idle_observe';
-    viewer.play();
-  }
+  clearTimeout(sustainedTimer);
+  sustainedTimer=setTimeout(()=>{
+    if(glbLoaded && !fallbackReason){
+      document.documentElement.dataset.purrtocol3d='sustained';
+      document.documentElement.dataset.purrtocol3dSustained='true';
+      status.textContent='GLB sustained · static-first renderer remained healthy for 20s';
+      runtimeStatus();
+    }
+  },20000);
+  queueMicrotask(()=>{
+    const canvas=viewer.shadowRoot?.querySelector('canvas');
+    if(canvas && !canvas.dataset.pakenyaLossBound){
+      canvas.dataset.pakenyaLossBound='true';
+      canvas.addEventListener('webglcontextlost',event=>{
+        event.preventDefault?.();
+        activateFallback('webglcontextlost');
+      },{capture:true});
+      if(new URLSearchParams(location.search).get('forceWebglLoss')==='1'){
+        setTimeout(()=>{
+          const gl=canvas.getContext('webgl2')||canvas.getContext('webgl');
+          const ext=gl?.getExtension('WEBGL_lose_context');
+          if(ext){
+            document.documentElement.dataset.purrtocol3dForcedLoss='native-extension';
+            ext.loseContext();
+          }else{
+            document.documentElement.dataset.purrtocol3dForcedLoss='synthetic-model-viewer-error';
+            viewer.dispatchEvent(new CustomEvent('error',{
+              detail:{type:'webglcontextlost',synthetic:true}
+            }));
+          }
+        },1500);
+      }
+    }
+  });
 });
 viewer.addEventListener('error',event=>{
-  document.documentElement.dataset.purrtocol3d='error';
-  const type=event?.detail?.type||'unknown model-viewer error';
-  status.textContent='3D load error: '+type+' · poster fallback remains visible';
-  runtimeStatus();
+  const type=event?.detail?.type||'unknown-model-viewer-error';
+  activateFallback(type);
 });
 viewer.addEventListener('progress',event=>{
   const total=Number(event?.detail?.totalProgress||0);
@@ -172,9 +230,18 @@ viewer.addEventListener('progress',event=>{
 document.getElementById('retryViewer').addEventListener('click',()=>{
   const src=viewer.getAttribute('src');
   glbLoaded=false;
-  status.textContent='Retrying GLB…';
+  clearTimeout(sustainedTimer);
+  clearFallback();
+  document.documentElement.dataset.purrtocol3d='retrying';
+  status.textContent='Retrying GLB… poster backstop remains behind the renderer.';
   viewer.removeAttribute('src');
   requestAnimationFrame(()=>requestAnimationFrame(()=>viewer.setAttribute('src',src)));
+  runtimeStatus();
+});
+document.getElementById('staticViewer').addEventListener('click',()=>{
+  try{viewer.pause();}catch(_){}
+  document.documentElement.dataset.purrtocol3dMode='static-first';
+  status.textContent='Static-first mode · animation paused · GPU churn minimized';
   runtimeStatus();
 });
 
@@ -189,17 +256,18 @@ document.getElementById('buttons').addEventListener('click',e=>{
     status.textContent='Missing animation: '+name;
     return;
   }
+  clearFallback();
   viewer.pause();
   viewer.animationName=name;
   viewer.currentTime=0;
   viewer.play();
-  status.textContent='Playing: '+name;
+  document.documentElement.dataset.purrtocol3dMode='user-animation';
+  status.textContent='Playing by user request: '+name;
 });
 
 setTimeout(()=>{
   if(!glbLoaded){
-    status.textContent='Interactive 3D did not become ready in 8s · poster fallback remains visible';
-    runtimeStatus();
+    activateFallback('load-timeout');
   }
 },8000);
 </script>

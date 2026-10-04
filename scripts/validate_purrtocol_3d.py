@@ -268,16 +268,63 @@ def main() -> None:
         == "NOT_ESTABLISHED"
     )
 
+    browser_survival = json.loads(
+        (
+            ROOT / "docs" / "purrtocol-3d" / "BROWSER_SURVIVAL_OBSERVATION.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert (
+        browser_survival["schema"]
+        == "purrtocol-3d-browser-survival-observation/v1"
+    )
+    assert (
+        browser_survival["observations"]["sustained_static_first"]["conclusion"]
+        == "success"
+    )
+    assert (
+        browser_survival["observations"]["sustained_static_first"]["duration_s"]
+        >= 20
+    )
+    assert (
+        browser_survival["observations"]["forced_renderer_loss"][
+            "fallback_reason"
+        ]
+        == "webglcontextlost"
+    )
+    assert (
+        browser_survival["implementation_change"]["automatic_animation_on_load"]
+        is False
+    )
+    assert browser_survival["implementation_change"]["persistent_backstop"] is True
+    assert (
+        browser_survival["interpretation"]["result"]
+        == "SUSTAINED_VISIBILITY_BASELINE_IMPLEMENTED"
+    )
+    assert (
+        browser_survival["interpretation"]["live_site_root_cause"]
+        == "NOT_ESTABLISHED"
+    )
+    assert (
+        browser_survival["interpretation"]["ios_webview_equivalence"]
+        == "NOT_ESTABLISHED"
+    )
+
     html = preview.read_text(encoding="utf-8")
     assert 'src="../assets/purrtocol/purrtocol.glb"' in html
     assert "ajax.googleapis.com/ajax/libs/model-viewer/4.3.1" in html
     assert "cdnjs.cloudflare.com/ajax/libs/model-viewer/4.3.1" in html
     assert 'poster="../assets/purrtocol/purrtocol-poster.svg"' in html
     assert 'slot="poster"' in html
-    assert "poster fallback remains visible" in html
+    assert 'class="viewer-backstop"' in html
+    assert "fallback-active" in html
+    assert "static-first" in html
+    assert "webglcontextlost" in html
+    assert "forceWebglLoss" in html
+    assert "purrtocol3dSustained" in html
+    assert "stable poster remains visible" in html
     assert "viewer.addEventListener('error'" in html
     assert "WebGL2 available" in html
-    assert "display:block" in html
+    assert "background:transparent" in html
     for name in contract["required_animations"]:
         assert name in html
 
@@ -297,6 +344,11 @@ def main() -> None:
                 "browser_observation_run": browser_observation["workflow_run_id"],
                 "interactive_3d_observed": True,
                 "dark_box_fallback_observed": True,
+                "sustained_visibility_run": browser_survival["workflow_run_id"],
+                "sustained_visibility_seconds": browser_survival["observations"][
+                    "sustained_static_first"
+                ]["duration_s"],
+                "context_loss_fallback_observed": True,
             },
             ensure_ascii=False,
             indent=2,

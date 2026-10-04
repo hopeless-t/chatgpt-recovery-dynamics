@@ -226,3 +226,64 @@ This browser observation was made on GitHub Actions Chrome/SwiftShader.
 
 It does **not** prove identical behavior in every device/WebView. In particular,
 a ChatGPT iOS in-app browser remains a separate device-specific observation.
+
+
+## Sustained visibility baseline
+
+The first browser observation proved that the GLB could load and render.
+
+A later real-site observation exposed a stricter requirement:
+
+~~~text
+first frame visible
+!=
+sustained visibility
+~~~
+
+The reported symptom was:
+
+~~~text
+3D appears briefly
+-> stage darkens
+~~~
+
+The exact live-device root cause remains **NOT ESTABLISHED**.
+
+The preview is now static-first:
+
+- load the GLB;
+- do not automatically start the animation loop;
+- keep a local poster backstop behind the renderer;
+- if `webglcontextlost` is reported, pause/hide the interactive renderer and reveal the backstop;
+- preserve explicit retry and user-triggered animation controls.
+
+The strengthened browser gate now requires:
+
+~~~text
+external viewer CDN failure -> local backstop still present
+static-first render          -> survives >=20s in Chrome/SwiftShader
+forced renderer-loss event   -> webglcontextlost fallback
+fallback screenshot          -> visible poster, not a dark box
+~~~
+
+Canonical sustained-visibility receipt:
+
+- `BROWSER_SURVIVAL_OBSERVATION.json`
+- workflow run `37209084331`
+
+Observed statuses:
+
+~~~text
+GLB sustained · static-first renderer remained healthy for 20s
+
+3D renderer fallback: webglcontextlost · stable poster remains visible
+~~~
+
+The forced loss lane used a synthetic `model-viewer` `webglcontextlost` error
+event in CI because that runner did not expose `WEBGL_lose_context`.
+
+That tests the recovery path, not the browser driver's ability to lose a real
+context on demand.
+
+This still does **not** prove identical behavior in ChatGPT's iOS in-app WebView.
+The repair covers a matching failure class while preserving that uncertainty.

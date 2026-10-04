@@ -1,0 +1,56 @@
+{
+  "schema": "purrtocol-3d-browser-survival-observation/v1",
+  "triggering_observation": {
+    "classification": "user_reported_live_site_symptom_not_instrumented",
+    "symptom": "3D model appeared briefly and then the stage darkened",
+    "interpretation": "initial load success was insufficient evidence for sustained visibility"
+  },
+  "observed_head_sha": "482905bb357f5a33d3567720818cda7080bf35fa",
+  "workflow_run_id": 37209084331,
+  "workflow_name": "Observe Purrtocol 3D Browser",
+  "observations": {
+    "cdn_runtime_failure": {
+      "job_id": 111456376814,
+      "conclusion": "success",
+      "assertion": "data-viewer-runtime=fallback and local viewer-backstop remain in DOM when both external model-viewer CDNs are unavailable",
+      "artifact_id": 11305728911,
+      "artifact_name": "purrtocol-3d-fallback-browser"
+    },
+    "sustained_static_first": {
+      "job_id": 111456376926,
+      "conclusion": "success",
+      "duration_s": 20,
+      "dom_marker": "data-purrtocol3d=\"sustained\"",
+      "mode": "static-first",
+      "status_text": "GLB sustained · static-first renderer remained healthy for 20s",
+      "screenshot_artifact_id": 11305509721,
+      "screenshot_observed": true
+    },
+    "forced_renderer_loss": {
+      "job_id": 111456376926,
+      "conclusion": "success",
+      "trigger": "synthetic-model-viewer-error on runner because WEBGL_lose_context extension was unavailable",
+      "modeled_event_type": "webglcontextlost",
+      "dom_marker": "data-purrtocol3d=\"fallback\"",
+      "fallback_reason": "webglcontextlost",
+      "status_text": "3D renderer fallback: webglcontextlost · stable poster remains visible",
+      "screenshot_artifact_id": 11305509721,
+      "screenshot_observed": true
+    }
+  },
+  "implementation_change": {
+    "automatic_animation_on_load": false,
+    "default_mode": "static-first",
+    "persistent_backstop": true,
+    "renderer_loss_action": "pause interactive renderer, hide model-viewer, reveal stable poster",
+    "retry_control_preserved": true,
+    "user_triggered_animations_preserved": true
+  },
+  "interpretation": {
+    "result": "SUSTAINED_VISIBILITY_BASELINE_IMPLEMENTED",
+    "first_frame_success_is_not_healthy": true,
+    "live_site_root_cause": "NOT_ESTABLISHED",
+    "ios_webview_equivalence": "NOT_ESTABLISHED",
+    "note": "The repair directly covers a matching failure class but does not prove the reported iOS/WebView event was caused by WebGL context loss."
+  }
+}
