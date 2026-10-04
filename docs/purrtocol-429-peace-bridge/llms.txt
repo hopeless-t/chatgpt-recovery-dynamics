@@ -1,13 +1,13 @@
-# Purrtocol 429 Peace Bridge
+# Purrtocol 429 Peace Junction
 
-> Visualization-only explanation of the frozen Python/Node loopback conformance baseline.
+> Visualization-only explanation of separately frozen Python/Node and Python/Go loopback conformance baselines.
 
-Observed receipt:
-- shared scenarios: 8
-- Python: 8/8
-- independent Node: 8/8
-- semantic parity: true
-- errors: 0
+Observed:
+- runtimes represented: Python, Node, Go
+- shared scenarios per comparison: 8
+- Python/Node semantic parity: true
+- Python/Go semantic parity: true
+- comparator errors: 0 in both frozen receipts
 - production traffic: false
 
 Interpretation:
@@ -15,9 +15,11 @@ Interpretation:
 - attempt_id changes
 - Retry-After is a floor
 - UNKNOWN non-idempotent POST re-observes unless explicit idempotency semantics exist
+- implementation-specific transport error strings are not contract semantics
 - this page is not evidence by itself
 
 Surfaces:
-- [Interactive bridge](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/)
-- [Frozen receipt](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-429-peace-bridge/reference.json)
-- [Technical notes](https://hopeless-t.github.io/chatgpt-recovery-dynamics/429-conformance-lab/cross-language.md)
+- Interactive junction: /purrtocol-429-peace-bridge/
+- Python/Node receipt: /purrtocol-429-peace-bridge/reference.json
+- Python/Go receipt: /purrtocol-429-peace-bridge/go-reference.json
+- Technical notes: /429-conformance-lab/tri-runtime.md

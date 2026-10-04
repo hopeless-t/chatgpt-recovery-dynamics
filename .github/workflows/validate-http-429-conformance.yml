@@ -125,10 +125,15 @@ jobs:
           print("HTTP 429 cross-language frozen reference: PASS")
           PY
 
-      - name: Check Peace Bridge reference mirror
+      - name: Check Peace Junction reference mirrors
         run: |
-          cmp             data/http_429_cross_language_reference.json             docs/purrtocol-429-peace-bridge/reference.json
-          echo "Purrtocol 429 Peace Bridge receipt mirror: PASS"
+          cmp \
+            data/http_429_cross_language_reference.json \
+            docs/purrtocol-429-peace-bridge/reference.json
+          cmp \
+            data/http_429_go_cross_language_reference.json \
+            docs/purrtocol-429-peace-bridge/go-reference.json
+          echo "Purrtocol 429 Peace Junction receipt mirrors: PASS"
 
       - name: Observe Peace Bridge in real Chrome
         run: |
@@ -141,15 +146,17 @@ jobs:
 
           "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --virtual-time-budget=4000             --dump-dom             http://127.0.0.1:8766/purrtocol-429-peace-bridge/             > /tmp/purrtocol-429-peace-bridge-dom.html
 
-          grep -q '429 Peace Bridge' /tmp/purrtocol-429-peace-bridge-dom.html
-          grep -q '>TRUE<' /tmp/purrtocol-429-peace-bridge-dom.html
-          grep -q '8 / 8' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q '429 Peace' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q 'GoPaw' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q '3 / 3' /tmp/purrtocol-429-peace-bridge-dom.html
+          test "$(grep -o '>TRUE<' /tmp/purrtocol-429-peace-bridge-dom.html | wc -l)" -ge 2
+          test "$(grep -o '8 / 8' /tmp/purrtocol-429-peace-bridge-dom.html | wc -l)" -ge 2
           grep -q 'Visualization ≠ Evidence' /tmp/purrtocol-429-peace-bridge-dom.html
 
           "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --virtual-time-budget=4000             --window-size=1200,900             --screenshot=/tmp/purrtocol-429-peace-bridge.png             http://127.0.0.1:8766/purrtocol-429-peace-bridge/
 
           test -s /tmp/purrtocol-429-peace-bridge.png
-          echo "Purrtocol 429 Peace Bridge browser observation: PASS"
+          echo "Purrtocol 429 Tri-Runtime Peace Junction browser observation: PASS"
 
       - name: Check local-network and recovery invariants
         run: |
