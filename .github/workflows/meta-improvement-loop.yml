@@ -38,6 +38,11 @@ on:
       - "scripts/route_public_analysis_jobs.py"
       - "scripts/evaluate_public_analysis_observer_routing.py"
       - "docs/repository-observatory/public-analysis-routing.md"
+      - ".github/workflows/validate-http-429*"
+      - "data/http_429_*"
+      - "scripts/http_429_*"
+      - "docs/429-conformance-lab/**"
+      - "docs/purrtocol-429-peace-bridge/**"
       - "META_IMPROVEMENT_LOOP.md"
       - ".github/workflows/meta-improvement-loop.yml"
   workflow_dispatch:
@@ -223,6 +228,42 @@ jobs:
           )
           PY
 
+      - name: Observe current PR public-analysis route
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff --name-only "$BASE_SHA...$HEAD_SHA" > /tmp/current-pr-paths.txt
+          python - <<'PY'
+          import json
+
+          with open("/tmp/current-pr-paths.txt", "r", encoding="utf-8") as f:
+              paths = [line.strip() for line in f if line.strip()]
+          with open("/tmp/current-pr-paths.json", "w", encoding="utf-8") as f:
+              json.dump({"paths": paths}, f, indent=2)
+          PY
+          python scripts/route_public_analysis_jobs.py \
+            --paths-file /tmp/current-pr-paths.json \
+            --output /tmp/current-pr-public-analysis-route.json
+          python - <<'PY'
+          import json
+
+          with open("/tmp/current-pr-public-analysis-route.json", "r", encoding="utf-8") as f:
+              route = json.load(f)
+
+          assert route["execution_authority"] is False
+          assert route["jobs_actually_skipped"] is False
+          assert route["candidate_job_count"] <= route["full_job_count"]
+          print(
+              "Current PR public-analysis shadow route:",
+              route["route_id"],
+              "candidate_jobs=", route["candidate_job_count"],
+              "of", route["full_job_count"],
+              "actually_skipped=", route["jobs_actually_skipped"],
+          )
+          PY
+
       - name: Check second-order guardrails
         run: |
           python - <<'PY'
@@ -257,3 +298,5 @@ jobs:
             /tmp/branch-convergence-pr14.json
             /tmp/branch-convergence-pr10.json
             /tmp/public-analysis-routing.json
+            /tmp/current-pr-paths.json
+            /tmp/current-pr-public-analysis-route.json
