@@ -271,8 +271,7 @@ jobs:
             data/http_429_cross_language_reference.json \
             docs/purrtocol-429-peace-bridge/reference.json
           cmp \
-            data/http_429_go_cross_language_reference.json
-            data/http_429_metamorphic_reference.json \
+            data/http_429_go_cross_language_reference.json \
             docs/purrtocol-429-peace-bridge/go-reference.json
           echo "Purrtocol 429 Peace Junction receipt mirrors: PASS"
 
