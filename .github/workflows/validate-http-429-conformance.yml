@@ -12,6 +12,7 @@ on:
       - "scripts/http_429_conformance_node.js"
       - "scripts/http_429_survival.py"
       - "docs/429-conformance-lab/**"
+      - "docs/purrtocol-429-peace-bridge/**"
       - ".github/workflows/validate-http-429-conformance.yml"
   pull_request:
     paths:
@@ -78,6 +79,32 @@ jobs:
           assert observed["errors"] == frozen["errors"]
           print("HTTP 429 cross-language frozen reference: PASS")
           PY
+
+      - name: Check Peace Bridge reference mirror
+        run: |
+          cmp             data/http_429_cross_language_reference.json             docs/purrtocol-429-peace-bridge/reference.json
+          echo "Purrtocol 429 Peace Bridge receipt mirror: PASS"
+
+      - name: Observe Peace Bridge in real Chrome
+        run: |
+          python -m http.server 8766 --bind 127.0.0.1 --directory docs >/tmp/peace-bridge-http.log 2>&1 &
+          echo $! > /tmp/peace-bridge-http.pid
+          sleep 1
+
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME"
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --virtual-time-budget=4000             --dump-dom             http://127.0.0.1:8766/purrtocol-429-peace-bridge/             > /tmp/purrtocol-429-peace-bridge-dom.html
+
+          grep -q '429 Peace Bridge' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q '>TRUE<' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q '8 / 8' /tmp/purrtocol-429-peace-bridge-dom.html
+          grep -q 'Visualization ≠ Evidence' /tmp/purrtocol-429-peace-bridge-dom.html
+
+          "$CHROME"             --headless=new             --no-sandbox             --disable-dev-shm-usage             --virtual-time-budget=4000             --window-size=1200,900             --screenshot=/tmp/purrtocol-429-peace-bridge.png             http://127.0.0.1:8766/purrtocol-429-peace-bridge/
+
+          test -s /tmp/purrtocol-429-peace-bridge.png
+          echo "Purrtocol 429 Peace Bridge browser observation: PASS"
 
       - name: Check local-network and recovery invariants
         run: |
@@ -159,4 +186,7 @@ jobs:
             /tmp/http-429-conformance.json
             /tmp/http-429-conformance-node.json
             /tmp/http-429-cross-language.json
+            /tmp/purrtocol-429-peace-bridge-dom.html
+            /tmp/purrtocol-429-peace-bridge.png
+            /tmp/peace-bridge-http.log
             data/http_429_conformance_reference.json

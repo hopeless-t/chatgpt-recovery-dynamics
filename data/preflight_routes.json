@@ -66,7 +66,8 @@
         "scripts/http_429_conformance_lab.py",
         "scripts/http_429_conformance_node.js",
         "scripts/compare_http_429_conformance.py",
-        "data/http_429_cross_language_reference.json"
+        "data/http_429_cross_language_reference.json",
+        "docs/purrtocol-429-peace-bridge/*"
       ],
       "commands": [
         "python scripts/validate_http_429_survival.py",
