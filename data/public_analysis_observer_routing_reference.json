@@ -1,0 +1,71 @@
+{
+  "schema": "public-analysis-observer-routing-reference/v1",
+  "meta_cycle_id": "MIL-004",
+  "classification": "paired_live_shadow_baseline_not_execution_authority",
+  "trigger_coverage_hardening": {
+    "pull_request": 52,
+    "merge_commit": "f24076be6b9baafc3c206d14aa36c5fad65a2083",
+    "rule": "A reduced 429 route requires both safe-island membership and actual pull_request.paths coverage by at least one current source-proximate validate-http-429 workflow. Any uncovered path fails closed to FULL."
+  },
+  "negative_live_specimen": {
+    "pull_request": 51,
+    "head_sha": "586285035dbdb8a7b2e2369c35ee0eda9516b153",
+    "changed_paths": [
+      "docs/429-conformance-lab/observer-routing-live-probe.md",
+      "scripts/http_429_observer_routing_probe.py"
+    ],
+    "candidate_route_before_coverage": "http-429-isolated",
+    "source_gate_coverage": false,
+    "uncovered_paths": [
+      "scripts/http_429_observer_routing_probe.py"
+    ],
+    "hardened_final_route": "full-fail-closed",
+    "candidate_job_count_after_hardening": 13,
+    "jobs_actually_skipped": false,
+    "paired_full_runs": {
+      "public_analysis": 37240709938,
+      "http_429_source_gate": 37240709920,
+      "repository_observatory": 37240709915,
+      "meta_improvement_loop": 37240709903
+    },
+    "paired_full_result": "all passed"
+  },
+  "positive_live_specimen": {
+    "pull_request": 54,
+    "head_sha": "c102dc014d6e8881e5d45ffcf86f1233caeeebf8",
+    "merge_commit": "88efa699808f7f1d9c40e8adbd5f20dab8125431",
+    "changed_paths": [
+      "docs/429-conformance-lab/observer-routing-covered-live-probe.md"
+    ],
+    "candidate_route_before_coverage": "http-429-isolated",
+    "source_gate_coverage": true,
+    "covering_workflows": [
+      ".github/workflows/validate-http-429-conformance.yml"
+    ],
+    "final_route": "http-429-isolated",
+    "candidate_jobs": [
+      "repository-surface"
+    ],
+    "candidate_job_count": 1,
+    "full_job_count": 13,
+    "candidate_avoided_job_count": 12,
+    "jobs_actually_skipped": false,
+    "paired_full_runs": {
+      "public_analysis": 37241377269,
+      "http_429_source_gate": 37241377263,
+      "repository_observatory": 37241377341,
+      "meta_improvement_loop": 37241377292
+    },
+    "paired_full_result": "all passed"
+  },
+  "authority": {
+    "execution_authority": false,
+    "jobs_actually_skipped": false,
+    "full_public_analysis_authoritative_during_baseline": true
+  },
+  "interpretation": {
+    "supported": "The coverage-aware shadow router separated an uncovered isolated-looking 429 change from a fully covered docs-only 429 change while the full matrix remained green in paired observations.",
+    "not_supported": "Zero false negatives in all future changes or permission to reduce CI generally.",
+    "next_promotion": "A separate reversible trial may grant execution routing only to source-gate-covered docs-only isolated 429 pull requests. Python/source changes remain shadow-only until separately promoted."
+  }
+}
