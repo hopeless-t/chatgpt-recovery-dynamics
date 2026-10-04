@@ -1,6 +1,6 @@
 # Scheduler × Recovery Hysteresis Composition
 
-> Status: FIRST OBSERVATION PENDING
+> Status: FIRST BASELINE OBSERVED
 
 NET-429-COMP-001 composes two control planes that remain separately owned:
 
@@ -51,3 +51,40 @@ Safety:
 - no operation replay authority.
 
 The source intentionally does not claim a pass before CI observes the first run.
+
+
+## First observed result
+
+Source:
+
+```text
+workflow   37211808310
+job        111464340871
+head       97a0cc3eaca479ddf072733bc5283a604f28848e
+artifact   11306778418
+```
+
+Observed:
+
+```text
+scenarios                         8
+passed                            8
+failed                            0
+scheduler owns retry authority    true
+hysteresis owns confidence        true
+confidence can create replay      false
+confidence can shorten floor      false
+network access                    false
+production traffic                false
+```
+
+The first composition baseline therefore supports a narrow repository claim:
+
+> recovery confidence may make pacing more conservative while B/E, but it does
+> not own replay authorization, budget stops, or server timing floors.
+
+Frozen compact receipt:
+
+- `data/http_429_recovery_composition_reference.json`
+
+Fixture periods remain test values only.
