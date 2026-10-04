@@ -1,6 +1,6 @@
 # NET-429-HYS-001 — Recovery Hysteresis Gate
 
-> Status: FIRST EXECUTABLE OBSERVATION PENDING
+> Status: FIRST EXECUTABLE BASELINE OBSERVED
 
 The repository has long carried the design rule:
 
@@ -86,5 +86,37 @@ Eight deterministic cases cover:
 
 No network requests are made by this experiment.
 
-The first CI run is observation-before-freeze. This document intentionally does
-not claim that the executable baseline passes until CI observes it.
+## First observed result
+
+Source:
+
+~~~text
+workflow run  37210089256
+job           111459333291
+head          31d53bf740119118059cb0ca25088b3ce8e60d1e
+~~~
+
+Observed:
+
+~~~text
+scenarios                    8
+passed                       8
+failed                       0
+first success after B        E
+E + 429                      B
+count met / window not met   E
+count + window met           H
+failure-history reset        only on E -> H
+~~~
+
+The initial executable baseline therefore supports the repository design
+invariant that a first successful observation after Blocked is provisional,
+not Healthy.
+
+Frozen receipt:
+
+- `data/http_429_recovery_hysteresis_reference.json`
+
+This remains a deterministic state-machine lab. The 2-success / 5-second
+fixture is **not** a production threshold recommendation, and the public
+capture's 8/8 rebound is not claimed to be universal.
