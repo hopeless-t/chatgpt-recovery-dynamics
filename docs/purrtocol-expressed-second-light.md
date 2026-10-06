@@ -80,3 +80,30 @@ The important transition is not "make the mascot prettier." It is:
 That makes future renderer competition possible: multiple renderers can receive the same
 Expression Genome and compete on size, semantic fidelity, runtime cost, visual legibility,
 and eventually observed human response without rewriting upstream history.
+
+## Physical-lineage fingerprint
+
+Whole-file inequality is not enough to prove a physical mutation because lineage metadata can
+also change bytes. The renderer therefore computes `physical_sha256` after removing
+`asset.extras`. CI requires two sampled genomes to have different physical fingerprints.
+
+This prevents a fake-evolution failure mode where two cats are visually identical but look
+"different" only because their IDs differ.
+
+## Animation continuity
+
+Expression is now rebased into affected animation tracks as well as the resting pose.
+
+- body scale clips are rebased onto the expressed body proportions,
+- ear rotation clips begin from the expressed ear pose,
+- tail clips begin from the expressed tail arc and retain genome-specific secondary motion.
+
+CI verifies that the first keyed pose of every affected track matches the expressed static
+node pose. A descendant must not snap back into its ancestor when an animation begins.
+
+This adds another world law:
+
+```text
+Metadata difference != Physical difference
+Rest pose mutation != Complete expression
+```

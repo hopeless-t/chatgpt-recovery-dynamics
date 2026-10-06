@@ -60,19 +60,29 @@ jobs:
           print('Receipt semantic identity: PASS')
           PY
 
-      - name: Require two distinct genomes to express distinct assets
+      - name: Require two distinct genomes to express physically distinct assets
         run: |
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 1 --output /tmp/cat-c.glb --receipt /tmp/cat-c.json
           if cmp -s /tmp/cat-a.glb /tmp/cat-c.glb; then
             echo 'distinct expression genomes collapsed to the same GLB' >&2
             exit 1
           fi
+          python - <<'PY'
+          import json
+          a=json.load(open('/tmp/cat-a.json',encoding='utf-8'))
+          c=json.load(open('/tmp/cat-c.json',encoding='utf-8'))
+          assert a['expression_id'] != c['expression_id']
+          assert a['physical_sha256'] != c['physical_sha256']
+          print('Physical lineage divergence: PASS')
+          PY
 
       - name: Validate semantic compatibility and physical expression
         run: |
           python scripts/generate_purrtocol_second_light.py --output /tmp/base.glb
           python - <<'PY'
-          import hashlib, json, struct
+          import hashlib, json, struct, sys
+          sys.path.insert(0, 'scripts')
+          import render_purrtocol_expression as renderer
 
           def unpack(path):
               data=open(path,'rb').read()
@@ -121,9 +131,32 @@ jobs:
           assert receipt['schema']=='purrtocol-expressed-second-light-receipt/v0'
           assert receipt['expression_id']==genome['expression_id']
           assert receipt['asset_sha256']==hashlib.sha256(data).hexdigest()
+          assert receipt['physical_sha256']==renderer.physical_fingerprint(*renderer.parse_glb(data))
           assert receipt['canonical'] is False
           assert receipt['human_reaction']=='UNKNOWN'
+
+          parsed,binary=renderer.parse_glb(data)
+          idx_to_name={i:n['name'] for i,n in enumerate(parsed['nodes'])}
+          nodes_by_name={n['name']:n for n in parsed['nodes']}
+          continuity_checks=0
+          for animation in parsed['animations']:
+              for channel in animation['channels']:
+                  sampler=animation['samplers'][channel['sampler']]
+                  target=channel['target']
+                  node_name=idx_to_name[target['node']]
+                  path=target['path']
+                  if (path=='scale' and node_name=='body') or (
+                      path=='rotation' and node_name in {'tail','ear_L','ear_R'}
+                  ):
+                      vals=renderer.accessor_values(parsed,binary,sampler['output'])
+                      keys=renderer.key_indices(sampler.get('interpolation','LINEAR'),len(vals))
+                      first=vals[keys[0]]
+                      expected=nodes_by_name[node_name][path]
+                      assert max(abs(a-b) for a,b in zip(first,expected)) < 1e-5
+                      continuity_checks += 1
+          assert continuity_checks >= 5
           print('Purrtocol expressed Second Light invariants: PASS')
+          print('Animation base-pose continuity: PASS', continuity_checks)
           PY
 
       - name: Fail closed on extinct genomes

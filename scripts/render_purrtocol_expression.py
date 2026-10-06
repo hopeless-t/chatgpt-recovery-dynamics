@@ -7,6 +7,7 @@ to evidence and it does not replace the canonical First Light asset.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -119,17 +120,44 @@ def scale_translation_track(
     write_accessor_values(gltf, binary, accessor_id, values)
 
 
-def scale_tail_track(
-    gltf: dict[str, Any], binary: bytearray, accessor_id: int, interpolation: str, factor: float
+def rebase_z_rotation_track(
+    gltf: dict[str, Any],
+    binary: bytearray,
+    accessor_id: int,
+    interpolation: str,
+    target_base_deg: float,
+    factor: float = 1.0,
 ) -> None:
     values = accessor_values(gltf, binary, accessor_id)
     keys = key_indices(interpolation, len(values))
     if not keys:
         return
-    base = quat_z_deg(values[keys[0]])
-    for idx in keys[1:]:
+    source_base = quat_z_deg(values[keys[0]])
+    for idx in keys:
         angle = quat_z_deg(values[idx])
-        values[idx] = quat_z(base + (angle - base) * factor)
+        values[idx] = quat_z(target_base_deg + (angle - source_base) * factor)
+    write_accessor_values(gltf, binary, accessor_id, values)
+
+
+def rebase_scale_track(
+    gltf: dict[str, Any],
+    binary: bytearray,
+    accessor_id: int,
+    interpolation: str,
+    target_base: list[float],
+) -> None:
+    values = accessor_values(gltf, binary, accessor_id)
+    keys = key_indices(interpolation, len(values))
+    if not keys:
+        return
+    source_base = values[keys[0]][:]
+    if any(abs(v) < 1e-8 for v in source_base):
+        raise ValueError("cannot rebase scale track with zero source component")
+    for idx in keys:
+        values[idx] = [
+            target_base[k] * (values[idx][k] / source_base[k])
+            for k in range(3)
+        ]
     write_accessor_values(gltf, binary, accessor_id, values)
 
 
@@ -238,9 +266,24 @@ def apply_expression(gltf: dict[str, Any], binary: bytearray, genome: dict[str, 
                 scale_translation_track(
                     gltf, binary, sampler["output"], sampler.get("interpolation", "LINEAR"), factor
                 )
-            elif path == "rotation" and node_name == "tail":
-                scale_tail_track(
-                    gltf, binary, sampler["output"], sampler.get("interpolation", "LINEAR"), tail_factor
+            elif path == "scale" and node_name == "body":
+                rebase_scale_track(
+                    gltf,
+                    binary,
+                    sampler["output"],
+                    sampler.get("interpolation", "LINEAR"),
+                    nodes["body"]["scale"],
+                )
+            elif path == "rotation" and node_name in {"tail", "ear_L", "ear_R"}:
+                target_base = quat_z_deg(nodes[node_name]["rotation"])
+                factor = tail_factor if node_name == "tail" else 1.0
+                rebase_z_rotation_track(
+                    gltf,
+                    binary,
+                    sampler["output"],
+                    sampler.get("interpolation", "LINEAR"),
+                    target_base,
+                    factor,
                 )
 
     extras = gltf["asset"].setdefault("extras", {})
@@ -261,14 +304,22 @@ def apply_expression(gltf: dict[str, Any], binary: bytearray, genome: dict[str, 
     )
 
 
+def physical_fingerprint(gltf: dict[str, Any], binary: bytearray) -> str:
+    physical = copy.deepcopy(gltf)
+    physical.get("asset", {}).pop("extras", None)
+    return hashlib.sha256(pack_glb(physical, bytearray(binary))).hexdigest()
+
+
 def render(doc: dict[str, Any], index: int, expression_id: str | None) -> tuple[bytes, dict[str, Any]]:
     genome = select_genome(doc, index, expression_id)
     base, base_metrics = build_base()
     gltf, binary = parse_glb(base)
     apply_expression(gltf, binary, genome)
+    physical_sha256 = physical_fingerprint(gltf, binary)
     out = pack_glb(gltf, binary)
     metrics = {
         **base_metrics,
+        "physical_sha256": physical_sha256,
         "expression_id": genome["expression_id"],
         "source_organism_id": genome["source_organism_id"],
         "source_species_id": genome["source_species_id"],
