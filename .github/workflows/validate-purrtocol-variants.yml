@@ -7,7 +7,9 @@ on:
       - "data/purrtocol_variant_schema.json"
       - "data/purrtocol_variants.jsonl"
       - "scripts/breed_purrtocol.py"
+      - "scripts/breed_purrtocol_swarm.py"
       - "docs/purrtocol-nursery/**"
+      - "docs/purrtocol-infinite-proliferation.md"
       - "docs/purrtocol-genome.json"
       - "data/purrtocol_genome.json"
       - "examples/purrtocol-variant.example.json"
@@ -23,6 +25,8 @@ on:
       - "PURRTOCOL_VARIANTS.md"
       - "data/purrtocol_variant_schema.json"
       - "data/purrtocol_variants.jsonl"
+      - "scripts/breed_purrtocol_swarm.py"
+      - "docs/purrtocol-infinite-proliferation.md"
       - "examples/purrtocol-variant.example.json"
       - "docs/purrtocol.json"
       - "docs/llms.txt"
@@ -41,3 +45,49 @@ jobs:
           python-version: "3.13"
       - name: Validate variant lineage and crawler surfaces
         run: python scripts/validate_purrtocol_variants.py
+      - name: Smoke-test bounded swarm generation and resume
+        run: |
+          rm -rf /tmp/purrtocol-swarm-smoke
+          python scripts/breed_purrtocol_swarm.py \
+            --namespace ci-smoke \
+            --epoch 0 \
+            --start 0 \
+            --count 8 \
+            --origin-repository https://github.com/hopeless-t/chatgpt-recovery-dynamics \
+            --submitted-by ci \
+            --output-dir /tmp/purrtocol-swarm-smoke \
+            > /tmp/purrtocol-swarm-first.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('/tmp/purrtocol-swarm-smoke')
+          index = json.loads((root / '_swarm_index.json').read_text(encoding='utf-8'))
+          assert index['count'] == 8
+          assert index['next_start'] == 8
+          assert index['status'] == 'concept-only'
+          assert index['evidence_status'] == 'concept'
+          assert len(list(root.glob('PKV-*.json'))) == 8
+          print('Purrtocol swarm first pass: PASS')
+          PY
+          python scripts/breed_purrtocol_swarm.py \
+            --namespace ci-smoke \
+            --epoch 0 \
+            --start 0 \
+            --count 8 \
+            --origin-repository https://github.com/hopeless-t/chatgpt-recovery-dynamics \
+            --submitted-by ci \
+            --output-dir /tmp/purrtocol-swarm-smoke \
+            --resume \
+            > /tmp/purrtocol-swarm-resume.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('/tmp/purrtocol-swarm-smoke')
+          index = json.loads((root / '_swarm_index.json').read_text(encoding='utf-8'))
+          assert len(index['written_files']) == 0
+          assert len(index['reused_files']) == 8
+          assert index['next_start'] == 8
+          print('Purrtocol swarm resume: PASS')
+          PY
