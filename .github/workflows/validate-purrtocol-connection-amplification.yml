@@ -1,0 +1,129 @@
+name: Validate Purrtocol Connection Amplification
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/purrtocol_connection_amplification.py'
+      - 'docs/purrtocol-connection-amplification.md'
+      - '.github/workflows/validate-purrtocol-connection-amplification.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/purrtocol_connection_amplification.py'
+      - 'docs/purrtocol-connection-amplification.md'
+      - '.github/workflows/validate-purrtocol-connection-amplification.yml'
+
+jobs:
+  bounded-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile bounded model
+        run: python -m py_compile scripts/purrtocol_connection_amplification.py
+
+      - name: Build shared-capacity counterexample scenario
+        run: |
+          python - <<'PY'
+          import json
+          doc={
+            'schema':'purrtocol-connection-amplification-input/v0',
+            'scenario_id':'small-local-hero-vs-larger-global-safe',
+            'baseline_request_rate_rps':40.0,
+            'shared_connection_capacity':100.0,
+            'max_retry_depth':4,
+            'policies':[
+              {
+                'policy_id':'small-local-hero',
+                'fanout_connections_per_attempt':4.0,
+                'failure_probability':0.7,
+                'retry_multiplier':1.5,
+                'connection_hold_seconds':0.5,
+                'payload_bytes':1000,
+                'local_success_probability':0.99,
+              },
+              {
+                'policy_id':'larger-global-safe',
+                'fanout_connections_per_attempt':1.0,
+                'failure_probability':0.2,
+                'retry_multiplier':0.5,
+                'connection_hold_seconds':0.25,
+                'payload_bytes':4000,
+                'local_success_probability':0.90,
+              },
+            ],
+          }
+          json.dump(doc,open('/tmp/scenario-depth4.json','w',encoding='utf-8'),sort_keys=True)
+          shallow=dict(doc)
+          shallow['scenario_id']='same-policies-no-retry-depth'
+          shallow['max_retry_depth']=0
+          json.dump(shallow,open('/tmp/scenario-depth0.json','w',encoding='utf-8'),sort_keys=True)
+          PY
+
+      - name: Run model twice and require deterministic output
+        run: |
+          python scripts/purrtocol_connection_amplification.py --input /tmp/scenario-depth4.json --output /tmp/model-a.json
+          python scripts/purrtocol_connection_amplification.py --input /tmp/scenario-depth4.json --output /tmp/model-b.json
+          cmp /tmp/model-a.json /tmp/model-b.json
+          python scripts/purrtocol_connection_amplification.py --input /tmp/scenario-depth0.json --output /tmp/model-depth0.json
+
+      - name: Prove local optimization can lose the global capacity gate
+        run: |
+          python - <<'PY'
+          import json
+          deep=json.load(open('/tmp/model-a.json',encoding='utf-8'))
+          shallow=json.load(open('/tmp/model-depth0.json',encoding='utf-8'))
+          assert deep['schema']=='purrtocol-connection-amplification/v0'
+          assert deep['evidence_status']=='modeled_bounded_scenario'
+          assert deep['model_contract']['finite_retry_depth_only'] is True
+          assert deep['model_contract']['infinite_series_used'] is False
+          assert deep['model_contract']['exact_provider_topology_claimed'] is False
+          rows={r['policy_id']:r for r in deep['policies']}
+          shallow_rows={r['policy_id']:r for r in shallow['policies']}
+          hero=rows['small-local-hero']
+          safe=rows['larger-global-safe']
+          hero0=shallow_rows['small-local-hero']
+
+          assert hero['payload_bytes'] < safe['payload_bytes']
+          assert hero['local_success_probability'] > safe['local_success_probability']
+          assert hero['retry_branch_factor'] == 1.05
+          assert hero['retry_shape']=='NON_DECAYING_BOUNDED'
+          assert safe['retry_shape']=='DECAYING_BOUNDED'
+          assert hero0['expected_concurrent_connections'] == 80.0
+          assert hero0['connection_capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert hero['expected_concurrent_connections'] > 400.0
+          assert hero['connection_capacity_gate']['status']=='CAPACITY_EXCEEDED'
+          assert safe['connection_capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert hero['expected_concurrent_connections'] > hero0['expected_concurrent_connections'] * 5
+          assert deep['world_laws']['higher_local_success_does_not_imply_global_safety'] is True
+          assert deep['world_laws']['smaller_payload_does_not_imply_safer_recovery'] is True
+          print('Connection amplification global-safety counterexample: PASS')
+          print('hero depth0 -> depth4:',hero0['expected_concurrent_connections'],'->',hero['expected_concurrent_connections'])
+          print('safe depth4:',safe['expected_concurrent_connections'])
+          PY
+
+      - name: Prove bounded depth even in non-decaying regime
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/model-a.json',encoding='utf-8'))
+          hero=next(r for r in d['policies'] if r['policy_id']=='small-local-hero')
+          assert len(hero['retry_terms'])==d['scenario']['max_retry_depth']+1
+          assert hero['retry_terms']==[1.0,1.05,1.1025,1.157625,1.21550625]
+          assert hero['expected_attempt_multiplier']==5.52563125
+          print('Finite non-decaying retry tree: PASS')
+          PY
+
+      - name: Upload modeled scenario ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-connection-amplification-v0
+          path: |
+            /tmp/scenario-depth4.json
+            /tmp/scenario-depth0.json
+            /tmp/model-a.json
+            /tmp/model-depth0.json
+          if-no-files-found: error
