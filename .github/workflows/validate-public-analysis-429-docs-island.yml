@@ -1,0 +1,170 @@
+name: Validate public analysis 429 docs island
+
+on:
+  pull_request:
+    paths:
+      - "docs/429-conformance-lab/**"
+      - ".github/workflows/validate-public-analysis-429-docs-island.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  repository-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Classify docs-only 429 execution island
+        id: classify
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"
+          git diff --name-only "$BASE_SHA...$HEAD_SHA" > /tmp/changed-paths.txt
+
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          paths = [
+              line.strip()
+              for line in Path("/tmp/changed-paths.txt").read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          Path("/tmp/changed-paths.json").write_text(
+              json.dumps({"paths": paths}, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          docs_only = bool(paths) and all(
+              path.startswith("docs/429-conformance-lab/") for path in paths
+          )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"docs_only={'true' if docs_only else 'false'}\n")
+
+          print("changed paths:", paths)
+          print("docs-only 429 island:", docs_only)
+          PY
+
+          python scripts/route_public_analysis_jobs.py \
+            --paths-file /tmp/changed-paths.json \
+            --output /tmp/public-analysis-route.json
+
+          python - <<'PY'
+          import json
+
+          route = json.load(open("/tmp/public-analysis-route.json", encoding="utf-8"))
+          paths = json.load(open("/tmp/changed-paths.json", encoding="utf-8"))["paths"]
+          docs_only = bool(paths) and all(
+              path.startswith("docs/429-conformance-lab/") for path in paths
+          )
+
+          if docs_only:
+              assert route["route_id"] == "http-429-isolated", route
+              assert route["source_gate_trigger_coverage"]["all_paths_covered"] is True
+              assert route["candidate_jobs"] == ["repository-surface"], route
+              assert route["candidate_job_count"] == 1
+              assert route["execution_authority"] is False
+              assert route["jobs_actually_skipped"] is False
+              print("docs-only execution island preconditions: PASS")
+          else:
+              print("mixed/non-docs PR: lightweight lane is a no-op; full workflow remains authoritative")
+          PY
+
+      - name: Validate documentation/governance surface
+        if: steps.classify.outputs.docs_only == 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          required = [
+              "FAQ.md",
+              "GLOSSARY.md",
+              "CHANGELOG.md",
+              "BRANDING.md",
+              "releases/RELEASE-NOTES-v0.1.0.md",
+              "docs/mascot.md",
+              "docs/assets/purrtocol.svg",
+              "docs/cm/index.html",
+              "docs/adrs/ADR-0001-evidence-boundary.md",
+              "docs/adrs/ADR-0002-recovery-hysteresis.md",
+              "docs/adrs/ADR-0003-provider-friendly-recovery.md",
+              "rfcs/RFC-0001-recovery-survival-plane.md",
+              "rfcs/RFC-0002-popular-server-congestion.md",
+              "docs/paper/PAPER.md",
+              "docs/paper/README.md",
+              "wiki-src/Purrtocol.md",
+              "wiki-src/Paper.md",
+              "wiki-src/Architecture-Decisions.md",
+              "wiki-src/RFCs.md",
+          ]
+
+          missing = [p for p in required if not Path(p).exists()]
+          assert not missing, missing
+
+          readme = Path("README.md").read_text(encoding="utf-8")
+          for phrase in [
+              "Recover. Don't amplify.",
+              "Visualization ≠ Evidence.",
+              "Purrtocol",
+              "Retry less. Observe more.",
+          ]:
+              assert phrase in readme, phrase
+
+          svg = Path("docs/assets/purrtocol.svg").read_text(encoding="utf-8")
+          assert "<svg" in svg and "PURRTOCOL" in svg
+
+          cm = Path("docs/cm/index.html").read_text(encoding="utf-8")
+          assert "パケニャの会話復旧相談室" in cm
+          assert "あわてず・ふやさず・パケニャ" in cm
+          assert "Visualization ≠ Evidence" in cm
+
+          print("429 docs-island repository surface invariants: PASS")
+          PY
+
+      - name: Record execution-trial receipt
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          route = {}
+          path = Path("/tmp/public-analysis-route.json")
+          if path.exists():
+              route = json.loads(path.read_text(encoding="utf-8"))
+
+          receipt = {
+              "schema": "public-analysis-docs-island-execution/v1",
+              "classification": "reversible_narrow_execution_trial",
+              "route": route,
+              "full_workflow_policy": (
+                  "pure docs/429-conformance-lab PRs are excluded from the full "
+                  "public-analysis workflow; mixed PRs remain full"
+              ),
+              "independent_required_gates": [
+                  "Validate HTTP 429 Local Conformance Lab",
+                  "Repository Observatory",
+                  "Meta Improvement Loop",
+              ],
+          }
+          Path("/tmp/docs-island-execution.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-analysis-429-docs-island-execution
+          path: |
+            /tmp/changed-paths.txt
+            /tmp/public-analysis-route.json
+            /tmp/docs-island-execution.json

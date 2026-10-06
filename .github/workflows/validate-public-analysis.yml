@@ -3,6 +3,8 @@ name: Validate public analysis
 on:
   push:
   pull_request:
+    paths-ignore:
+      - "docs/429-conformance-lab/**"
 
 jobs:
   validate:
