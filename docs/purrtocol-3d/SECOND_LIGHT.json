@@ -1,0 +1,40 @@
+{
+  "animation_strategy": {
+    "rotation": "LINEAR_quaternion_slerp_at_runtime",
+    "secondary_motion": [
+      "ears",
+      "tail",
+      "paws",
+      "goggles",
+      "packet",
+      "snapshot"
+    ],
+    "smooth_translation_scale": "CUBICSPLINE_zero_tangent_ease",
+    "viewer_crossfade_candidate_ms": 450
+  },
+  "asset": "docs/assets/purrtocol/second-light.glb",
+  "asset_bytes": 24500,
+  "asset_sha256": "7da971a9cc34de376c8d0d62ae9183183bc315752d9a5c4d9f00de98435eb859",
+  "canonical_asset_unchanged": true,
+  "classification": "implemented_visualization_not_evidence",
+  "metrics": {
+    "animation_channels": 25,
+    "animation_clips": 6,
+    "cubic_spline_samplers": 12,
+    "instanced_scene_triangles": 3720,
+    "linear_samplers": 13,
+    "materials": 8,
+    "scene_nodes": 28,
+    "textures": 0,
+    "unique_geometry_triangles": 180
+  },
+  "schema": "purrtocol-3d-second-light-candidate/v0",
+  "source_contract": "data/purrtocol_3d_contract.json",
+  "status": "experimental_asset_not_canonical",
+  "world_laws": {
+    "automatic_promotion": false,
+    "human_reaction": "UNKNOWN",
+    "technical_quality_is_not_humor": true,
+    "visualization_is_not_evidence": true
+  }
+}
