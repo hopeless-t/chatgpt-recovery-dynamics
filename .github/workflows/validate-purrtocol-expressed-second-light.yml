@@ -50,7 +50,15 @@ jobs:
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/cat-a.glb --receipt /tmp/cat-a.json
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/cat-b.glb --receipt /tmp/cat-b.json
           cmp /tmp/cat-a.glb /tmp/cat-b.glb
-          cmp /tmp/cat-a.json /tmp/cat-b.json
+          python - <<'PY'
+          import json
+          a=json.load(open('/tmp/cat-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/cat-b.json',encoding='utf-8'))
+          assert a.pop('asset')=='cat-a.glb'
+          assert b.pop('asset')=='cat-b.glb'
+          assert a==b
+          print('Receipt semantic identity: PASS')
+          PY
 
       - name: Require two distinct genomes to express distinct assets
         run: |
