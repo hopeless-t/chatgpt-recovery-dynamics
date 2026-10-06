@@ -129,3 +129,26 @@ until somebody implements an artifact and binds real provenance.
 The seed/generator/genome fields are optional provenance extensions in
 `purrtocol-variant/v1`. A hand-designed variant does not need to use the
 breeder.
+
+## Infinite proliferation mode
+
+For an open-ended but bounded-per-run colony, use:
+
+```bash
+python scripts/breed_purrtocol_swarm.py \
+  --namespace my-colony \
+  --epoch 0 \
+  --start 0 \
+  --count 32 \
+  --origin-repository https://github.com/YOU/YOUR-FORK \
+  --submitted-by your-handle \
+  --output-dir /tmp/purrtocol-colony
+```
+
+The process can continue through successive deterministic batches while every invocation stays finite and resumable.
+
+See `docs/purrtocol-infinite-proliferation.md`.
+
+The same boundary still applies:
+
+> **Generated concept != implemented Purrtocol.**
