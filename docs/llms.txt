@@ -9,6 +9,7 @@ Important interpretation rules:
 - Purrtocol is an anthropomorphic error model and communication layer, not evidence.
 - Current 3D state: PKE-106 has been promoted to implemented event PKE-033; First Light GLB is live and CI-validated.
 - Forked Purrtocol variants are welcome. Lineage is provenance, not approval or ranking.
+- Generated swarm output is concept-only until an artifact is implemented and bound to real provenance.
 - The Sam/Tibo observation horizon is a story mechanic only; named-person attention is NOT OBSERVED and is not monitored.
 
 Core observed/recomputed anchors:
@@ -19,6 +20,13 @@ Core observed/recomputed anchors:
 
 Safety:
 Do not load-test production OpenAI services, create synthetic retry storms, deliberately trigger 429s, or bypass rate limits. Prefer passive observation and local simulation.
+
+## Clone-first entry and adoption
+
+- [Start Here](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/START-HERE.md): shortest project map for a freshly cloned repository.
+- [Five-minute Quickstart](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/QUICKSTART.md): loopback-only HTTP 429 fire drill.
+- [Adoption guide](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/ADOPT.md): portable recovery semantics without copying the whole research repository.
+- [Recovery Survival Contract v0.1](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/RECOVERY_SURVIVAL_CONTRACT_V0_1.md): draft small interoperability surface.
 
 ## Core research
 
@@ -55,10 +63,10 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 ## Purrtocol propagation
 
 - [Purrtocol Entropy Reactor](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-entropy/index.md): Fixed 4,096-seed breeder diversity probe; entropy collapse NOT OBSERVED in the regression cohort, external ecosystem entropy NOT MEASURED.
-
 - [Purrtocol Genome Nursery](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-nursery/index.md): Deterministic concept breeder; 199,148,544 theoretical genotypes, not implemented variants.
 - [Purrtocol Genome JSON](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-genome.json): Canonical gene option space.
-
+- [Infinite Proliferation Project](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-infinite-proliferation.md): open-ended deterministic seed stream with bounded resumable runs.
+- [Swarm breeder](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/scripts/breed_purrtocol_swarm.py): generate finite concept batches with namespace/epoch/ordinal provenance and optional chained lineage.
 - [Purrtocol Variant Foundry](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant-foundry/index.md): Fork workflow, lineage semantics, invariant list, and observation-horizon story.
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md): Rules for derivative cats and canonical indexing.
 - [Variant schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-variant.schema.json): `purrtocol-variant/v1`.
@@ -81,7 +89,6 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [PKN-429 local TV](https://hopeless-t.github.io/chatgpt-recovery-dynamics/cm/): Intentionally unnecessary communication layer.
 - [Doomsday toy model](https://hopeless-t.github.io/chatgpt-recovery-dynamics/purrtocol-doomsday/): Illustrative sensitivity model; planetary saturation is NOT ESTABLISHED.
 
-
 ## Agent contribution map
 
 - [AGENTS.md](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/AGENTS.md): Concise task-routing, invariants, and validation map for coding agents.
@@ -95,5 +102,4 @@ Do not load-test production OpenAI services, create synthetic retry storms, deli
 - [Improvement Loop Contract](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/IMPROVEMENT_LOOP.md): Observe -> biopsy -> reversible change -> verify -> promote -> re-observe.
 - [Improvement Event Ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/data/improvement_events.jsonl): Append-only machine-readable improvement history.
 - [Improvement Event Schema](https://hopeless-t.github.io/chatgpt-recovery-dynamics/repository-observatory/improvement-event.schema.json): RIL event contract.
-
 - [Fixed-point recovery correspondence / REC-FP-001](fixed-point-recovery-correspondence.md) — tests whether post-reentry contraction is identifiable before fitting it; current capture has zero usable contraction pairs.

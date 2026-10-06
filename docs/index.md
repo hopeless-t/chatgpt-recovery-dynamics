@@ -4,6 +4,10 @@
 
 ## Start here
 
+- [Clone-first Start Here](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/START-HERE.md): 30-second project map for people who already cloned the repository.
+- [Five-minute Quickstart](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/QUICKSTART.md): loopback-only HTTP 429 recovery fire drill; no production endpoint required.
+- [Adopt the semantics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/ADOPT.md): portable operation/attempt identity, replay safety, re-observation, single-flight, and recovery-confidence rules.
+- [Recovery Survival Contract v0.1](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/RECOVERY_SURVIVAL_CONTRACT_V0_1.md): deliberately small draft interoperability surface.
 - [Evidence ledger](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/evidence-ledger.md): observed, recomputed, modeled, simulated, proposed, weak external, and unknown claims.
 - [Recovery architecture](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/recovery-design.md): start-anchored retry, single-flight, observation before materialization, and hysteresis.
 - [Deep validation](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/deep-validation.md): residual memory, change points, sensitivity checks, and cross-epoch prediction.
@@ -26,6 +30,7 @@ Purrtocol is an anthropomorphic error model for recovery systems.
 - [Design Bible](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-design-bible.md)
 - [Purrtocol Expansion Dynamics](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-expansion/PAPER.md)
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md)
+- [Infinite Proliferation Project](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-infinite-proliferation.md) — open-ended seed stream, bounded runs, deterministic lineage, concept-only output.
 - [Variant Foundry](./purrtocol-variant-foundry/index.md)
 - [Genome Nursery](./purrtocol-nursery/index.md) — deterministic concept breeding; theoretical genotype space is not artifact count
 - [Entropy Reactor](./purrtocol-entropy/index.md) — fixed-seed breeder diversity/entropy regression probe
