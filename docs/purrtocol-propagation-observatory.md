@@ -64,6 +64,18 @@ Useful dimensions include:
 
 A clone-heavy / view-light shape can be consistent with direct Git access, CI, agents, scanners, mirrors, or other automation. It does **not** identify which cause is responsible.
 
+### Self-generated CI is a first-class confounder
+
+This repository contains many GitHub Actions jobs that perform `actions/checkout`. A high clone count therefore cannot be interpreted as external propagation until the observatory estimates a plausible self-generated CI baseline.
+
+The attribution ladder is:
+
+`raw clone traffic -> subtract/estimate self-CI envelope -> unresolved clone residual -> public lineage search -> descendant evidence`
+
+The self-CI envelope is itself uncertain. The observatory MUST keep lower/upper bounds when GitHub does not expose enough information to attribute individual clone events.
+
+A residual clone wave is still not a human count or descendant count.
+
 ## Anti-Goodhart rules
 
 Never optimize the world for raw:
@@ -95,6 +107,8 @@ Projection may be entertaining, but `Visualization != Evidence`.
 
 1. Persist private traffic snapshots outside the public repository.
 2. Derive privacy-preserving shape metrics.
-3. Search public code for distinctive invariant combinations rather than mascot names alone.
-4. Compare direct descendants against convergent species.
-5. Estimate how many transformations Recovery DNA can survive before attribution disappears.
+3. Estimate a self-generated CI clone envelope from workflow runs and checkout-bearing jobs.
+4. Compare the residual traffic shape with visible web traffic.
+5. Search public code for distinctive invariant combinations rather than mascot names alone.
+6. Compare direct descendants against convergent species.
+7. Estimate how many transformations Recovery DNA can survive before attribution disappears.
