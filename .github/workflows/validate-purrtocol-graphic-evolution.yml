@@ -1,0 +1,80 @@
+name: Validate Purrtocol Graphic Evolution
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  graphic-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile projection bridge
+        run: python -m py_compile scripts/purrtocol_ecology.py scripts/purrtocol_graphic_manifest.py
+
+      - name: Generate deterministic C1 ecology
+        run: |
+          python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology.json
+
+      - name: Generate graphic manifests twice
+        run: |
+          python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 8 --output /tmp/graphic-a.json
+          python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 8 --output /tmp/graphic-b.json
+          cmp /tmp/graphic-a.json /tmp/graphic-b.json
+
+      - name: Check projection and provenance invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open('/tmp/ecology.json', 'r', encoding='utf-8') as f:
+              ecology = json.load(f)
+          with open('/tmp/graphic-a.json', 'r', encoding='utf-8') as f:
+              m = json.load(f)
+          with open('data/purrtocol_3d_contract.json', 'r', encoding='utf-8') as f:
+              contract = json.load(f)
+
+          assert m['schema'] == 'purrtocol-graphic-manifest/v0'
+          assert m['evidence_status'] == 'simulation'
+          assert m['projection_status'] == 'render-plan-only'
+          assert m['summary']['implemented_assets'] == 0
+          assert 1 <= m['summary']['profiles'] <= 8
+          assert m['world_laws']['visualization_is_not_evidence'] is True
+          assert m['world_laws']['human_reaction_stays_unknown_until_observed'] is True
+          assert m['world_laws']['technical_quality_is_not_humor'] is True
+          assert m['world_laws']['play_the_absurd_subject_straight'] is True
+
+          baseline = m['semantic_contract']['first_light_baseline']
+          assert baseline['asset_bytes'] == contract['first_light']['asset_bytes']
+          assert baseline['scene_nodes'] == contract['first_light']['scene_nodes']
+          assert baseline['animation_clips'] == contract['first_light']['animation_clips']
+          assert baseline['textures'] == contract['first_light']['textures']
+
+          by_id = {row['organism_id']: row for row in ecology['ledger']}
+          for p in m['profiles']:
+              src = p['source']
+              assert src['organism_id'] in by_id
+              row = by_id[src['organism_id']]
+              assert src['species_id'] == row['species_id']
+              assert src['survives'] == row['survives']
+              assert src['evidence_status'] == 'simulation'
+              assert p['human_reaction']['status'] == 'UNKNOWN'
+              assert p['promotion']['automatic'] is False
+              assert p['promotion']['implemented_asset'] is False
+              assert p['render_plan']['production_intent'] == 'play-straight'
+              assert p['render_plan']['semantic_animation_contract'] == contract['required_animations']
+              assert p['render_plan']['semantic_nodes_contract'] == contract['required_nodes']
+
+          print('Purrtocol graphic-evolution invariants: PASS')
+          PY
+
+      - name: Check bounded profile count
+        run: |
+          if python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 25 --output /tmp/too-many.json; then
+            echo 'expected profile-count bound failure' >&2
+            exit 1
+          fi
