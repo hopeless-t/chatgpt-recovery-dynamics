@@ -1,0 +1,71 @@
+name: Validate Purrtocol Second Light
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/generate_purrtocol_second_light.py'
+      - '.github/workflows/validate-purrtocol-second-light.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/generate_purrtocol_second_light.py'
+      - '.github/workflows/validate-purrtocol-second-light.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate twice and require byte-identical GLB
+        run: |
+          python scripts/generate_purrtocol_second_light.py --output /tmp/second-light-a.glb --receipt /tmp/SECOND_LIGHT.json
+          python scripts/generate_purrtocol_second_light.py --output /tmp/second-light-b.glb
+          cmp /tmp/second-light-a.glb /tmp/second-light-b.glb
+      - name: Validate Second Light structure and epistemic boundary
+        run: |
+          python - <<'PY'
+          import hashlib, json, struct
+          from pathlib import Path
+          data=Path('/tmp/second-light-a.glb').read_bytes()
+          rec=json.loads(Path('/tmp/SECOND_LIGHT.json').read_text())
+          magic,version,total=struct.unpack_from('<4sII',data,0)
+          assert magic==b'glTF' and version==2 and total==len(data)
+          off=12; gltf=None
+          while off+8<=len(data):
+              n,t=struct.unpack_from('<II',data,off); off+=8
+              chunk=data[off:off+n]; off+=n
+              if t==0x4E4F534A:
+                  gltf=json.loads(chunk.rstrip(b' \t\r\n\0').decode())
+          assert gltf is not None
+          required={'root','head','ear_L','ear_R','eye_L','eye_R','eyelid_L','eyelid_R','mouth','paw_FL','paw_FR','paw_BL','paw_BR','tail','goggles','socket_packet','socket_snapshot'}
+          assert required <= {n.get('name') for n in gltf['nodes']}
+          expected={'idle_observe','blocked_429','provisional_step_E','stable_snapshot_carry_H','duplicate_retry_attempt','director_neck_scruff_stop'}
+          assert expected == {a['name'] for a in gltf['animations']}
+          channels=sum(len(a['channels']) for a in gltf['animations'])
+          cubic=sum(1 for a in gltf['animations'] for s in a['samplers'] if s.get('interpolation')=='CUBICSPLINE')
+          extras=gltf['asset']['extras']
+          assert len(data)==18500
+          assert len(gltf['nodes'])==30
+          assert len(gltf['animations'])==6
+          assert channels==31 and cubic==15
+          assert not gltf.get('textures')
+          assert extras['variant_id']=='PKV-SECOND-LIGHT-EXPERIMENTAL'
+          assert extras['canonical'] is False
+          assert extras['classification']=='visualization_not_evidence'
+          assert extras['human_reaction']=='UNKNOWN'
+          assert rec['canonical'] is False and rec['promotion']=='none'
+          assert rec['human_reaction']=='UNKNOWN'
+          assert rec['asset_sha256']==hashlib.sha256(data).hexdigest()
+          print(json.dumps({'status':'SECOND LIGHT EXPERIMENT PASS','bytes':len(data),'nodes':30,'animations':6,'channels':31,'cubic_spline_channels':15,'canonical':False,'human_reaction':'UNKNOWN'},indent=2))
+          PY
+      - name: Upload reproducible Second Light specimen
+        uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-second-light-experimental
+          path: |
+            /tmp/second-light-a.glb
+            /tmp/SECOND_LIGHT.json
+          if-no-files-found: error
