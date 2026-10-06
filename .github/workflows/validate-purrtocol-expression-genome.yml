@@ -1,0 +1,67 @@
+name: Validate Purrtocol Expression Genome
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/purrtocol_expression_genome.py'
+      - '.github/workflows/validate-purrtocol-expression-genome.yml'
+      - 'docs/purrtocol-expression-genome.md'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/purrtocol_expression_genome.py'
+      - '.github/workflows/validate-purrtocol-expression-genome.yml'
+      - 'docs/purrtocol-expression-genome.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate C1 ecology and Graphic Evolution manifest
+        run: |
+          python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology.json
+          python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 8 --output /tmp/graphic.json
+      - name: Compile expression genomes twice
+        run: |
+          python scripts/purrtocol_expression_genome.py --manifest /tmp/graphic.json --output /tmp/expression-a.json
+          python scripts/purrtocol_expression_genome.py --manifest /tmp/graphic.json --output /tmp/expression-b.json
+          cmp /tmp/expression-a.json /tmp/expression-b.json
+      - name: Validate lineage, bounds and evidence gates
+        run: |
+          python - <<'PY'
+          import json
+          g=json.load(open('/tmp/expression-a.json', encoding='utf-8'))
+          assert g['schema']=='purrtocol-expression-genome/v0'
+          assert g['status']=='proposed-expression-parameters'
+          assert g['world_laws']['expression_is_not_rendered_asset'] is True
+          assert g['world_laws']['human_reaction_stays_unknown_until_observed'] is True
+          assert g['world_laws']['technical_quality_is_not_humor'] is True
+          assert g['summary']['genomes']==len(g['genomes'])
+          assert len(g['genomes']) > 0
+          seen=set()
+          for row in g['genomes']:
+              assert row['expression_id'] not in seen; seen.add(row['expression_id'])
+              assert row['canonical'] is False
+              assert row['human_reaction']=='UNKNOWN'
+              assert row['evidence_status']=='simulation-derived-proposal'
+              assert row['breeding_eligible'] is row['survives']
+              if row['survives']:
+                  assert row['implementation_target']=='purrtocol-second-light-generator/v0'
+              else:
+                  assert row['implementation_target']=='museum-extinction-memorial-only'
+              e=row['expression']
+              assert 0.20 <= e['silhouette']['body_roundness'] <= 0.90
+              assert 0.20 <= e['silhouette']['head_roundness'] <= 0.90
+              assert 0.10 <= e['silhouette']['ear_asymmetry'] <= 0.90
+              assert 0.20 <= e['silhouette']['tail_arc'] <= 0.95
+              assert 0.03 <= e['motion']['breath_amplitude'] <= 0.22
+              assert 0.15 <= e['motion']['tail_secondary_motion'] <= 0.95
+              assert 0.20 <= e['motion']['step_amplitude'] <= 0.90
+              assert 0.72 <= e['motion']['timing_scale'] <= 1.30
+              assert e['surface']['texture_budget']==0
+          print('Purrtocol expression-genome invariants: PASS')
+          PY
