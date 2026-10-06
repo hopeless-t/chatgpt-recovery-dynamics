@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
       - 'scripts/purrtocol_renderer_router.py'
+      - 'scripts/purrtocol_transfer_measurement.py'
       - 'scripts/render_purrtocol_expression.py'
       - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
@@ -13,6 +14,7 @@ on:
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
       - 'docs/purrtocol-renderer-router.md'
+      - 'docs/purrtocol-transfer-measurement.md'
       - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
   push:
@@ -20,6 +22,7 @@ on:
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
       - 'scripts/purrtocol_renderer_router.py'
+      - 'scripts/purrtocol_transfer_measurement.py'
       - 'scripts/render_purrtocol_expression.py'
       - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
@@ -28,6 +31,7 @@ on:
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
       - 'docs/purrtocol-renderer-router.md'
+      - 'docs/purrtocol-transfer-measurement.md'
       - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
 
@@ -45,6 +49,7 @@ jobs:
           python -m py_compile \
             scripts/purrtocol_renderer_arena.py \
             scripts/purrtocol_renderer_router.py \
+            scripts/purrtocol_transfer_measurement.py \
             scripts/render_purrtocol_expression.py \
             scripts/render_purrtocol_expression_lean.py \
             scripts/generate_purrtocol_second_light.py \
@@ -66,6 +71,14 @@ jobs:
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/expressed-a.glb --receipt /tmp/expressed-a.json
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/expressed-b.glb --receipt /tmp/expressed-b.json
           cmp /tmp/expressed-a.glb /tmp/expressed-b.glb
+
+      - name: Measure deterministic transfer proxies
+        run: |
+          python scripts/purrtocol_transfer_measurement.py --asset /tmp/base-a.glb --renderer-id second-light-baseline/v0 --output /tmp/transfer-base-a.json
+          python scripts/purrtocol_transfer_measurement.py --asset /tmp/base-a.glb --renderer-id second-light-baseline/v0 --output /tmp/transfer-base-b.json
+          cmp /tmp/transfer-base-a.json /tmp/transfer-base-b.json
+          python scripts/purrtocol_transfer_measurement.py --asset /tmp/lean-a.glb --renderer-id lean-expressed-second-light/v0 --output /tmp/transfer-lean.json
+          python scripts/purrtocol_transfer_measurement.py --asset /tmp/expressed-a.glb --renderer-id expressed-second-light/v0 --output /tmp/transfer-full.json
 
       - name: Validate lean renderer declaration and semantics
         run: |
@@ -131,10 +144,13 @@ jobs:
           base=json.load(open('/tmp/base-a.json',encoding='utf-8'))
           lean=json.load(open('/tmp/lean-a.json',encoding='utf-8'))
           expressed=json.load(open('/tmp/expressed-a.json',encoding='utf-8'))
+          tbase=json.load(open('/tmp/transfer-base-a.json',encoding='utf-8'))
+          tlean=json.load(open('/tmp/transfer-lean.json',encoding='utf-8'))
+          tfull=json.load(open('/tmp/transfer-full.json',encoding='utf-8'))
           base_gltf,base_bin=renderer.parse_glb(open('/tmp/base-a.glb','rb').read())
           base_physical=renderer.physical_fingerprint(base_gltf,base_bin)
 
-          def entrant(renderer_id,specimen,asset_sha,physical_sha,asset_bytes,coverage):
+          def entrant(renderer_id,specimen,asset_sha,physical_sha,asset_bytes,coverage,transfer):
               return {
                 'renderer_id':renderer_id,
                 'specimen_id':specimen,
@@ -149,16 +165,17 @@ jobs:
                 'provenance_bound':True,
                 'canonical':False,
                 'human_reaction':'UNKNOWN',
-                'evidence_status':'visualization_not_evidence'
+                'evidence_status':'visualization_not_evidence',
+                'transfer_proxy':transfer,
               }
 
           doc={'schema':'purrtocol-renderer-arena-input/v0','entrants':[
               entrant('second-light-baseline/v0','second-light-baseline-control',
-                      base['asset_sha256'],base_physical,base['asset_bytes'],0.0),
+                      base['asset_sha256'],base_physical,base['asset_bytes'],0.0,tbase),
               entrant('lean-expressed-second-light/v0',lean['expression_id'],
-                      lean['asset_sha256'],lean['physical_sha256'],lean['asset_bytes'],lean['lineage_expression_coverage']),
+                      lean['asset_sha256'],lean['physical_sha256'],lean['asset_bytes'],lean['lineage_expression_coverage'],tlean),
               entrant('expressed-second-light/v0',expressed['expression_id'],
-                      expressed['asset_sha256'],expressed['physical_sha256'],expressed['asset_bytes'],1.0),
+                      expressed['asset_sha256'],expressed['physical_sha256'],expressed['asset_bytes'],1.0,tfull),
           ]}
           json.dump(doc,open('/tmp/arena-input.json','w',encoding='utf-8'),ensure_ascii=False,indent=2,sort_keys=True)
           PY
@@ -169,7 +186,7 @@ jobs:
           python scripts/purrtocol_renderer_arena.py --input /tmp/arena-input.json --output /tmp/arena-b.json
           cmp /tmp/arena-a.json /tmp/arena-b.json
 
-      - name: Validate three real Pareto niches
+      - name: Validate three real Pareto niches and diagnostic transfer contract
         run: |
           python - <<'PY'
           import json
@@ -181,6 +198,8 @@ jobs:
               'second-light-baseline/v0'
           ]
           assert a['dominance_edges']==[]
+          assert a['objective_policy']['diagnostic_only']==['runtime','transfer_proxy']
+          assert a['world_laws']['compressed_bytes_are_not_network_load'] is True
           rows={r['renderer_id']:r for r in a['entrants']}
           base=rows['second-light-baseline/v0']
           lean=rows['lean-expressed-second-light/v0']
@@ -191,7 +210,38 @@ jobs:
           assert full['lineage_expression_coverage']==1.0
           assert len({base['physical_sha256'],lean['physical_sha256'],full['physical_sha256']})==3
           assert all(r['human_reaction']=='UNKNOWN' for r in a['entrants'])
-          print('Three-niche renderer ecology: PASS')
+          for row in rows.values():
+              t=row['transfer_proxy']
+              assert t['status']=='MEASURED_DIAGNOSTIC'
+              assert t['raw_bytes']==row['asset_bytes']
+              assert t['gzip_bytes'] > 0
+              assert t['included_in_pareto'] is False
+              assert t['proxy_not_wire_truth'] is True
+          print('Three-niche renderer ecology + transfer diagnostics: PASS')
+          PY
+
+      - name: Prove compression alone is not renderer fitness
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          Path('/tmp/compressibility-liar.bin').write_bytes(b'0' * 32768)
+          PY
+          python scripts/purrtocol_transfer_measurement.py \
+            --asset /tmp/compressibility-liar.bin \
+            --renderer-id compressibility-liar/counterexample \
+            --output /tmp/transfer-liar.json
+          python - <<'PY'
+          import json
+          liar=json.load(open('/tmp/transfer-liar.json',encoding='utf-8'))
+          measured=[json.load(open(p,encoding='utf-8')) for p in [
+              '/tmp/transfer-base-a.json','/tmp/transfer-lean.json','/tmp/transfer-full.json'
+          ]]
+          assert liar['raw_bytes'] > max(row['raw_bytes'] for row in measured)
+          assert liar['gzip_bytes'] < min(row['gzip_bytes'] for row in measured)
+          assert liar['world_laws']['measurement_does_not_imply_fitness'] is True
+          arena=json.load(open('/tmp/arena-a.json',encoding='utf-8'))
+          assert 'compressibility-liar/counterexample' not in [r['renderer_id'] for r in arena['entrants']]
+          print('Compression Goodhart counterexample: PASS', liar['raw_bytes'], liar['gzip_bytes'])
           PY
 
       - name: Route tight, lean, full and impossible habitats
@@ -281,6 +331,7 @@ jobs:
           dominated['asset_sha256']='3'*64
           dominated['physical_sha256']='4'*64
           dominated['asset_bytes']=expressed['asset_bytes']+4096
+          dominated.pop('transfer_proxy',None)
           doc['entrants'].append(dominated)
           json.dump(doc,open('/tmp/arena-dominance.json','w',encoding='utf-8'),sort_keys=True)
           PY
@@ -295,7 +346,7 @@ jobs:
           print('Pareto dominance counterexample: PASS')
           PY
 
-      - name: Upload arena, lean specimen and habitat routes
+      - name: Upload arena, transfer diagnostics, lean specimen and habitat routes
         uses: actions/upload-artifact@v4
         with:
           name: purrtocol-renderer-arena-v0
@@ -304,6 +355,10 @@ jobs:
             /tmp/arena-a.json
             /tmp/lean-a.glb
             /tmp/lean-a.json
+            /tmp/transfer-base-a.json
+            /tmp/transfer-lean.json
+            /tmp/transfer-full.json
+            /tmp/transfer-liar.json
             /tmp/route-tight.json
             /tmp/route-lean.json
             /tmp/route-full.json
