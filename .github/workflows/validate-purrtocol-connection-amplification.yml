@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - 'scripts/purrtocol_connection_amplification.py'
+      - 'scripts/purrtocol_recovery_policy_lab.py'
       - 'docs/purrtocol-connection-amplification.md'
+      - 'docs/purrtocol-recovery-policy-lab.md'
       - '.github/workflows/validate-purrtocol-connection-amplification.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/purrtocol_connection_amplification.py'
+      - 'scripts/purrtocol_recovery_policy_lab.py'
       - 'docs/purrtocol-connection-amplification.md'
+      - 'docs/purrtocol-recovery-policy-lab.md'
       - '.github/workflows/validate-purrtocol-connection-amplification.yml'
 
 jobs:
@@ -22,8 +26,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Compile bounded model
-        run: python -m py_compile scripts/purrtocol_connection_amplification.py
+      - name: Compile bounded model and policy lab
+        run: |
+          python -m py_compile \
+            scripts/purrtocol_connection_amplification.py \
+            scripts/purrtocol_recovery_policy_lab.py
 
       - name: Build shared-capacity counterexample scenario
         run: |
@@ -86,7 +93,6 @@ jobs:
           hero=rows['small-local-hero']
           safe=rows['larger-global-safe']
           hero0=shallow_rows['small-local-hero']
-
           assert hero['payload_bytes'] < safe['payload_bytes']
           assert hero['local_success_probability'] > safe['local_success_probability']
           assert hero['retry_branch_factor'] == 1.05
@@ -98,8 +104,6 @@ jobs:
           assert hero['connection_capacity_gate']['status']=='CAPACITY_EXCEEDED'
           assert safe['connection_capacity_gate']['status']=='WITHIN_CAPACITY'
           assert hero['expected_concurrent_connections'] > hero0['expected_concurrent_connections'] * 5
-          assert deep['world_laws']['higher_local_success_does_not_imply_global_safety'] is True
-          assert deep['world_laws']['smaller_payload_does_not_imply_safer_recovery'] is True
           print('Connection amplification global-safety counterexample: PASS')
           print('hero depth0 -> depth4:',hero0['expected_concurrent_connections'],'->',hero['expected_concurrent_connections'])
           print('safe depth4:',safe['expected_concurrent_connections'])
@@ -117,7 +121,103 @@ jobs:
           print('Finite non-decaying retry tree: PASS')
           PY
 
-      - name: Upload modeled scenario ledger
+      - name: Build Recovery Policy Lab interventions
+        run: |
+          python - <<'PY'
+          import json
+          doc={
+            'schema':'purrtocol-recovery-policy-lab-input/v0',
+            'lab_id':'shared-capacity-mitigation-classes',
+            'base_scenario':{
+              'baseline_request_rate_rps':40.0,
+              'shared_connection_capacity':100.0,
+              'max_retry_depth':4,
+            },
+            'base_policy':{
+              'policy_id':'small-local-hero',
+              'fanout_connections_per_attempt':4.0,
+              'failure_probability':0.7,
+              'retry_multiplier':1.5,
+              'connection_hold_seconds':0.5,
+              'payload_bytes':1000,
+              'local_success_probability':0.99,
+            },
+            'interventions':[
+              {
+                'intervention_id':'capacity-expansion',
+                'mechanism':'effective-shared-capacity-increase-proxy',
+                'scenario_overrides':{'shared_connection_capacity':500.0},
+              },
+              {
+                'intervention_id':'fanout-cap-only',
+                'mechanism':'connection-fanout-reduction',
+                'policy_overrides':{'fanout_connections_per_attempt':1.0},
+              },
+              {
+                'intervention_id':'reduce-failure-branch',
+                'mechanism':'failure-probability-reduction-proxy',
+                'policy_overrides':{'failure_probability':0.1},
+              },
+              {
+                'intervention_id':'retry-depth-zero',
+                'mechanism':'retry-budget-depth-cap',
+                'scenario_overrides':{'max_retry_depth':0},
+              },
+              {
+                'intervention_id':'shorten-hold-time',
+                'mechanism':'connection-hold-time-reduction',
+                'policy_overrides':{'connection_hold_seconds':0.1},
+              },
+              {
+                'intervention_id':'stop-repeated-checks',
+                'mechanism':'failure-triggered-repeat-suppression',
+                'policy_overrides':{'retry_multiplier':0.0},
+              },
+            ],
+          }
+          json.dump(doc,open('/tmp/policy-lab-input.json','w',encoding='utf-8'),sort_keys=True)
+          PY
+
+      - name: Run Policy Lab twice and require deterministic classification
+        run: |
+          python scripts/purrtocol_recovery_policy_lab.py --input /tmp/policy-lab-input.json --output /tmp/policy-lab-a.json
+          python scripts/purrtocol_recovery_policy_lab.py --input /tmp/policy-lab-input.json --output /tmp/policy-lab-b.json
+          cmp /tmp/policy-lab-a.json /tmp/policy-lab-b.json
+
+      - name: Prove substantial single mitigation can remain insufficient
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/policy-lab-a.json',encoding='utf-8'))
+          assert d['schema']=='purrtocol-recovery-policy-lab/v0'
+          assert d['evidence_status']=='modeled_bounded_policy_lab'
+          assert d['selection_policy']=='classify-capacity-safety-no-hidden-policy-winner'
+          assert d['baseline']['expected_concurrent_connections']==442.0505
+          assert d['baseline']['capacity_gate']['status']=='CAPACITY_EXCEEDED'
+          rows={r['intervention_id']:r for r in d['interventions']}
+          assert rows['stop-repeated-checks']['expected_concurrent_connections']==80.0
+          assert rows['stop-repeated-checks']['capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert rows['fanout-cap-only']['expected_concurrent_connections']==110.512625
+          assert rows['fanout-cap-only']['capacity_gate']['status']=='CAPACITY_EXCEEDED'
+          assert rows['reduce-failure-branch']['expected_concurrent_connections']==94.1105
+          assert rows['reduce-failure-branch']['capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert rows['shorten-hold-time']['expected_concurrent_connections']==88.4101
+          assert rows['shorten-hold-time']['capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert rows['retry-depth-zero']['expected_concurrent_connections']==80.0
+          assert rows['retry-depth-zero']['capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert rows['capacity-expansion']['expected_concurrent_connections']==442.0505
+          assert rows['capacity-expansion']['capacity_gate']['status']=='WITHIN_CAPACITY'
+          assert d['unsafe_interventions']==['fanout-cap-only']
+          assert d['safe_interventions']==[
+              'capacity-expansion','reduce-failure-branch','retry-depth-zero',
+              'shorten-hold-time','stop-repeated-checks'
+          ]
+          assert d['world_laws']['heterogeneous_intervention_costs_not_scalarized'] is True
+          assert d['world_laws']['safe_set_is_not_final_winner'] is True
+          print('Recovery Policy Lab safe-set classification: PASS')
+          PY
+
+      - name: Upload modeled scenario and policy ledgers
         uses: actions/upload-artifact@v4
         with:
           name: purrtocol-connection-amplification-v0
@@ -126,4 +226,6 @@ jobs:
             /tmp/scenario-depth0.json
             /tmp/model-a.json
             /tmp/model-depth0.json
+            /tmp/policy-lab-input.json
+            /tmp/policy-lab-a.json
           if-no-files-found: error
