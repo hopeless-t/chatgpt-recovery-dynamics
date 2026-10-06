@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
+      - 'scripts/purrtocol_renderer_router.py'
       - 'scripts/render_purrtocol_expression.py'
       - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
@@ -11,12 +12,14 @@ on:
       - 'scripts/purrtocol_graphic_manifest.py'
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
+      - 'docs/purrtocol-renderer-router.md'
       - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
+      - 'scripts/purrtocol_renderer_router.py'
       - 'scripts/render_purrtocol_expression.py'
       - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
@@ -24,6 +27,7 @@ on:
       - 'scripts/purrtocol_graphic_manifest.py'
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
+      - 'docs/purrtocol-renderer-router.md'
       - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
 
@@ -40,6 +44,7 @@ jobs:
         run: |
           python -m py_compile \
             scripts/purrtocol_renderer_arena.py \
+            scripts/purrtocol_renderer_router.py \
             scripts/render_purrtocol_expression.py \
             scripts/render_purrtocol_expression_lean.py \
             scripts/generate_purrtocol_second_light.py \
@@ -189,6 +194,57 @@ jobs:
           print('Three-niche renderer ecology: PASS')
           PY
 
+      - name: Route tight, lean, full and impossible habitats
+        run: |
+          python - <<'PY'
+          import json
+          requests={
+            'tight':(18500,0.0),
+            'lean':(18700,0.5),
+            'full':(19000,1.0),
+            'broad':(19000,0.5),
+            'impossible':(18500,1.0),
+          }
+          for name,(max_bytes,min_cov) in requests.items():
+              doc={
+                'schema':'purrtocol-renderer-habitat-request/v0',
+                'request_id':name,
+                'max_asset_bytes':max_bytes,
+                'min_lineage_expression_coverage':min_cov,
+                'require_pareto_frontier':True,
+              }
+              json.dump(doc,open(f'/tmp/request-{name}.json','w',encoding='utf-8'),sort_keys=True)
+          PY
+          for name in tight lean full broad impossible; do
+            python scripts/purrtocol_renderer_router.py \
+              --arena /tmp/arena-a.json \
+              --request /tmp/request-${name}.json \
+              --output /tmp/route-${name}.json
+          done
+          python scripts/purrtocol_renderer_router.py --arena /tmp/arena-a.json --request /tmp/request-broad.json --output /tmp/route-broad-2.json
+          cmp /tmp/route-broad.json /tmp/route-broad-2.json
+          python - <<'PY'
+          import json
+          def ids(name):
+              d=json.load(open(f'/tmp/route-{name}.json',encoding='utf-8'))
+              return d,[r['renderer_id'] for r in d['feasible_renderers']]
+          tight,tight_ids=ids('tight')
+          lean,lean_ids=ids('lean')
+          full,full_ids=ids('full')
+          broad,broad_ids=ids('broad')
+          impossible,impossible_ids=ids('impossible')
+          assert tight_ids==['second-light-baseline/v0']
+          assert lean_ids==['lean-expressed-second-light/v0']
+          assert full_ids==['expressed-second-light/v0']
+          assert broad_ids==['lean-expressed-second-light/v0','expressed-second-light/v0']
+          assert impossible_ids==[]
+          assert impossible['status']=='NO_FEASIBLE_RENDERER'
+          assert impossible['world_laws']['no_silent_requirement_relaxation'] is True
+          assert broad['status']=='FEASIBLE_SET'
+          assert broad['world_laws']['no_single_winner_invented'] is True
+          print('Renderer habitat routing: PASS')
+          PY
+
       - name: Prove tiny invalid renderer cannot Goodhart the arena
         run: |
           python - <<'PY'
@@ -239,7 +295,7 @@ jobs:
           print('Pareto dominance counterexample: PASS')
           PY
 
-      - name: Upload arena ledger and lean specimen
+      - name: Upload arena, lean specimen and habitat routes
         uses: actions/upload-artifact@v4
         with:
           name: purrtocol-renderer-arena-v0
@@ -248,4 +304,9 @@ jobs:
             /tmp/arena-a.json
             /tmp/lean-a.glb
             /tmp/lean-a.json
+            /tmp/route-tight.json
+            /tmp/route-lean.json
+            /tmp/route-full.json
+            /tmp/route-broad.json
+            /tmp/route-impossible.json
           if-no-files-found: error
