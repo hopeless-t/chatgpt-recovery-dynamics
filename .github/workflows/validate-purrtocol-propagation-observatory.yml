@@ -1,0 +1,43 @@
+name: Validate Purrtocol Propagation Observatory
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run synthetic clone-heavy fixture
+        run: |
+          python scripts/purrtocol_propagation_observatory.py \
+            --clones 1200 \
+            --unique-cloners 100 \
+            --views 24 \
+            --unique-visitors 8 \
+            --output /tmp/propagation.json
+
+      - name: Check evidence and privacy boundaries
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("/tmp/propagation.json", "r", encoding="utf-8") as f:
+              s = json.load(f)
+
+          assert s["schema"] == "purrtocol-propagation-shape/v0"
+          assert s["evidence_status"] == "derived"
+          assert s["causal_status"] == "unknown"
+          assert s["raw_values_included"] is False
+          assert "repeat-full-clone-heavy" in s["signals"]
+          assert "direct-clone-heavy-relative-to-web-visitors" in s["signals"]
+          assert "clone-heavy-relative-to-page-views" in s["signals"]
+          assert "UNKNOWN != descendant" in s["invariants"]
+          print("Purrtocol propagation observatory: PASS")
+          PY
