@@ -1,0 +1,43 @@
+name: Validate Purrtocol Civilization
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/purrtocol_civilization.py'
+      - 'docs/purrtocol-civilization.md'
+      - '.github/workflows/validate-purrtocol-civilization.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/purrtocol_civilization.py'
+      - 'docs/purrtocol-civilization.md'
+      - '.github/workflows/validate-purrtocol-civilization.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  civilization-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run deterministic season twice
+        run: |
+          python scripts/purrtocol_civilization.py --seed 27 --population 32 --shock 0.65 --output /tmp/season-a.json
+          python scripts/purrtocol_civilization.py --seed 27 --population 32 --shock 0.65 --output /tmp/season-b.json
+          cmp /tmp/season-a.json /tmp/season-b.json
+      - name: Validate evidence and bounded output
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/season-a.json'))
+          assert x['schema']=='purrtocol-civilization-season/v0'
+          assert x['evidence_status']=='simulation'
+          assert len(x['ledger'])==32
+          assert 0 <= x['news_facts']['survivors'] <= 32
+          assert all('recovery_gate' in r and 'projection_gate' in r for r in x['ledger'])
+          print(x['news_facts'])
+          PY
