@@ -1,0 +1,80 @@
+name: Validate Purrtocol C1 Ecology
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ecology-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile ecology simulator
+        run: python -m py_compile scripts/purrtocol_ecology.py scripts/breed_purrtocol.py
+
+      - name: Run deterministic ecology twice
+        run: |
+          python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology-a.json
+          python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology-b.json
+          cmp /tmp/ecology-a.json /tmp/ecology-b.json
+
+      - name: Check ecology invariants
+        run: |
+          python - <<'PY'
+          import json
+
+          with open('/tmp/ecology-a.json', 'r', encoding='utf-8') as f:
+              s = json.load(f)
+
+          assert s['schema'] == 'purrtocol-ecology-run/v0'
+          assert s['evidence_status'] == 'simulation'
+          assert s['projection_status'] == 'phenotype-descriptors-only'
+          assert s['world_laws']['projection_cannot_rescue_recovery_invalid'] is True
+          assert s['world_laws']['simulation_not_evidence'] is True
+          assert s['world_laws']['generated_concept_not_implemented'] is True
+          assert s['world_laws']['no_final_boss'] is True
+          assert 1 <= s['summary']['generations_completed'] <= 5
+          assert len(s['ledger']) <= 48 * 5
+
+          seen = set()
+          for row in sorted(s['ledger'], key=lambda r: (r['generation'], r['organism_id'])):
+              if row['generation'] == 0:
+                  assert row['parent_id'] is None
+              else:
+                  assert row['parent_id'] in seen
+              if not row['recovery_gate']:
+                  assert row['survives'] is False
+                  assert row['extinction_reason'] == 'recovery-invalid'
+              if row['survives']:
+                  assert row['recovery_gate'] is True
+                  assert row['projection_gate'] is True
+                  assert row['resource_gate'] is True
+                  assert row['extinction_reason'] is None
+              else:
+                  assert row['extinction_reason'] in {
+                      'recovery-invalid', 'projection-failed', 'resource-negative'
+                  }
+              assert row['phenotype']['status'] == 'projection-descriptor-only'
+              seen.add(row['organism_id'])
+
+          birth_ids = {b['organism_id'] for b in s['births']}
+          nonroot_ids = {r['organism_id'] for r in s['ledger'] if r['generation'] > 0}
+          assert nonroot_ids <= birth_ids
+
+          print('Purrtocol C1 ecology invariants: PASS')
+          PY
+
+      - name: Check bounded CLI rejection
+        run: |
+          if python scripts/purrtocol_ecology.py --population 513 --generations 1 --output /tmp/too-big.json; then
+            echo 'expected population bound failure' >&2
+            exit 1
+          fi
+          if python scripts/purrtocol_ecology.py --population 8 --generations 33 --output /tmp/too-long.json; then
+            echo 'expected generation bound failure' >&2
+            exit 1
+          fi
