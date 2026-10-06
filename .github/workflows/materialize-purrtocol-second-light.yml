@@ -1,0 +1,38 @@
+name: Materialize Purrtocol Second Light
+
+on:
+  push:
+    branches:
+      - purrtocol-second-light-forge
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: purrtocol-second-light-forge
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize once
+        run: |
+          set -euo pipefail
+          if [ -f docs/assets/purrtocol/second-light.glb ] && [ -f docs/purrtocol-3d/SECOND_LIGHT.json ]; then
+            echo 'Second Light already materialized; no write.'
+            exit 0
+          fi
+          python scripts/build_purrtocol_second_light.py \
+            --output docs/assets/purrtocol/second-light.glb \
+            --receipt docs/purrtocol-3d/SECOND_LIGHT.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/assets/purrtocol/second-light.glb docs/purrtocol-3d/SECOND_LIGHT.json
+          git commit -m 'Materialize Purrtocol Second Light candidate'
+          git push origin HEAD:purrtocol-second-light-forge

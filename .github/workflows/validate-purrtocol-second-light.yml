@@ -1,0 +1,26 @@
+name: Validate Purrtocol Second Light
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  second-light:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile forge and validator
+        run: python -m py_compile scripts/build_purrtocol_second_light.py scripts/validate_purrtocol_second_light.py
+      - name: Rebuild deterministically
+        run: |
+          python scripts/build_purrtocol_second_light.py --output docs/assets/purrtocol/second-light.glb --receipt docs/purrtocol-3d/SECOND_LIGHT.json
+          git diff --exit-code -- docs/assets/purrtocol/second-light.glb docs/purrtocol-3d/SECOND_LIGHT.json
+      - name: Validate Second Light candidate
+        run: python scripts/validate_purrtocol_second_light.py
+      - name: Preserve canonical First Light
+        run: python scripts/validate_purrtocol_3d.py
