@@ -1,0 +1,157 @@
+name: Validate Purrtocol Expressed Second Light
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/render_purrtocol_expression.py'
+      - 'scripts/purrtocol_expression_genome.py'
+      - 'scripts/generate_purrtocol_second_light.py'
+      - 'scripts/purrtocol_graphic_manifest.py'
+      - 'scripts/purrtocol_ecology.py'
+      - 'docs/purrtocol-expressed-second-light.md'
+      - '.github/workflows/validate-purrtocol-expressed-second-light.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/render_purrtocol_expression.py'
+      - 'scripts/purrtocol_expression_genome.py'
+      - 'scripts/generate_purrtocol_second_light.py'
+      - 'scripts/purrtocol_graphic_manifest.py'
+      - 'scripts/purrtocol_ecology.py'
+      - 'docs/purrtocol-expressed-second-light.md'
+      - '.github/workflows/validate-purrtocol-expressed-second-light.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile expression-rendering lane
+        run: |
+          python -m py_compile \
+            scripts/purrtocol_ecology.py \
+            scripts/purrtocol_graphic_manifest.py \
+            scripts/purrtocol_expression_genome.py \
+            scripts/generate_purrtocol_second_light.py \
+            scripts/render_purrtocol_expression.py
+
+      - name: Generate ecology, graphic manifest and expression genomes
+        run: |
+          python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology.json
+          python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 8 --output /tmp/graphic.json
+          python scripts/purrtocol_expression_genome.py --manifest /tmp/graphic.json --output /tmp/genomes.json
+
+      - name: Render one genome twice and require byte identity
+        run: |
+          python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/cat-a.glb --receipt /tmp/cat-a.json
+          python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/cat-b.glb --receipt /tmp/cat-b.json
+          cmp /tmp/cat-a.glb /tmp/cat-b.glb
+          python - <<'PY'
+          import json
+          a=json.load(open('/tmp/cat-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/cat-b.json',encoding='utf-8'))
+          assert a.pop('asset')=='cat-a.glb'
+          assert b.pop('asset')=='cat-b.glb'
+          assert a==b
+          print('Receipt semantic identity: PASS')
+          PY
+
+      - name: Require two distinct genomes to express distinct assets
+        run: |
+          python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 1 --output /tmp/cat-c.glb --receipt /tmp/cat-c.json
+          if cmp -s /tmp/cat-a.glb /tmp/cat-c.glb; then
+            echo 'distinct expression genomes collapsed to the same GLB' >&2
+            exit 1
+          fi
+
+      - name: Validate semantic compatibility and physical expression
+        run: |
+          python scripts/generate_purrtocol_second_light.py --output /tmp/base.glb
+          python - <<'PY'
+          import hashlib, json, struct
+
+          def unpack(path):
+              data=open(path,'rb').read()
+              magic,version,total=struct.unpack_from('<4sII',data,0)
+              assert magic==b'glTF' and version==2 and total==len(data)
+              off=12; gltf=None
+              while off+8 <= len(data):
+                  n,t=struct.unpack_from('<II',data,off); off+=8
+                  chunk=data[off:off+n]; off+=n
+                  if t==0x4E4F534A:
+                      gltf=json.loads(chunk.rstrip(b' \t\r\n\0').decode())
+              assert gltf is not None
+              return data,gltf
+
+          base_data,base=unpack('/tmp/base.glb')
+          data,gltf=unpack('/tmp/cat-a.glb')
+          receipt=json.load(open('/tmp/cat-a.json',encoding='utf-8'))
+          genomes=json.load(open('/tmp/genomes.json',encoding='utf-8'))
+          genome=genomes['genomes'][0]
+
+          required={'root','head','ear_L','ear_R','eye_L','eye_R','eyelid_L','eyelid_R','mouth',
+                    'paw_FL','paw_FR','paw_BL','paw_BR','tail','goggles','socket_packet','socket_snapshot'}
+          assert required <= {n.get('name') for n in gltf['nodes']}
+          expected={'idle_observe','blocked_429','provisional_step_E','stable_snapshot_carry_H',
+                    'duplicate_retry_attempt','director_neck_scruff_stop'}
+          assert expected == {a['name'] for a in gltf['animations']}
+          assert len(gltf['nodes'])==30 and len(gltf['animations'])==6
+          assert not gltf.get('textures')
+          assert len(data) < 24576
+          assert data != base_data
+
+          extras=gltf['asset']['extras']
+          assert extras['expression_id']==genome['expression_id']
+          assert extras['source_organism_id']==genome['source_organism_id']
+          assert extras['expression_signature']==genome['expression_signature']
+          assert extras['canonical'] is False
+          assert extras['human_reaction']=='UNKNOWN'
+          assert extras['expression_status']=='simulation-derived-proposal'
+
+          bnodes={n['name']:n for n in base['nodes']}
+          nodes={n['name']:n for n in gltf['nodes']}
+          assert nodes['body']['scale'] != bnodes['body']['scale']
+          assert nodes['head']['scale'] != bnodes['head']['scale']
+          assert nodes['tail']['rotation'] != bnodes['tail']['rotation']
+
+          assert receipt['schema']=='purrtocol-expressed-second-light-receipt/v0'
+          assert receipt['expression_id']==genome['expression_id']
+          assert receipt['asset_sha256']==hashlib.sha256(data).hexdigest()
+          assert receipt['canonical'] is False
+          assert receipt['human_reaction']=='UNKNOWN'
+          print('Purrtocol expressed Second Light invariants: PASS')
+          PY
+
+      - name: Fail closed on extinct genomes
+        run: |
+          python - <<'PY'
+          import json
+          p='/tmp/genomes.json'
+          g=json.load(open(p,encoding='utf-8'))
+          row=g['genomes'][0]
+          row['survives']=False
+          row['breeding_eligible']=False
+          row['implementation_target']='museum-extinction-memorial-only'
+          with open('/tmp/extinct-genomes.json','w',encoding='utf-8') as f:
+              json.dump(g,f,ensure_ascii=False,sort_keys=True)
+          PY
+          if python scripts/render_purrtocol_expression.py --genomes /tmp/extinct-genomes.json --index 0 --output /tmp/should-not-exist.glb; then
+            echo 'extinct genome rendered a living descendant' >&2
+            exit 1
+          fi
+          test ! -e /tmp/should-not-exist.glb
+
+      - name: Upload first expressed litter
+        uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-expressed-second-light-litter
+          path: |
+            /tmp/cat-a.glb
+            /tmp/cat-a.json
+            /tmp/cat-c.glb
+            /tmp/cat-c.json
+          if-no-files-found: error
