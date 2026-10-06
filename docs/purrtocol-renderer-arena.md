@@ -10,11 +10,11 @@ those gates are compared on a Pareto frontier.
 
 ## Why there is no total score
 
-A scalar score encourages Goodhart failure. For example, minimizing bytes alone rewards an
-empty or semantically broken asset. Maximizing visible motion alone rewards noisy animation.
-Maximizing human attention before observation invents evidence.
+A scalar score encourages Goodhart failure. Minimizing bytes alone rewards an empty or
+semantically broken asset. Maximizing motion alone rewards noise. Maximizing attention before
+human observation invents evidence.
 
-Arena v0 therefore uses hard gates first, then only two stable engineering objectives:
+Arena v0 therefore uses hard gates first, then two bounded engineering objectives:
 
 ```text
 asset_bytes                   -> minimize
@@ -23,13 +23,20 @@ lineage_expression_coverage   -> maximize
 
 Semantic contract coverage must already be `1.0` to enter the frontier.
 
-The first measured comparison is intentionally simple:
+## First real renderer ecology
 
-- `second-light-baseline/v0`: smaller stable control, zero lineage-expression coverage,
-- `expressed-second-light/v0`: slightly larger, but physically expresses an Expression Genome.
+The initial arena had a stable Second Light control and one full expression renderer. The first
+renderer-diversification step adds a third real implementation:
 
-Neither dominates the other: the baseline occupies a compactness niche, while the expressed
-renderer occupies a lineage-expression niche.
+- `second-light-baseline/v0` — stable control, zero lineage-expression coverage,
+- `lean-expressed-second-light/v0` — deliberately realizes 5/8 expression axes (`0.625`),
+- `expressed-second-light/v0` — realizes all 8/8 current expression axes (`1.0`).
+
+The expected ecology is not a podium. If representation cost rises monotonically with expression
+coverage, all three can remain on the Pareto frontier as distinct niches.
+
+A renderer may leave the frontier later when another implementation becomes no worse on both
+cost and expression coverage and strictly better on at least one.
 
 ## Runtime is diagnostic in v0
 
@@ -55,8 +62,8 @@ replay_value
 
 CI injects a synthetic one-byte `tiny-liar` renderer. It loses before optimization because it
 breaks semantic, extinction, and provenance gates. CI also injects a valid but bloated renderer
-with the same lineage-expression coverage as the expressed renderer; the smaller expressed
-renderer Pareto-dominates it.
+with the same lineage-expression coverage as the full renderer; the smaller full renderer
+Pareto-dominates it.
 
 These are test-only counterexamples, not observed external species.
 
@@ -67,6 +74,7 @@ Hard gates before optimization.
 Invalid cannot win by being small.
 No single scalar score.
 Pareto frontier != final champion.
+Partial expression must be declared.
 Human UNKNOWN != zero.
 Runtime sample != stable benchmark.
 Metadata difference != Physical difference.
@@ -75,14 +83,14 @@ No automatic canonical promotion.
 
 ## Next evolution
 
-Arena v0 makes renderer competition possible without inventing a winner. Future real renderer
-strategies can occupy different niches, for example:
+Renderer Arena can now accept genuinely different strategies rather than only a baseline and a
+single implementation. Future niches may include:
 
 - ultra-light semantic renderer,
-- richer motion renderer,
+- richer secondary-motion renderer,
 - mobile-budget renderer,
 - projection-first renderer,
 - accessibility / high-legibility renderer.
 
-A new axis should enter optimization only after it has a bounded measurement contract and a
+A new axis enters optimization only after it has a bounded measurement contract and a
 counterexample showing how that metric can be gamed.

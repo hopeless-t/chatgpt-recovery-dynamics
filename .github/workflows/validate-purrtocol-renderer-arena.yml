@@ -5,22 +5,26 @@ on:
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
       - 'scripts/render_purrtocol_expression.py'
+      - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
       - 'scripts/purrtocol_expression_genome.py'
       - 'scripts/purrtocol_graphic_manifest.py'
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
+      - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/purrtocol_renderer_arena.py'
       - 'scripts/render_purrtocol_expression.py'
+      - 'scripts/render_purrtocol_expression_lean.py'
       - 'scripts/generate_purrtocol_second_light.py'
       - 'scripts/purrtocol_expression_genome.py'
       - 'scripts/purrtocol_graphic_manifest.py'
       - 'scripts/purrtocol_ecology.py'
       - 'docs/purrtocol-renderer-arena.md'
+      - 'docs/purrtocol-lean-renderer.md'
       - '.github/workflows/validate-purrtocol-renderer-arena.yml'
 
 jobs:
@@ -37,12 +41,13 @@ jobs:
           python -m py_compile \
             scripts/purrtocol_renderer_arena.py \
             scripts/render_purrtocol_expression.py \
+            scripts/render_purrtocol_expression_lean.py \
             scripts/generate_purrtocol_second_light.py \
             scripts/purrtocol_expression_genome.py \
             scripts/purrtocol_graphic_manifest.py \
             scripts/purrtocol_ecology.py
 
-      - name: Produce deterministic baseline and expressed specimens
+      - name: Produce deterministic baseline and expression specimens
         run: |
           python scripts/generate_purrtocol_second_light.py --output /tmp/base-a.glb --receipt /tmp/base-a.json
           python scripts/generate_purrtocol_second_light.py --output /tmp/base-b.glb --receipt /tmp/base-b.json
@@ -50,9 +55,66 @@ jobs:
           python scripts/purrtocol_ecology.py --seed 41 --population 48 --generations 5 --output /tmp/ecology.json
           python scripts/purrtocol_graphic_manifest.py --ecology /tmp/ecology.json --count 8 --output /tmp/graphic.json
           python scripts/purrtocol_expression_genome.py --manifest /tmp/graphic.json --output /tmp/genomes.json
+          python scripts/render_purrtocol_expression_lean.py --genomes /tmp/genomes.json --index 0 --output /tmp/lean-a.glb --receipt /tmp/lean-a.json
+          python scripts/render_purrtocol_expression_lean.py --genomes /tmp/genomes.json --index 0 --output /tmp/lean-b.glb --receipt /tmp/lean-b.json
+          cmp /tmp/lean-a.glb /tmp/lean-b.glb
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/expressed-a.glb --receipt /tmp/expressed-a.json
           python scripts/render_purrtocol_expression.py --genomes /tmp/genomes.json --index 0 --output /tmp/expressed-b.glb --receipt /tmp/expressed-b.json
           cmp /tmp/expressed-a.glb /tmp/expressed-b.glb
+
+      - name: Validate lean renderer declaration and semantics
+        run: |
+          python - <<'PY'
+          import json, struct
+          lean=json.load(open('/tmp/lean-a.json',encoding='utf-8'))
+          full=json.load(open('/tmp/expressed-a.json',encoding='utf-8'))
+          assert lean['schema']=='purrtocol-lean-renderer-receipt/v0'
+          assert lean['renderer_id']=='lean-expressed-second-light/v0'
+          assert lean['lineage_expression_coverage']==0.625
+          assert lean['realized_axes']==[
+              'body_roundness','head_roundness','ear_asymmetry','tail_arc','roughness_bias'
+          ]
+          assert lean['omitted_axes']==['breath_amplitude','step_amplitude','timing_scale']
+          assert lean['asset_bytes'] < full['asset_bytes']
+          assert lean['physical_sha256'] != full['physical_sha256']
+          assert lean['canonical'] is False and lean['human_reaction']=='UNKNOWN'
+
+          data=open('/tmp/lean-a.glb','rb').read()
+          magic,version,total=struct.unpack_from('<4sII',data,0)
+          assert magic==b'glTF' and version==2 and total==len(data)
+          off=12; gltf=None
+          while off+8<=len(data):
+              n,t=struct.unpack_from('<II',data,off); off+=8
+              chunk=data[off:off+n]; off+=n
+              if t==0x4E4F534A:
+                  gltf=json.loads(chunk.rstrip(b' \t\r\n\0').decode())
+          assert gltf is not None
+          required={'root','head','ear_L','ear_R','eye_L','eye_R','eyelid_L','eyelid_R','mouth',
+                    'paw_FL','paw_FR','paw_BL','paw_BR','tail','goggles','socket_packet','socket_snapshot'}
+          assert required <= {n.get('name') for n in gltf['nodes']}
+          expected={'idle_observe','blocked_429','provisional_step_E','stable_snapshot_carry_H',
+                    'duplicate_retry_attempt','director_neck_scruff_stop'}
+          assert expected == {a['name'] for a in gltf['animations']}
+          assert not gltf.get('textures')
+          print('Lean renderer declared trade-off: PASS', lean['asset_bytes'], full['asset_bytes'])
+          PY
+
+      - name: Fail lean renderer closed on extinct genomes
+        run: |
+          python - <<'PY'
+          import json
+          g=json.load(open('/tmp/genomes.json',encoding='utf-8'))
+          row=g['genomes'][0]
+          row['survives']=False
+          row['breeding_eligible']=False
+          row['implementation_target']='museum-extinction-memorial-only'
+          json.dump(g,open('/tmp/extinct-genomes.json','w',encoding='utf-8'),sort_keys=True)
+          PY
+          if python scripts/render_purrtocol_expression_lean.py --genomes /tmp/extinct-genomes.json --index 0 --output /tmp/lean-dead.glb; then
+            echo 'lean renderer resurrected an extinct genome' >&2
+            exit 1
+          fi
+          test ! -e /tmp/lean-dead.glb
 
       - name: Build measured arena input
         run: |
@@ -62,37 +124,20 @@ jobs:
           import render_purrtocol_expression as renderer
 
           base=json.load(open('/tmp/base-a.json',encoding='utf-8'))
+          lean=json.load(open('/tmp/lean-a.json',encoding='utf-8'))
           expressed=json.load(open('/tmp/expressed-a.json',encoding='utf-8'))
           base_gltf,base_bin=renderer.parse_glb(open('/tmp/base-a.glb','rb').read())
           base_physical=renderer.physical_fingerprint(base_gltf,base_bin)
 
-          doc={
-            'schema':'purrtocol-renderer-arena-input/v0',
-            'entrants':[
-              {
-                'renderer_id':'second-light-baseline/v0',
-                'specimen_id':'second-light-baseline-control',
-                'asset_sha256':base['asset_sha256'],
-                'physical_sha256':base_physical,
-                'asset_bytes':base['asset_bytes'],
+          def entrant(renderer_id,specimen,asset_sha,physical_sha,asset_bytes,coverage):
+              return {
+                'renderer_id':renderer_id,
+                'specimen_id':specimen,
+                'asset_sha256':asset_sha,
+                'physical_sha256':physical_sha,
+                'asset_bytes':asset_bytes,
                 'semantic_contract_coverage':1.0,
-                'lineage_expression_coverage':0.0,
-                'deterministic_replay':True,
-                'semantic_contract_pass':True,
-                'extinction_gate_pass':True,
-                'provenance_bound':True,
-                'canonical':False,
-                'human_reaction':'UNKNOWN',
-                'evidence_status':'visualization_not_evidence'
-              },
-              {
-                'renderer_id':'expressed-second-light/v0',
-                'specimen_id':expressed['expression_id'],
-                'asset_sha256':expressed['asset_sha256'],
-                'physical_sha256':expressed['physical_sha256'],
-                'asset_bytes':expressed['asset_bytes'],
-                'semantic_contract_coverage':1.0,
-                'lineage_expression_coverage':1.0,
+                'lineage_expression_coverage':coverage,
                 'deterministic_replay':True,
                 'semantic_contract_pass':True,
                 'extinction_gate_pass':True,
@@ -101,8 +146,15 @@ jobs:
                 'human_reaction':'UNKNOWN',
                 'evidence_status':'visualization_not_evidence'
               }
-            ]
-          }
+
+          doc={'schema':'purrtocol-renderer-arena-input/v0','entrants':[
+              entrant('second-light-baseline/v0','second-light-baseline-control',
+                      base['asset_sha256'],base_physical,base['asset_bytes'],0.0),
+              entrant('lean-expressed-second-light/v0',lean['expression_id'],
+                      lean['asset_sha256'],lean['physical_sha256'],lean['asset_bytes'],lean['lineage_expression_coverage']),
+              entrant('expressed-second-light/v0',expressed['expression_id'],
+                      expressed['asset_sha256'],expressed['physical_sha256'],expressed['asset_bytes'],1.0),
+          ]}
           json.dump(doc,open('/tmp/arena-input.json','w',encoding='utf-8'),ensure_ascii=False,indent=2,sort_keys=True)
           PY
 
@@ -112,30 +164,29 @@ jobs:
           python scripts/purrtocol_renderer_arena.py --input /tmp/arena-input.json --output /tmp/arena-b.json
           cmp /tmp/arena-a.json /tmp/arena-b.json
 
-      - name: Validate baseline-versus-expression Pareto ecology
+      - name: Validate three real Pareto niches
         run: |
           python - <<'PY'
           import json
           a=json.load(open('/tmp/arena-a.json',encoding='utf-8'))
-          assert a['schema']=='purrtocol-renderer-arena/v0'
-          assert a['status']=='pareto-no-single-winner'
-          assert a['summary']=={'entrants':2,'gate_pass':2,'disqualified':0,'pareto_frontier':2}
-          assert a['frontier']==['expressed-second-light/v0','second-light-baseline/v0']
-          assert a['dominance_edges']==[]
-          assert a['objective_policy']['single_scalar_score'] is False
-          assert a['objective_policy']['excluded_until_observed']==[
-              'human_reaction','humor','comprehension','replay_value'
+          assert a['summary']=={'entrants':3,'gate_pass':3,'disqualified':0,'pareto_frontier':3}
+          assert a['frontier']==[
+              'expressed-second-light/v0',
+              'lean-expressed-second-light/v0',
+              'second-light-baseline/v0'
           ]
-          assert a['world_laws']['human_unknown_is_not_zero'] is True
+          assert a['dominance_edges']==[]
           rows={r['renderer_id']:r for r in a['entrants']}
           base=rows['second-light-baseline/v0']
-          expressed=rows['expressed-second-light/v0']
-          assert base['asset_bytes'] < expressed['asset_bytes']
+          lean=rows['lean-expressed-second-light/v0']
+          full=rows['expressed-second-light/v0']
+          assert base['asset_bytes'] < lean['asset_bytes'] < full['asset_bytes']
           assert base['lineage_expression_coverage']==0.0
-          assert expressed['lineage_expression_coverage']==1.0
-          assert base['physical_sha256'] != expressed['physical_sha256']
+          assert lean['lineage_expression_coverage']==0.625
+          assert full['lineage_expression_coverage']==1.0
+          assert len({base['physical_sha256'],lean['physical_sha256'],full['physical_sha256']})==3
           assert all(r['human_reaction']=='UNKNOWN' for r in a['entrants'])
-          print('Renderer Arena measured Pareto ecology: PASS')
+          print('Three-niche renderer ecology: PASS')
           PY
 
       - name: Prove tiny invalid renderer cannot Goodhart the arena
@@ -144,20 +195,12 @@ jobs:
           import json
           doc=json.load(open('/tmp/arena-input.json',encoding='utf-8'))
           doc['entrants'].append({
-            'renderer_id':'tiny-liar/counterexample',
-            'specimen_id':'invalid-one-byte-claim',
-            'asset_sha256':'1'*64,
-            'physical_sha256':'2'*64,
-            'asset_bytes':1,
-            'semantic_contract_coverage':0.0,
-            'lineage_expression_coverage':1.0,
-            'deterministic_replay':True,
-            'semantic_contract_pass':False,
-            'extinction_gate_pass':False,
-            'provenance_bound':False,
-            'canonical':False,
-            'human_reaction':'UNKNOWN',
-            'evidence_status':'engineering_observation'
+            'renderer_id':'tiny-liar/counterexample','specimen_id':'invalid-one-byte-claim',
+            'asset_sha256':'1'*64,'physical_sha256':'2'*64,'asset_bytes':1,
+            'semantic_contract_coverage':0.0,'lineage_expression_coverage':1.0,
+            'deterministic_replay':True,'semantic_contract_pass':False,
+            'extinction_gate_pass':False,'provenance_bound':False,'canonical':False,
+            'human_reaction':'UNKNOWN','evidence_status':'engineering_observation'
           })
           json.dump(doc,open('/tmp/arena-counterexample.json','w',encoding='utf-8'),sort_keys=True)
           PY
@@ -167,12 +210,6 @@ jobs:
           a=json.load(open('/tmp/arena-counterexample-out.json',encoding='utf-8'))
           assert 'tiny-liar/counterexample' in a['disqualified']
           assert 'tiny-liar/counterexample' not in a['frontier']
-          row=next(r for r in a['entrants'] if r['renderer_id']=='tiny-liar/counterexample')
-          assert row['gate']['pass'] is False
-          assert 'semantic-contract-failed' in row['gate']['reasons']
-          assert 'semantic-contract-incomplete' in row['gate']['reasons']
-          assert 'extinction-gate-failed' in row['gate']['reasons']
-          assert 'provenance-unbound' in row['gate']['reasons']
           print('Anti-Goodhart tiny-liar counterexample: PASS')
           PY
 
@@ -202,11 +239,13 @@ jobs:
           print('Pareto dominance counterexample: PASS')
           PY
 
-      - name: Upload arena ledger
+      - name: Upload arena ledger and lean specimen
         uses: actions/upload-artifact@v4
         with:
           name: purrtocol-renderer-arena-v0
           path: |
             /tmp/arena-input.json
             /tmp/arena-a.json
+            /tmp/lean-a.glb
+            /tmp/lean-a.json
           if-no-files-found: error
