@@ -65,3 +65,30 @@ jobs:
               assert e['surface']['texture_budget']==0
           print('Purrtocol expression-genome invariants: PASS')
           PY
+      - name: Force an extinction counterexample through the compiler
+        run: |
+          python - <<'PY'
+          import json
+          m=json.load(open('/tmp/graphic.json', encoding='utf-8'))
+          p=m['profiles'][0]
+          p['source']['survives']=False
+          p['source']['extinction_reason']='counterexample-forced-recovery-invalid'
+          m['profiles']=[p]
+          with open('/tmp/extinct-graphic.json','w',encoding='utf-8') as f:
+              json.dump(m,f,ensure_ascii=False,sort_keys=True)
+          PY
+          python scripts/purrtocol_expression_genome.py --manifest /tmp/extinct-graphic.json --output /tmp/extinct-expression.json
+          python - <<'PY'
+          import json
+          g=json.load(open('/tmp/extinct-expression.json', encoding='utf-8'))
+          assert g['summary']['genomes']==1
+          assert g['summary']['breeding_eligible']==0
+          assert g['summary']['memorial_only']==1
+          row=g['genomes'][0]
+          assert row['survives'] is False
+          assert row['breeding_eligible'] is False
+          assert row['implementation_target']=='museum-extinction-memorial-only'
+          assert row['canonical'] is False
+          assert row['human_reaction']=='UNKNOWN'
+          print('Extinction cannot breed counterexample: PASS')
+          PY
