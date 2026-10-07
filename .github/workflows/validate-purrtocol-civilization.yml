@@ -4,13 +4,23 @@ on:
   pull_request:
     paths:
       - 'scripts/purrtocol_civilization.py'
+      - 'scripts/purrtocol_civilization_shock_regimes.py'
+      - 'scripts/purrtocol_recovery_safety_frontier.py'
+      - 'scripts/purrtocol_recovery_policy_lab.py'
+      - 'scripts/purrtocol_connection_amplification.py'
       - 'docs/purrtocol-civilization.md'
+      - 'docs/purrtocol-civilization-shock-regimes.md'
       - '.github/workflows/validate-purrtocol-civilization.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/purrtocol_civilization.py'
+      - 'scripts/purrtocol_civilization_shock_regimes.py'
+      - 'scripts/purrtocol_recovery_safety_frontier.py'
+      - 'scripts/purrtocol_recovery_policy_lab.py'
+      - 'scripts/purrtocol_connection_amplification.py'
       - 'docs/purrtocol-civilization.md'
+      - 'docs/purrtocol-civilization-shock-regimes.md'
       - '.github/workflows/validate-purrtocol-civilization.yml'
 
 permissions:
@@ -24,6 +34,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Compile civilization surfaces
+        run: |
+          python -m py_compile \
+            scripts/purrtocol_civilization.py \
+            scripts/purrtocol_civilization_shock_regimes.py \
+            scripts/purrtocol_recovery_safety_frontier.py \
+            scripts/purrtocol_recovery_policy_lab.py \
+            scripts/purrtocol_connection_amplification.py
       - name: Run deterministic season twice
         run: |
           python scripts/purrtocol_civilization.py --seed 27 --population 32 --shock 0.65 --output /tmp/season-a.json
@@ -41,3 +59,131 @@ jobs:
           assert all('recovery_gate' in r and 'projection_gate' in r for r in x['ledger'])
           print(x['news_facts'])
           PY
+      - name: Build deterministic civilization shock regimes
+        run: |
+          python - <<'PY'
+          import json
+          doc={
+            'schema':'purrtocol-civilization-shock-regimes-input/v0',
+            'regime_lab_id':'civilization-policy-phase-change',
+            'base_scenario':{
+              'baseline_request_rate_rps':10.0,
+              'shared_connection_capacity':100.0,
+              'max_retry_depth':4,
+            },
+            'base_policy':{
+              'policy_id':'small-local-hero',
+              'fanout_connections_per_attempt':4.0,
+              'failure_probability':0.7,
+              'retry_multiplier':1.5,
+              'connection_hold_seconds':0.5,
+              'payload_bytes':1000,
+              'local_success_probability':0.99,
+            },
+            'max_package_size':2,
+            'levers':[
+              {
+                'lever_id':'fanout-cap',
+                'mechanism':'connection-fanout-reduction',
+                'policy_overrides':{'fanout_connections_per_attempt':1.0},
+              },
+              {
+                'lever_id':'hold-time-cap',
+                'mechanism':'connection-hold-time-reduction',
+                'policy_overrides':{'connection_hold_seconds':0.4},
+              },
+              {
+                'lever_id':'retry-depth-two',
+                'mechanism':'retry-budget-depth-cap',
+                'scenario_overrides':{'max_retry_depth':2},
+              },
+              {
+                'lever_id':'retry-multiplier-cap',
+                'mechanism':'failure-triggered-repeat-reduction',
+                'policy_overrides':{'retry_multiplier':1.0},
+              },
+            ],
+            'environments':[
+              {
+                'environment_id':'calm-habitat',
+                'scenario_overrides':{
+                  'baseline_request_rate_rps':10.0,
+                  'shared_connection_capacity':100.0,
+                },
+              },
+              {
+                'environment_id':'congested-habitat',
+                'scenario_overrides':{
+                  'baseline_request_rate_rps':40.0,
+                  'shared_connection_capacity':100.0,
+                },
+              },
+              {
+                'environment_id':'severe-habitat',
+                'scenario_overrides':{
+                  'baseline_request_rate_rps':80.0,
+                  'shared_connection_capacity':80.0,
+                },
+              },
+            ],
+          }
+          json.dump(doc,open('/tmp/shock-regimes-input.json','w',encoding='utf-8'),sort_keys=True)
+          PY
+      - name: Run shock regime lab twice and require deterministic output
+        run: |
+          python scripts/purrtocol_civilization_shock_regimes.py --input /tmp/shock-regimes-input.json --output /tmp/shock-regimes-a.json
+          python scripts/purrtocol_civilization_shock_regimes.py --input /tmp/shock-regimes-input.json --output /tmp/shock-regimes-b.json
+          cmp /tmp/shock-regimes-a.json /tmp/shock-regimes-b.json
+      - name: Prove environment can force an institutional phase change
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/shock-regimes-a.json',encoding='utf-8'))
+          assert d['schema']=='purrtocol-civilization-shock-regimes/v0'
+          assert d['evidence_status']=='modeled_bounded_civilization_regimes'
+          assert d['phase_sequence']==[
+              'SINGLE_LEVER_SUFFICIENT',
+              'COALITION_REQUIRED',
+              'FRONTIER_EMPTY_WITHIN_BOUND',
+          ]
+          env={row['environment_id']:row for row in d['environments']}
+          calm=env['calm-habitat']
+          congested=env['congested-habitat']
+          severe=env['severe-habitat']
+
+          assert calm['baseline']['expected_concurrent_connections']==110.512625
+          assert calm['minimum_required_package_size']==1
+          assert calm['minimal_safe_packages']==[
+              'fanout-cap','hold-time-cap','retry-depth-two','retry-multiplier-cap'
+          ]
+
+          assert congested['baseline']['expected_concurrent_connections']==442.0505
+          assert congested['minimum_required_package_size']==2
+          assert congested['minimal_safe_packages']==[
+              'fanout-cap+hold-time-cap',
+              'fanout-cap+retry-depth-two',
+              'fanout-cap+retry-multiplier-cap',
+          ]
+
+          assert severe['baseline']['expected_concurrent_connections']==884.101
+          assert severe['minimum_required_package_size'] is None
+          assert severe['minimal_safe_packages']==[]
+          assert severe['safe_packages']==[]
+          severe_rows={r['package_id']:r for r in severe['packages']}
+          assert severe_rows['fanout-cap+retry-multiplier-cap']['expected_concurrent_connections']==110.924
+          assert severe_rows['fanout-cap+retry-multiplier-cap']['capacity_gate']['status']=='CAPACITY_EXCEEDED'
+
+          assert len(d['phase_transitions'])==2
+          assert all(t['phase_changed'] for t in d['phase_transitions'])
+          assert d['world_laws']['frontier_empty_within_bound_is_not_global_impossibility'] is True
+          assert d['world_laws']['safe_package_is_not_universal_winner'] is True
+          print('Civilization institutional phase transition: PASS')
+          PY
+      - name: Upload civilization regime ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: purrtocol-civilization-shock-regimes-v0
+          path: |
+            /tmp/shock-regimes-input.json
+            /tmp/shock-regimes-a.json
+          if-no-files-found: error
