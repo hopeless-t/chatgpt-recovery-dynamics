@@ -1,6 +1,6 @@
 # Purrtocol Civilization Chronicle
 
-> 建国から制度相転移まで、9時間13分46秒。文明進化が速すぎる。
+> 建国から制度相転移まで9時間13分46秒。報道局開局まで9時間37分09秒。文明進化が速すぎる。
 
 This chronicle has two explicitly separated layers:
 
@@ -8,6 +8,24 @@ This chronicle has two explicitly separated layers:
 2. **Civilization projection** — era names such as “カンブリア紀” or “連立政治の成立”. These are narrative labels for comprehension and entertainment, **not additional evidence**.
 
 Canonical time is GitHub `merged_at` in UTC. The table below displays Asia/Tokyo (JST, UTC+09:00).
+
+## Publication model — the historian cannot record its own birth in advance
+
+The Chronicle is a **published snapshot**, not an oracle.
+
+A PR that publishes a Chronicle edition cannot know its own final merge SHA and merge timestamp before it merges. Therefore that publication event can only enter the **next** Chronicle edition.
+
+```text
+history through N
+      ↓
+Chronicle edition is prepared
+      ↓
+Chronicle PR merges as event N+1
+      ↓
+next edition can record N+1
+```
+
+This is explicit self-reference / publication lag. It does **not** grant permission for silent staleness: each edition declares its coverage boundary, and new merged events belong in a later edition.
 
 ## Prehistory — government had not yet happened
 
@@ -44,6 +62,8 @@ Foundation is PR #68 at **00:54:49 JST**.
 | 04:50:56 | +03:56:07 | #84 | **政策研究院設立 — Recovery Policy Lab** | Add Recovery Policy Lab for shared-capacity interventions |
 | 09:43:53 | +08:49:04 | #85 | **連立政治の成立 — Safety Frontier** | Add bounded Recovery Safety Frontier for complementary policies |
 | 10:08:35 | +09:13:46 | #86 | **制度相転移 — Shock Regimes** | Connect Safety Frontier to civilization shock regimes |
+| 10:28:21 | +09:33:32 | #87 | **歴史学成立 — Civilization Chronicle** | Publish canonical Purrtocol Civilization chronicle |
+| 10:31:58 | +09:37:09 | #88 | **報道局開局 — Civilization Annalist** | Add ledger-grounded Purrtocol Civilization Annalist |
 
 ## Eras
 
@@ -126,23 +146,38 @@ The final state does **not** mean civilization is impossible. It means the curre
 
 Thus Purrtocol politics was accidentally invented.
 
+### VII. 歴史学・報道時代 — Self-observing Civilization
+
+**#87–#88** made the civilization capable of inspecting and projecting its own repository history.
+
+The Chronicle created an auditable split between merged fact and playful historical labels. The Annalist then produced Civilization News only from that validated Chronicle, retaining source PR and merge SHA for every headline.
+
+This era immediately discovered its own observer problem: publishing a history becomes a new historical event. The solution is not impossible self-completeness; it is explicit **snapshot semantics**.
+
+`history -> chronicle -> publication event -> next chronicle edition`
+
+The civilization has acquired historians, journalists, and a bureaucracy that prevents them from making things up. This was not part of the original 429 research plan.
+
 ## External / apocryphal branch
 
 **PR #73** remains open and therefore is **not canonical history**. It is recorded as a parallel experimental Second Light smooth-3D branch.
 
 An open experiment can influence future work, but the Chronicle must not rewrite it as a historical fact until it is merged or otherwise explicitly promoted.
 
-## Speedrun record
+## Speedrun records
 
-From PR #68 foundation to PR #86 institutional shock regimes:
+Two different milestones are preserved rather than silently changing the old one:
 
-**9 hours, 13 minutes, 46 seconds.**
+- **C0 foundation #68 -> institutional Shock Regimes #86:** `9:13:46`
+- **C0 foundation #68 -> Civilization Annalist #88:** `9:37:09`
 
-Within that interval the world acquired:
+Within the first interval the world acquired:
 
 `civilization -> external ecology -> evolution -> phenotype -> 3D organisms -> renderer competition -> habitat routing -> network crisis -> policy lab -> coalitions -> institutional phase transitions`
 
-This is a repository-history fact about merge timing plus a deliberately playful narrative projection. It is not evidence that real biological, economic or political evolution behaves at this speed.
+Within another 23 minutes and 23 seconds it also acquired **history and journalism**.
+
+These are repository-history facts about merge timing plus deliberately playful narrative projection. They are not evidence that real biological, economic, political, historical or journalistic evolution behaves at this speed.
 
 ## Chronicle laws
 
@@ -150,10 +185,12 @@ This is a repository-history fact about merge timing plus a deliberately playful
 2. **Open PR != canonical history.**
 3. **Narrative name != evidence.**
 4. **History may expand; it must not silently rewrite.**
-5. **Simulation != Evidence.**
-6. **Visualization != Evidence.**
-7. **UNKNOWN != SUCCESS.**
-8. **NO FINAL BOSS.**
-9. **NO FINAL CIVILIZATION.**
+5. **A Chronicle publication event enters the next edition.**
+6. **Publication lag is explicit snapshot semantics, not permission for silent staleness.**
+7. **Simulation != Evidence.**
+8. **Visualization != Evidence.**
+9. **UNKNOWN != SUCCESS.**
+10. **NO FINAL BOSS.**
+11. **NO FINAL CIVILIZATION.**
 
 Machine-readable source: [`data/purrtocol_civilization_chronicle.json`](../data/purrtocol_civilization_chronicle.json).

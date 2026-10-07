@@ -67,8 +67,14 @@ jobs:
               assert f"#{row['pr']}" in text
           assert 'PR #73' in text
           assert 'not canonical history' in text
-          assert data['coverage']['elapsed_human']=='9:13:46'
-          print('Civilization Chronicle repository-history boundary: PASS')
+          assert len(data['canonical_events'])==19
+          assert data['coverage']['through_pr']==88
+          assert data['coverage']['elapsed_human']=='9:37:09'
+          assert data['publication_model']['self_reference_acknowledged'] is True
+          assert data['publication_model']['publication_event_enters_next_edition'] is True
+          assert data['publication_model']['coverage_is_as_of_snapshot'] is True
+          assert data['publication_model']['publication_lag_is_not_permission_for_silent_staleness'] is True
+          print('Civilization Chronicle repository-history + publication-snapshot boundary: PASS')
           PY
       - name: Run Annalist twice and require deterministic news
         run: |
@@ -88,9 +94,10 @@ jobs:
           c=json.loads(Path('data/purrtocol_civilization_chronicle.json').read_text(encoding='utf-8'))
           assert d['schema']=='purrtocol-civilization-news/v0'
           assert d['evidence_status']=='projection_from_validated_repository_history'
-          assert d['summary']['articles']==len(c['canonical_events'])==17
-          assert d['front_page']['source_pr']==86
-          assert d['front_page']['civilization_speedrun']=='9:13:46'
+          assert d['summary']['articles']==len(c['canonical_events'])==19
+          assert d['front_page']['source_pr']==88
+          assert d['front_page']['civilization_speedrun']=='9:37:09'
+          assert d['front_page']['headline']=='報道局開局 — Civilization Annalist'
           assert all(a['headline_status']=='projection_from_explicit_chronicle_label' for a in d['articles'])
           assert all(a['source']['canonical_history'] is True for a in d['articles'])
           assert all(a['source']['pr'] != 73 for a in d['articles'])
@@ -112,6 +119,19 @@ jobs:
             exit 1
           fi
           test ! -e /tmp/should-not-exist.json
+      - name: Reject silent removal of Chronicle publication semantics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('data/purrtocol_civilization_chronicle.json').read_text(encoding='utf-8'))
+          d['publication_model']['self_reference_acknowledged']=False
+          Path('/tmp/tampered-publication-model.json').write_text(json.dumps(d),encoding='utf-8')
+          PY
+          if python scripts/validate_purrtocol_civilization_chronicle.py --input /tmp/tampered-publication-model.json; then
+            echo 'Chronicle accepted a hidden self-reference/publication-lag regression' >&2
+            exit 1
+          fi
       - name: Run deterministic season twice
         run: |
           python scripts/purrtocol_civilization.py --seed 27 --population 32 --shock 0.65 --output /tmp/season-a.json
