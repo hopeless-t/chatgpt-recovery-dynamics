@@ -1,0 +1,271 @@
+{
+  "schema": "purrtocol-civilization-chronicle/v0",
+  "evidence_status": "repository_history_plus_explicit_projection_labels",
+  "time_contract": {
+    "canonical_clock": "GitHub merged_at UTC",
+    "display_clock": "Asia/Tokyo +09:00",
+    "narrative_names_are_projection": true
+  },
+  "foundation": {
+    "pr": 68,
+    "merged_at_utc": "2026-10-06T15:54:49Z",
+    "merged_at_jst": "2026-10-07T00:54:49+09:00"
+  },
+  "coverage": {
+    "through_pr": 86,
+    "through_merge_sha": "d2be539f3d5c60e3150735d9abcca5da05fa0df7",
+    "elapsed_seconds_from_foundation": 33226,
+    "elapsed_human": "9:13:46"
+  },
+  "prehistory": [
+    {
+      "pr": 65,
+      "merged_at_utc": "2026-10-06T13:23:21Z",
+      "merged_at_jst": "2026-10-06T22:23:21+09:00",
+      "merge_sha": "196f34db278dd977955e84dd2315e2b57bd1a353",
+      "title": "Add clone-first onboarding and Recovery Survival Contract v0.1",
+      "chronicle_name": "契約前史 — Recovery Survival Contract"
+    },
+    {
+      "pr": 66,
+      "merged_at_utc": "2026-10-06T13:26:11Z",
+      "merged_at_jst": "2026-10-06T22:26:11+09:00",
+      "merge_sha": "811bdbebd453ea7f3bde46f1410b2d869121b7dc",
+      "title": "Launch bounded Purrtocol infinite-proliferation swarm",
+      "chronicle_name": "増殖前史 — Infinite Proliferation"
+    },
+    {
+      "pr": 67,
+      "merged_at_utc": "2026-10-06T13:30:54Z",
+      "merged_at_jst": "2026-10-06T22:30:54+09:00",
+      "merge_sha": "175c192113b7c8394f46c2be1e155259541c6087",
+      "title": "Surface clone-first v0.1 and Purrtocol proliferation entry points",
+      "chronicle_name": "発見可能性前史 — Discoverability"
+    }
+  ],
+  "canonical_events": [
+    {
+      "pr": 68,
+      "merged_at_utc": "2026-10-06T15:54:49Z",
+      "merged_at_jst": "2026-10-07T00:54:49+09:00",
+      "seconds_since_foundation": 0,
+      "merge_sha": "dbdb1b42d56cc389480426b8ab22040230f64c75",
+      "title": "Bootstrap Purrtocol Civilization survival environment",
+      "chronicle_name": "建国 — C0 Civilization",
+      "era": "founding",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 69,
+      "merged_at_utc": "2026-10-06T18:02:19Z",
+      "merged_at_jst": "2026-10-07T03:02:19+09:00",
+      "seconds_since_foundation": 7650,
+      "merge_sha": "500bc0b23ff1efb5746507e2e37a58f1c3ad14be",
+      "title": "Add privacy-preserving Purrtocol Propagation Observatory",
+      "chronicle_name": "野生種観測 — Propagation Observatory",
+      "era": "wild_ecology",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 70,
+      "merged_at_utc": "2026-10-06T18:11:48Z",
+      "merged_at_jst": "2026-10-07T03:11:48+09:00",
+      "seconds_since_foundation": 8219,
+      "merge_sha": "d9eb312e63199ddfcf5d07e6fcece5cb5e86bdda",
+      "title": "Launch C1 Purrtocol evolutionary ecology",
+      "chronicle_name": "カンブリア紀 — C1 Ecology",
+      "era": "wild_ecology",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 71,
+      "merged_at_utc": "2026-10-06T18:15:43Z",
+      "merged_at_jst": "2026-10-07T03:15:43+09:00",
+      "seconds_since_foundation": 8454,
+      "merge_sha": "f91ef93aa6897d57e36b29ebba965b4a53d613dc",
+      "title": "Bridge C1 ecology into Purrtocol Graphic Evolution",
+      "chronicle_name": "視覚文化革命 — Graphic Evolution",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 72,
+      "merged_at_utc": "2026-10-06T18:37:58Z",
+      "merged_at_jst": "2026-10-07T03:37:58+09:00",
+      "seconds_since_foundation": 9789,
+      "merge_sha": "4ef41fb712ccd56b3c2ff2b9e6fe8c57e5690309",
+      "title": "Generate reproducible Purrtocol Second Light specimen",
+      "chronicle_name": "第二灯点灯 — Second Light",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 74,
+      "merged_at_utc": "2026-10-06T18:41:41Z",
+      "merged_at_jst": "2026-10-07T03:41:41+09:00",
+      "seconds_since_foundation": 10012,
+      "merge_sha": "eb4790ad7817f97644731c5a862d5e659c387f8e",
+      "title": "Compile ecology into Purrtocol expression genomes",
+      "chronicle_name": "遺伝子発現時代 — Expression Genome",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 75,
+      "merged_at_utc": "2026-10-06T18:50:01Z",
+      "merged_at_jst": "2026-10-07T03:50:01+09:00",
+      "seconds_since_foundation": 10512,
+      "merge_sha": "17235a99987c2fb097997b0754e10aeec507e155",
+      "title": "Test extinct Purrtocols cannot breed",
+      "chronicle_name": "死者繁殖禁止令 — Extinction Counterexample",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 76,
+      "merged_at_utc": "2026-10-06T18:58:48Z",
+      "merged_at_jst": "2026-10-07T03:58:48+09:00",
+      "seconds_since_foundation": 11039,
+      "merge_sha": "8160c39f0f2ccb3f1f2cd27b5335cbc4bdf0fb3c",
+      "title": "Render Expression Genomes as distinct Second Light descendants",
+      "chronicle_name": "第一発現世代 — Physical Descendants",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 77,
+      "merged_at_utc": "2026-10-06T19:05:24Z",
+      "merged_at_jst": "2026-10-07T04:05:24+09:00",
+      "seconds_since_foundation": 11435,
+      "merge_sha": "080790e6865ae7c32d3363e67ec6775f2f930502",
+      "title": "Keep expressed Purrtocol bodies continuous through animation",
+      "chronicle_name": "幽霊猫禁止令 — Expression Continuity",
+      "era": "graphic_renaissance",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 78,
+      "merged_at_utc": "2026-10-06T19:10:02Z",
+      "merged_at_jst": "2026-10-07T04:10:02+09:00",
+      "seconds_since_foundation": 11713,
+      "merge_sha": "f12f9489696be929e0a848396c63e533a2e3931b",
+      "title": "Add Pareto Renderer Arena with anti-Goodhart gates",
+      "chronicle_name": "競技場時代 — Renderer Arena",
+      "era": "renderer_polity",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 79,
+      "merged_at_utc": "2026-10-06T19:14:50Z",
+      "merged_at_jst": "2026-10-07T04:14:50+09:00",
+      "seconds_since_foundation": 12001,
+      "merge_sha": "9f7dde7194469c0ca04f3897c38a49ac7b1bcc66",
+      "title": "Add Lean Expression Renderer as a real Arena niche",
+      "chronicle_name": "三種共存 — Baseline / Lean / Full",
+      "era": "renderer_polity",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 80,
+      "merged_at_utc": "2026-10-06T19:19:20Z",
+      "merged_at_jst": "2026-10-07T04:19:20+09:00",
+      "seconds_since_foundation": 12271,
+      "merge_sha": "996a2f004faeec7ff33ed16a6b8f464d8ac590f8",
+      "title": "Route Pareto renderers by explicit habitat constraints",
+      "chronicle_name": "生息地連邦制 — Habitat Router",
+      "era": "renderer_polity",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 82,
+      "merged_at_utc": "2026-10-06T19:39:51Z",
+      "merged_at_jst": "2026-10-07T04:39:51+09:00",
+      "seconds_since_foundation": 13502,
+      "merge_sha": "12cf88d26fc8b56b7103775bfebe9cb97ab21a2a",
+      "title": "Add deterministic transfer measurement contract before network fitness",
+      "chronicle_name": "通信計量革命 — Transfer Contract",
+      "era": "network_crisis",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 83,
+      "merged_at_utc": "2026-10-06T19:45:11Z",
+      "merged_at_jst": "2026-10-07T04:45:11+09:00",
+      "seconds_since_foundation": 13822,
+      "merge_sha": "7adc520c416f1b8b598fcc80b06f848278e774a8",
+      "title": "Model bounded failure-triggered connection amplification",
+      "chronicle_name": "接続危機 — Connection Amplification",
+      "era": "network_crisis",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 84,
+      "merged_at_utc": "2026-10-06T19:50:56Z",
+      "merged_at_jst": "2026-10-07T04:50:56+09:00",
+      "seconds_since_foundation": 14167,
+      "merge_sha": "1eacf2cae5930cc4163ea06a55277889c2f0c36b",
+      "title": "Add Recovery Policy Lab for shared-capacity interventions",
+      "chronicle_name": "政策研究院設立 — Recovery Policy Lab",
+      "era": "policy_revolution",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 85,
+      "merged_at_utc": "2026-10-07T00:43:53Z",
+      "merged_at_jst": "2026-10-07T09:43:53+09:00",
+      "seconds_since_foundation": 31744,
+      "merge_sha": "d539716eefcbcb25668d8a7a71f9f343e91f88e4",
+      "title": "Add bounded Recovery Safety Frontier for complementary policies",
+      "chronicle_name": "連立政治の成立 — Safety Frontier",
+      "era": "policy_revolution",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 86,
+      "merged_at_utc": "2026-10-07T01:08:35Z",
+      "merged_at_jst": "2026-10-07T10:08:35+09:00",
+      "seconds_since_foundation": 33226,
+      "merge_sha": "d2be539f3d5c60e3150735d9abcca5da05fa0df7",
+      "title": "Connect Safety Frontier to civilization shock regimes",
+      "chronicle_name": "制度相転移 — Shock Regimes",
+      "era": "policy_revolution",
+      "source_status": "merged",
+      "canonical_history": true
+    }
+  ],
+  "noncanonical_experiments": [
+    {
+      "pr": 73,
+      "status": "open",
+      "canonical_history": false,
+      "title": "Materialize Purrtocol Second Light smooth 3D candidate",
+      "head_sha": "fef877a5427a7509bc2ae2f4e3ac3578e6ab63c9",
+      "chronicle_role": "外典 / parallel experimental branch",
+      "reason": "not merged; must not be rewritten as canonical history"
+    }
+  ],
+  "world_laws": {
+    "merged_repository_history_is_canonical": true,
+    "open_pr_is_not_canonical_history": true,
+    "narrative_label_is_not_evidence": true,
+    "chronicle_must_be_monotonic": true,
+    "history_can_expand_but_not_silently_rewrite": true,
+    "no_final_civilization": true
+  }
+}
