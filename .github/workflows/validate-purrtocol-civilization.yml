@@ -10,11 +10,13 @@ on:
       - 'scripts/purrtocol_connection_amplification.py'
       - 'scripts/validate_purrtocol_civilization_chronicle.py'
       - 'scripts/purrtocol_civilization_annalist.py'
+      - 'scripts/validate_purrtocol_civilization_history_museum.py'
       - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
+      - 'docs/purrtocol-civilization-history/index.html'
       - '.github/workflows/validate-purrtocol-civilization.yml'
   push:
     branches: [main]
@@ -26,11 +28,13 @@ on:
       - 'scripts/purrtocol_connection_amplification.py'
       - 'scripts/validate_purrtocol_civilization_chronicle.py'
       - 'scripts/purrtocol_civilization_annalist.py'
+      - 'scripts/validate_purrtocol_civilization_history_museum.py'
       - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
+      - 'docs/purrtocol-civilization-history/index.html'
       - '.github/workflows/validate-purrtocol-civilization.yml'
 
 permissions:
@@ -53,7 +57,8 @@ jobs:
             scripts/purrtocol_recovery_policy_lab.py \
             scripts/purrtocol_connection_amplification.py \
             scripts/validate_purrtocol_civilization_chronicle.py \
-            scripts/purrtocol_civilization_annalist.py
+            scripts/purrtocol_civilization_annalist.py \
+            scripts/validate_purrtocol_civilization_history_museum.py
       - name: Validate canonical civilization chronicle
         run: |
           python scripts/validate_purrtocol_civilization_chronicle.py \
@@ -76,6 +81,11 @@ jobs:
           assert data['publication_model']['publication_lag_is_not_permission_for_silent_staleness'] is True
           print('Civilization Chronicle repository-history + publication-snapshot boundary: PASS')
           PY
+      - name: Validate visual History Museum against Chronicle
+        run: |
+          python scripts/validate_purrtocol_civilization_history_museum.py \
+            --chronicle data/purrtocol_civilization_chronicle.json \
+            --museum docs/purrtocol-civilization-history/index.html
       - name: Run Annalist twice and require deterministic news
         run: |
           python scripts/purrtocol_civilization_annalist.py \
