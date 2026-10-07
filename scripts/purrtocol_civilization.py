@@ -13,9 +13,11 @@ from pathlib import Path
 
 import purrtocol_c2_knowledge_institutions as c2_knowledge
 import purrtocol_c3_stratification_oracle as c3_stratification
+import purrtocol_c4_belief_leisure as c4_belief_leisure
 import purrtocol_genesis_microcosm as genesis_microcosm
 
 ROLES = ("Observer", "Executor", "CacheKeeper", "Broker", "Archivist", "Teacher", "Projector", "Auditor")
+
 
 @dataclass
 class Cat:
@@ -161,6 +163,44 @@ def c3_reference_summary() -> dict:
     }
 
 
+def c4_reference_summary() -> dict:
+    reference = c4_belief_leisure.build_reference()
+    receivers = reference["oracle"]["genuine_receivers"]
+    false_claimants = reference["oracle"]["false_claimants"]
+    if receivers != [19, 89]:
+        raise RuntimeError(f"C4 genuine receiver fixture drifted: {receivers!r}")
+    if false_claimants != [52, 88]:
+        raise RuntimeError(f"C4 false-claim fixture drifted: {false_claimants!r}")
+    if abs(reference["accounting"]["conservation_residual"]) > 1e-8:
+        raise RuntimeError("C4 wealth-flow conservation drifted")
+    strata = reference["entertainment"]["strata"]
+    if not (
+        strata["elite"]["mean_leisure_spend"]
+        > strata["laborer"]["mean_leisure_spend"]
+        > strata["debtor"]["mean_leisure_spend"]
+    ):
+        raise RuntimeError("C4 leisure-resource hierarchy drifted")
+    if not (
+        strata["debtor"]["mean_cultural_output"]
+        > strata["laborer"]["mean_cultural_output"]
+        > strata["elite"]["mean_cultural_output"]
+    ):
+        raise RuntimeError("C4 improvised-culture fixture drifted")
+    if strata["debtor"]["mean_escapism"] <= strata["laborer"]["mean_escapism"]:
+        raise RuntimeError("C4 constrained-escapism fixture drifted")
+    if not any((not row["genuine_receiver"]) and row["followers"] > 0 for row in reference["movements"]):
+        raise RuntimeError("C4 false claimant no longer converts claim into social power")
+    return {
+        "schema": reference["schema"],
+        "evidence_status": reference["evidence_status"],
+        "genuine_receivers": receivers,
+        "false_claimants": false_claimants,
+        "movements": reference["movements"],
+        "entertainment_strata": strata,
+        "world_laws": reference["world_laws"],
+    }
+
+
 def run(seed: int, population: int, shock: float) -> dict:
     rng = random.Random(seed)
     cats = [make_cat(rng, i) for i in range(population)]
@@ -228,6 +268,7 @@ def run(seed: int, population: int, shock: float) -> dict:
         "genesis_microcosm_reference": genesis_reference_summary(),
         "c2_knowledge_institutions_reference": c2_reference_summary(),
         "c3_stratification_oracle_reference": c3_reference_summary(),
+        "c4_belief_leisure_reference": c4_reference_summary(),
     }
 
 
@@ -247,6 +288,7 @@ def main() -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result["news_facts"], ensure_ascii=False, sort_keys=True))
+
 
 if __name__ == "__main__":
     main()
