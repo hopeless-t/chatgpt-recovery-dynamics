@@ -6,16 +6,23 @@
     "display_clock": "Asia/Tokyo +09:00",
     "narrative_names_are_projection": true
   },
+  "publication_model": {
+    "snapshot_semantics": "a published Chronicle records canonical repository history available before that Chronicle edition itself merges",
+    "self_reference_acknowledged": true,
+    "publication_event_enters_next_edition": true,
+    "coverage_is_as_of_snapshot": true,
+    "publication_lag_is_not_permission_for_silent_staleness": true
+  },
   "foundation": {
     "pr": 68,
     "merged_at_utc": "2026-10-06T15:54:49Z",
     "merged_at_jst": "2026-10-07T00:54:49+09:00"
   },
   "coverage": {
-    "through_pr": 86,
-    "through_merge_sha": "d2be539f3d5c60e3150735d9abcca5da05fa0df7",
-    "elapsed_seconds_from_foundation": 33226,
-    "elapsed_human": "9:13:46"
+    "through_pr": 88,
+    "through_merge_sha": "83ec9fd370c91c045033e771a8b43f6820aa460d",
+    "elapsed_seconds_from_foundation": 34629,
+    "elapsed_human": "9:37:09"
   },
   "prehistory": [
     {
@@ -247,6 +254,30 @@
       "era": "policy_revolution",
       "source_status": "merged",
       "canonical_history": true
+    },
+    {
+      "pr": 87,
+      "merged_at_utc": "2026-10-07T01:28:21Z",
+      "merged_at_jst": "2026-10-07T10:28:21+09:00",
+      "seconds_since_foundation": 34412,
+      "merge_sha": "478c7ec2e2f48dc824f82bde88afd7116618570b",
+      "title": "Publish canonical Purrtocol Civilization chronicle",
+      "chronicle_name": "歴史学成立 — Civilization Chronicle",
+      "era": "historiography_press",
+      "source_status": "merged",
+      "canonical_history": true
+    },
+    {
+      "pr": 88,
+      "merged_at_utc": "2026-10-07T01:31:58Z",
+      "merged_at_jst": "2026-10-07T10:31:58+09:00",
+      "seconds_since_foundation": 34629,
+      "merge_sha": "83ec9fd370c91c045033e771a8b43f6820aa460d",
+      "title": "Add ledger-grounded Purrtocol Civilization Annalist",
+      "chronicle_name": "報道局開局 — Civilization Annalist",
+      "era": "historiography_press",
+      "source_status": "merged",
+      "canonical_history": true
     }
   ],
   "noncanonical_experiments": [
@@ -266,6 +297,8 @@
     "narrative_label_is_not_evidence": true,
     "chronicle_must_be_monotonic": true,
     "history_can_expand_but_not_silently_rewrite": true,
+    "publication_event_enters_next_edition": true,
+    "chronicle_snapshot_may_trail_live_history_by_its_own_publication_event": true,
     "no_final_civilization": true
   }
 }
