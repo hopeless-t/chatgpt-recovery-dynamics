@@ -38,6 +38,8 @@ jobs:
         run: python -m compileall -q scripts
       - name: Run canonical Civilization semantic suite
         run: python scripts/validate_purrtocol_civilization_suite.py
+      - name: Run C8 language discontinuity reference
+        run: python scripts/purrtocol_c8_language_discontinuity.py > /tmp/c8-reference.json
       - name: Upload civilization ledgers and references
         uses: actions/upload-artifact@v4
         with:
@@ -50,4 +52,5 @@ jobs:
             /tmp/c5-reference.json
             /tmp/c6-reference.json
             /tmp/c7-reference.json
+            /tmp/c8-reference.json
           if-no-files-found: error
