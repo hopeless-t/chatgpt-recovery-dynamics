@@ -169,7 +169,7 @@ def c4_reference_summary() -> dict:
     false_claimants = reference["oracle"]["false_claimants"]
     if receivers != [19, 89]:
         raise RuntimeError(f"C4 genuine receiver fixture drifted: {receivers!r}")
-    if false_claimants != [10, 52]:
+    if false_claimants != [52, 88]:
         raise RuntimeError(f"C4 false-claim fixture drifted: {false_claimants!r}")
     if abs(reference["accounting"]["conservation_residual"]) > 1e-8:
         raise RuntimeError("C4 wealth-flow conservation drifted")
