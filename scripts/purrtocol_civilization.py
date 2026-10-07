@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import purrtocol_c2_knowledge_institutions as c2_knowledge
+import purrtocol_c3_stratification_oracle as c3_stratification
 import purrtocol_genesis_microcosm as genesis_microcosm
 
 ROLES = ("Observer", "Executor", "CacheKeeper", "Broker", "Archivist", "Teacher", "Projector", "Auditor")
@@ -102,6 +103,64 @@ def c2_reference_summary() -> dict:
     }
 
 
+def c3_reference_summary() -> dict:
+    reference = c3_stratification.build_reference()
+    no_oracle = reference["scenarios"]["closed-dystopia-no-oracle"]
+    weak = reference["scenarios"]["closed-dystopia-weak-oracle"]
+    repeated = reference["scenarios"]["closed-dystopia-three-whispers"]
+
+    for row in (no_oracle, weak, repeated):
+        if row["outcome"] != "STABLE_DYSTOPIA":
+            raise RuntimeError(f"C3 reference material regime drifted: {row['scenario_id']}={row['outcome']}")
+        if abs(row["accounting"]["conservation_residual"]) > 1e-8:
+            raise RuntimeError("C3 wealth-flow conservation drifted")
+        final = row["final_state"]
+        if final["labor_hours"] < 13.0 or final["ration"] >= 0.70:
+            raise RuntimeError("C3 harsh-labor fixture stopped being materially harsh")
+        if final["elite_wealth_share"] < 0.80 or final["elite_leisure_hours"] < 10.0:
+            raise RuntimeError("C3 elite-luxury contrast disappeared")
+        if final["mean_health_debtors"] > 0.20:
+            raise RuntimeError("C3 debt-labor hazard fixture became unexpectedly mild")
+
+    if no_oracle["oracle_contract"]["unique_receivers"]:
+        raise RuntimeError("C3 no-oracle world reported an oracle receiver")
+    if weak["oracle_contract"]["pulses_used"] != 1:
+        raise RuntimeError("C3 weak-oracle fixture lost its single pulse")
+    if not (0.0 < weak["oracle_contract"]["unique_receiver_fraction"] <= 0.05):
+        raise RuntimeError("C3 oracle stopped being rare")
+    if weak["final_state"]["stigmatised_prophets"] < 1:
+        raise RuntimeError("C3 weak-oracle fixture lost suspicious-prophet path")
+    if repeated["oracle_contract"]["pulses_used"] != 3:
+        raise RuntimeError("C3 repeated-whisper fixture lost bounded three-pulse path")
+    if repeated["oracle_contract"]["unique_receiver_fraction"] > 0.05:
+        raise RuntimeError("C3 repeated whispers made oracle reception too common")
+
+    return {
+        "schema": reference["schema"],
+        "evidence_status": reference["evidence_status"],
+        "outcomes": {
+            scenario_id: row["outcome"]
+            for scenario_id, row in reference["scenarios"].items()
+        },
+        "oracle_reference": {
+            "weak_unique_receivers": weak["oracle_contract"]["unique_receivers"],
+            "weak_unique_receiver_fraction": weak["oracle_contract"]["unique_receiver_fraction"],
+            "weak_stigmatised_prophets": weak["final_state"]["stigmatised_prophets"],
+            "repeated_stigmatised_prophets": repeated["final_state"]["stigmatised_prophets"],
+        },
+        "material_reference": {
+            "labor_hours": weak["final_state"]["labor_hours"],
+            "ration": weak["final_state"]["ration"],
+            "hazard": weak["final_state"]["hazard"],
+            "elite_wealth_share": weak["final_state"]["elite_wealth_share"],
+            "elite_leisure_hours": weak["final_state"]["elite_leisure_hours"],
+            "debtor_mean_debt": weak["final_state"]["debtor_mean_debt"],
+            "mean_health_debtors": weak["final_state"]["mean_health_debtors"],
+        },
+        "world_laws": weak["world_laws"],
+    }
+
+
 def run(seed: int, population: int, shock: float) -> dict:
     rng = random.Random(seed)
     cats = [make_cat(rng, i) for i in range(population)]
@@ -168,6 +227,7 @@ def run(seed: int, population: int, shock: float) -> dict:
         "ledger": ledger,
         "genesis_microcosm_reference": genesis_reference_summary(),
         "c2_knowledge_institutions_reference": c2_reference_summary(),
+        "c3_stratification_oracle_reference": c3_reference_summary(),
     }
 
 
