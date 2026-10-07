@@ -32,6 +32,7 @@ Purrtocol is an anthropomorphic error model for recovery systems.
 - [Variant Protocol](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/PURRTOCOL_VARIANTS.md)
 - [Infinite Proliferation Project](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-infinite-proliferation.md) — open-ended seed stream, bounded runs, deterministic lineage, concept-only output.
 - [Civilization Chronicle](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-civilization-chronicle.md) — canonical merged history plus explicitly labeled civilization projection; foundation to institutional phase change in 9:13:46.
+- [Civilization History Museum](./purrtocol-civilization-history/) — visual, source-linked chronology with canonical/prehistory/apocrypha separation and snapshot semantics.
 - [Civilization News](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-civilization-news.md) — deterministic Annalist projection where every headline remains bound to a canonical source PR and merge SHA.
 - [Civilization Shock Regimes](https://github.com/hopeless-t/chatgpt-recovery-dynamics/blob/main/docs/purrtocol-civilization-shock-regimes.md) — environment-dependent transition from singleton policy to coalition to bounded-frontier exhaustion.
 - [Variant Foundry](./purrtocol-variant-foundry/index.md)
