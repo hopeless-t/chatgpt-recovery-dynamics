@@ -8,8 +8,11 @@ on:
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
       - 'scripts/purrtocol_connection_amplification.py'
+      - 'scripts/validate_purrtocol_civilization_chronicle.py'
+      - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
+      - 'docs/purrtocol-civilization-chronicle.md'
       - '.github/workflows/validate-purrtocol-civilization.yml'
   push:
     branches: [main]
@@ -19,8 +22,11 @@ on:
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
       - 'scripts/purrtocol_connection_amplification.py'
+      - 'scripts/validate_purrtocol_civilization_chronicle.py'
+      - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
+      - 'docs/purrtocol-civilization-chronicle.md'
       - '.github/workflows/validate-purrtocol-civilization.yml'
 
 permissions:
@@ -41,7 +47,24 @@ jobs:
             scripts/purrtocol_civilization_shock_regimes.py \
             scripts/purrtocol_recovery_safety_frontier.py \
             scripts/purrtocol_recovery_policy_lab.py \
-            scripts/purrtocol_connection_amplification.py
+            scripts/purrtocol_connection_amplification.py \
+            scripts/validate_purrtocol_civilization_chronicle.py
+      - name: Validate canonical civilization chronicle
+        run: |
+          python scripts/validate_purrtocol_civilization_chronicle.py \
+            --input data/purrtocol_civilization_chronicle.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('data/purrtocol_civilization_chronicle.json').read_text(encoding='utf-8'))
+          text=Path('docs/purrtocol-civilization-chronicle.md').read_text(encoding='utf-8')
+          for row in data['canonical_events']:
+              assert f"#{row['pr']}" in text
+          assert 'PR #73' in text
+          assert 'not canonical history' in text
+          assert data['coverage']['elapsed_human']=='9:13:46'
+          print('Civilization Chronicle repository-history boundary: PASS')
+          PY
       - name: Run deterministic season twice
         run: |
           python scripts/purrtocol_civilization.py --seed 27 --population 32 --shock 0.65 --output /tmp/season-a.json
