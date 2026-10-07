@@ -11,6 +11,8 @@ import random
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import purrtocol_c2_knowledge_institutions as c2_knowledge
+
 ROLES = ("Observer", "Executor", "CacheKeeper", "Broker", "Archivist", "Teacher", "Projector", "Auditor")
 
 @dataclass
@@ -38,6 +40,46 @@ def make_cat(rng: random.Random, n: int) -> Cat:
         novelty=rng.random(),
         energy=rng.randint(6, 14),
     )
+
+
+def c2_reference_summary() -> dict:
+    reference = c2_knowledge.build(60)
+    outcomes = {
+        scenario_id: row["outcome"]
+        for scenario_id, row in reference["scenarios"].items()
+    }
+    expected = {
+        "late-abolition-after-knowledge-boom": "REVOLUTION",
+        "adaptive-reform-before-break": "REFORMED_ORDER",
+        "early-knowledge-lockdown": "AUTHORITARIAN_STAGNATION",
+    }
+    if outcomes != expected:
+        raise RuntimeError(f"C2 reference counterfactual drifted: {outcomes!r}")
+
+    late = reference["scenarios"]["late-abolition-after-knowledge-boom"]
+    reform = reference["scenarios"]["adaptive-reform-before-break"]
+    early = reference["scenarios"]["early-knowledge-lockdown"]
+    if not any(e["event"] == "FORMAL_SCHOOL_SYSTEM_ABOLISHED" for e in late["events"]):
+        raise RuntimeError("C2 late-abolition fixture never abolished formal schooling")
+    if not any(e["event"] == "UNDERGROUND_EDUCATION_NETWORK" for e in late["events"]):
+        raise RuntimeError("C2 late-abolition fixture never formed underground education")
+    if reform["policy_counts"].get("REFORM_COMPACT", 0) <= 0:
+        raise RuntimeError("C2 reform fixture never exercised REFORM_COMPACT")
+    if early["final_state"]["citizen_knowledge"] >= 0.30:
+        raise RuntimeError("C2 early-lockdown fixture unexpectedly retained high public knowledge")
+
+    return {
+        "schema": reference["schema"],
+        "evidence_status": reference["evidence_status"],
+        "outcomes": outcomes,
+        "world_laws": reference["world_laws"],
+        "counterexample_contract": {
+            "abolition_is_not_universal_revolution_trigger": True,
+            "reform_can_avoid_revolution_in_reference_fixture": True,
+            "early_lockdown_can_avoid_revolution_but_stagnate": True,
+            "late_abolition_can_leave_underground_learning": True,
+        },
+    }
 
 
 def run(seed: int, population: int, shock: float) -> dict:
@@ -106,6 +148,7 @@ def run(seed: int, population: int, shock: float) -> dict:
         "news_facts": news_facts,
         "survivor_ids": survivors,
         "ledger": ledger,
+        "c2_knowledge_institutions_reference": c2_reference_summary(),
     }
 
 
