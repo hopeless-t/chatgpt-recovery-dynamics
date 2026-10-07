@@ -4,6 +4,11 @@
 The chronicle deliberately separates merged repository history from playful
 civilization projection labels. Narrative labels are allowed; they are never
 upgraded into evidence.
+
+A published Chronicle is a snapshot: the PR that publishes an edition cannot
+know its own final merge SHA/timestamp before it merges, so that publication
+event enters the *next* edition. This self-reference lag is explicit and must
+never become an excuse for silent staleness.
 """
 from __future__ import annotations
 
@@ -43,6 +48,18 @@ def validate(doc: dict[str, Any]) -> dict[str, Any]:
         raise ChronicleError("canonical clock must remain GitHub merged_at UTC")
     if contract.get("narrative_names_are_projection") is not True:
         raise ChronicleError("narrative labels must remain projection-only")
+
+    publication = doc.get("publication_model", {})
+    required_publication = (
+        "self_reference_acknowledged",
+        "publication_event_enters_next_edition",
+        "coverage_is_as_of_snapshot",
+        "publication_lag_is_not_permission_for_silent_staleness",
+    )
+    if not isinstance(publication.get("snapshot_semantics"), str) or not publication["snapshot_semantics"].strip():
+        raise ChronicleError("publication_model.snapshot_semantics must be explicit")
+    if not all(publication.get(key) is True for key in required_publication):
+        raise ChronicleError("Chronicle publication self-reference contract is incomplete")
 
     foundation = doc.get("foundation", {})
     foundation_pr = foundation.get("pr")
@@ -87,6 +104,8 @@ def validate(doc: dict[str, Any]) -> dict[str, Any]:
             raise ChronicleError(f"canonical event #{pr} must be merged and canonical")
         if not isinstance(row.get("chronicle_name"), str) or not row["chronicle_name"].strip():
             raise ChronicleError(f"canonical event #{pr} needs a narrative label")
+        if not isinstance(row.get("era"), str) or not row["era"].strip():
+            raise ChronicleError(f"canonical event #{pr} needs an era")
         if index == 0 and pr != foundation_pr:
             raise ChronicleError("first canonical event must equal foundation.pr")
 
@@ -98,6 +117,10 @@ def validate(doc: dict[str, Any]) -> dict[str, Any]:
         raise ChronicleError("coverage.through_merge_sha must match latest canonical event")
     if coverage.get("elapsed_seconds_from_foundation") != last["seconds_since_foundation"]:
         raise ChronicleError("coverage elapsed seconds must match latest event")
+    elapsed = last["seconds_since_foundation"]
+    expected_human = f"{elapsed // 3600}:{(elapsed % 3600) // 60:02d}:{elapsed % 60:02d}"
+    if coverage.get("elapsed_human") != expected_human:
+        raise ChronicleError("coverage elapsed_human must be derived from elapsed seconds")
 
     prehistory = doc.get("prehistory", [])
     for row in prehistory:
@@ -122,6 +145,8 @@ def validate(doc: dict[str, Any]) -> dict[str, Any]:
         "narrative_label_is_not_evidence",
         "chronicle_must_be_monotonic",
         "history_can_expand_but_not_silently_rewrite",
+        "publication_event_enters_next_edition",
+        "chronicle_snapshot_may_trail_live_history_by_its_own_publication_event",
         "no_final_civilization",
     )
     if not all(laws.get(key) is True for key in required_laws):
@@ -134,6 +159,8 @@ def validate(doc: dict[str, Any]) -> dict[str, Any]:
         "foundation_pr": foundation_pr,
         "latest_pr": last["pr"],
         "elapsed_seconds": last["seconds_since_foundation"],
+        "elapsed_human": coverage["elapsed_human"],
+        "publication_snapshot": True,
     }
 
 
