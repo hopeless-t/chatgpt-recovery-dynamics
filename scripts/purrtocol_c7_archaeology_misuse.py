@@ -3,18 +3,11 @@
 
 Fictional simulation/game-system design only.
 
-A successor culture can inherit advanced artefacts while losing the dependency chain
-needed to understand them. Interpretation is therefore reconstructed from surviving
-knowledge, material scarcity, status pressure, ritualization, and the artefact's
-remaining physical affordances.
-
-Core rules:
+World laws:
 - Relic != understood technology.
 - Wrong interpretation != useless interpretation.
 - Social confidence != historical correctness.
-- Destructive reuse can erase evidence.
-- Ritual preservation can accidentally conserve evidence.
-- A mistaken use can preserve a useful physical regularity and seed a new capability.
+- Physical affordance can outlive semantic memory.
 """
 from __future__ import annotations
 
@@ -109,7 +102,6 @@ RELICS: tuple[dict[str, Any], ...] = (
 
 
 def successor_knowledge(seed: int) -> dict[str, float]:
-    """Knowledge after a long discontinuity; high confidence can coexist with low competence."""
     return {
         "language_continuity": 0.04 + 0.34 * h01(seed, "language"),
         "archive_literacy": 0.03 + 0.30 * h01(seed, "archive"),
@@ -136,7 +128,7 @@ def reconstruction_score(k: dict[str, float], relic_id: str) -> float:
     return clamp(base + 0.04 * (h01(LEGENDARY_SEED, "reconstruction", relic_id) - 0.5))
 
 
-def choose_misuse(seed: int, relic: dict[str, Any], k: dict[str, float]) -> tuple[str, str, str, float]:
+def choose_misuse(seed: int, relic: dict[str, Any], k: dict[str, float]) -> tuple[str, str, str]:
     ranked: list[tuple[float, tuple[str, str, str]]] = []
     for name, category, echo in relic["misuses"]:
         score = h01(seed, relic["relic_id"], name)
@@ -146,24 +138,23 @@ def choose_misuse(seed: int, relic: dict[str, Any], k: dict[str, float]) -> tupl
             score += 0.55 * k["status_pressure"] + 0.10 * (1.0 - k["scarcity"])
         elif category == "practical":
             score += 0.42 * k["scarcity"] + 0.20 * k["materials"]
-        elif category == "leisure":
+        else:
             score += 0.25 * k["scarcity"] + 0.20 * k["ritualization"]
         ranked.append((score, (name, category, echo)))
-    score, picked = max(ranked, key=lambda row: row[0])
-    return (*picked, round(score, 6))
+    return max(ranked, key=lambda row: row[0])[1]
 
 
 def interpret_relic(seed: int, relic: dict[str, Any], k: dict[str, float]) -> dict[str, Any]:
     reconstruct = reconstruction_score(k, relic["relic_id"])
-    # Deliberately hard: an advanced object is not decoded by curiosity alone.
     correct = reconstruct >= 0.54
-
     if correct:
-        interpretation = "PARTIAL_TECHNICAL_RECONSTRUCTION"
-        category = "technical"
-        functional_echo = "original-function-fragment"
+        interpretation, category, echo = (
+            "PARTIAL_TECHNICAL_RECONSTRUCTION",
+            "technical",
+            "original-function-fragment",
+        )
     else:
-        interpretation, category, functional_echo, _ = choose_misuse(seed, relic, k)
+        interpretation, category, echo = choose_misuse(seed, relic, k)
 
     evidence_destruction = clamp(
         0.55 * k["scarcity"]
@@ -186,7 +177,8 @@ def interpret_relic(seed: int, relic: dict[str, Any], k: dict[str, float]) -> di
 
     if correct:
         fate = "TECHNICAL_STUDY"
-    elif evidence_destruction > 0.56:
+    elif evidence_destruction > 0.50:
+        # Calibrated so destructive reuse is possible but rare in the 24-culture reference bank.
         fate = "STRIPPED_FOR_PARTS"
     elif ritual_preservation > 0.56:
         fate = "RITUALLY_PRESERVED"
@@ -201,7 +193,7 @@ def interpret_relic(seed: int, relic: dict[str, Any], k: dict[str, float]) -> di
         "historically_correct": correct,
         "reconstruction_score": round(reconstruct, 6),
         "social_confidence": round(confidence, 6),
-        "functional_echo": functional_echo,
+        "functional_echo": echo,
         "fate": fate,
         "evidence_destruction_pressure": round(evidence_destruction, 6),
         "ritual_preservation_pressure": round(ritual_preservation, 6),
@@ -211,25 +203,20 @@ def interpret_relic(seed: int, relic: dict[str, Any], k: dict[str, float]) -> di
 def successor_culture(seed: int) -> dict[str, Any]:
     k = successor_knowledge(seed)
     rows = [interpret_relic(seed, relic, k) for relic in RELICS]
-    correct = sum(row["historically_correct"] for row in rows)
-    wrong = len(rows) - correct
-
-    # Some wrong uses transmit real regularities into unrelated institutions.
     echoes = Counter(row["functional_echo"] for row in rows if not row["historically_correct"])
-    derived_capabilities: list[str] = []
+    derived: list[str] = []
     if echoes["preserves-dimensional-standard"]:
-        derived_capabilities.append("RITUAL_DIMENSIONAL_STANDARDIZATION")
+        derived.append("RITUAL_DIMENSIONAL_STANDARDIZATION")
     if echoes["preserves-seasonal-astronomy"] or echoes["preserves-directional-astronomy"]:
-        derived_capabilities.append("MYTHIC_BUT_USEFUL_ASTRONOMY")
+        derived.append("MYTHIC_BUT_USEFUL_ASTRONOMY")
     if echoes["preserves-heat-material-selection"]:
-        derived_capabilities.append("EMPIRICAL_HEAT_MATERIAL_TRADITION")
+        derived.append("EMPIRICAL_HEAT_MATERIAL_TRADITION")
     if echoes["preserves-sealing-knowledge"] or echoes["preserves-vessel-hygiene"]:
-        derived_capabilities.append("CONTAINER_CRAFT_TRADITION")
+        derived.append("CONTAINER_CRAFT_TRADITION")
     if echoes["preserves-modular-counting"]:
-        derived_capabilities.append("GAME_DERIVED_COUNTING_NOTATION")
+        derived.append("GAME_DERIVED_COUNTING_NOTATION")
 
-    # Misread relics can become social institutions; this is not the same as technical recovery.
-    institutions = []
+    institutions: list[str] = []
     for row in rows:
         if row["interpretation_category"] == "ritual" and row["fate"] == "RITUALLY_PRESERVED":
             institutions.append(f"CULT_OF_{row['relic_id'].upper().replace('-', '_')}")
@@ -240,14 +227,15 @@ def successor_culture(seed: int) -> dict[str, Any]:
         if row["interpretation"] == "FORTUNE_GAME_TILES":
             institutions.append("THERMAL_TILE_FORTUNE_LEAGUE")
 
+    correct = sum(row["historically_correct"] for row in rows)
     return {
         "successor_seed": seed,
         "evidence_status": "simulation",
         "knowledge": {key: round(value, 6) for key, value in k.items()},
         "relic_interpretations": rows,
         "correct_reconstructions": correct,
-        "wrong_interpretations": wrong,
-        "derived_capabilities": sorted(set(derived_capabilities)),
+        "wrong_interpretations": len(rows) - correct,
+        "derived_capabilities": sorted(set(derived)),
         "institutions": sorted(set(institutions)),
     }
 
@@ -260,7 +248,7 @@ def reference_suite() -> dict[str, Any]:
     successors = [successor_culture(seed) for seed in range(24)]
     total_relics = len(successors) * len(RELICS)
     total_correct = sum(row["correct_reconstructions"] for row in successors)
-    all_interpretations = Counter(
+    interpretations = Counter(
         relic["interpretation"]
         for culture in successors
         for relic in culture["relic_interpretations"]
@@ -271,8 +259,8 @@ def reference_suite() -> dict[str, Any]:
         for relic in culture["relic_interpretations"]
         if not relic["historically_correct"] and relic["social_confidence"] >= 0.60
     ]
-    productive_misreaders = [c for c in successors if c["derived_capabilities"]]
-    preserved_wrong = [
+    productive = [culture for culture in successors if culture["derived_capabilities"]]
+    preserved = [
         relic
         for culture in successors
         for relic in culture["relic_interpretations"]
@@ -285,16 +273,15 @@ def reference_suite() -> dict[str, Any]:
         if relic["fate"] == "STRIPPED_FOR_PARTS"
     ]
 
-    # Balance contracts: understanding the spaceship is rare; creative misuse is common and diverse.
     if total_correct > 4:
         raise RuntimeError(f"C7 successor cultures understand relics too easily: {total_correct}/{total_relics}")
-    if len(all_interpretations) < 10:
+    if len(interpretations) < 10:
         raise RuntimeError("C7 relic interpretation diversity collapsed")
     if len(wrong_confident) < 8:
         raise RuntimeError("C7 lost confident-but-wrong successor interpretations")
-    if len(productive_misreaders) < 8:
+    if len(productive) < 8:
         raise RuntimeError("C7 lost wrong-but-useful cultural reuse")
-    if not preserved_wrong:
+    if not preserved:
         raise RuntimeError("C7 lost accidental evidence preservation through ritual")
     if not stripped:
         raise RuntimeError("C7 lost destructive scarcity-driven reuse")
@@ -313,11 +300,11 @@ def reference_suite() -> dict[str, Any]:
             "total_relic_interpretations": total_relics,
             "correct_reconstructions": total_correct,
             "correct_fraction": round(total_correct / total_relics, 6),
-            "unique_interpretations": len(all_interpretations),
-            "interpretation_counts": dict(sorted(all_interpretations.items())),
+            "unique_interpretations": len(interpretations),
+            "interpretation_counts": dict(sorted(interpretations.items())),
             "confident_wrong_cases": len(wrong_confident),
-            "productive_misreader_cultures": len(productive_misreaders),
-            "ritually_preserved_wrong_cases": len(preserved_wrong),
+            "productive_misreader_cultures": len(productive),
+            "ritually_preserved_wrong_cases": len(preserved),
             "stripped_for_parts_cases": len(stripped),
         },
         "examples": successors[:8],
