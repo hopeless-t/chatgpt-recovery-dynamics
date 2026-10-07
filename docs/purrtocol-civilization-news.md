@@ -2,7 +2,7 @@
 
 > 面白い見出しは許す。史実の捏造は許さない。
 
-Purrtocol Civilization now has an **Annalist**: a deterministic news projector that reads the validated Civilization Chronicle and produces one article for every canonical merged event.
+Purrtocol Civilization has an **Annalist**: a deterministic news projector that reads the validated Civilization Chronicle and produces one article for every canonical merged event contained in that Chronicle snapshot.
 
 The Annalist is not a free-form fiction generator. It is a projection layer with a hard source binding.
 
@@ -11,7 +11,7 @@ The Annalist is not a free-form fiction generator. It is a projection layer with
 ```text
 merged repository history
         ↓
-validated Chronicle
+validated Chronicle snapshot
         ↓
 explicit narrative label
         ↓
@@ -33,13 +33,13 @@ The headline comes only from the Chronicle's already-explicit `chronicle_name`. 
 
 ## Current front page
 
-At the Chronicle boundary through PR #86:
+At the current Chronicle snapshot boundary through PR #88:
 
-> **制度相転移 — Shock Regimes**
+> **報道局開局 — Civilization Annalist**
 >
-> PR #86 entered canonical repository history at 2026-10-07 10:08:35 JST.
+> PR #88 entered canonical repository history at 2026-10-07 10:31:58 JST.
 >
-> Civilization speedrun from C0 foundation: **9:13:46**.
+> Civilization elapsed time from C0 foundation: **9:37:09**.
 
 Selected back issues include:
 
@@ -54,6 +54,20 @@ Selected back issues include:
 - **政策研究院設立 — Recovery Policy Lab** — #84
 - **連立政治の成立 — Safety Frontier** — #85
 - **制度相転移 — Shock Regimes** — #86
+- **歴史学成立 — Civilization Chronicle** — #87
+- **報道局開局 — Civilization Annalist** — #88
+
+## Chronicle publication lag
+
+The newspaper inherits the Chronicle's explicit snapshot semantics.
+
+A Chronicle edition cannot record the merge SHA/timestamp of the PR that publishes that same edition before the merge happens. Therefore the publication event appears in the **next** edition, and the Annalist only reports what the validated Chronicle snapshot contains.
+
+This means:
+
+`live repository history` may be one publication event ahead of `published Chronicle snapshot`.
+
+That difference is explicit state, not missing evidence and not permission to fabricate the future.
 
 ## Auditor cat
 
@@ -66,6 +80,7 @@ The Annalist then enforces:
 3. **Headline is projection, not evidence.**
 4. **No unsourced fact generation.**
 5. **News does not rewrite history.**
+6. **Publication lag does not authorize future prediction.**
 
 This means open experimental PR #73 remains outside the canonical newspaper. It may be discussed as an experiment elsewhere, but the Annalist cannot sneak it into the historical record.
 
@@ -81,7 +96,8 @@ Future layers may add deterministic templates for:
 - policy coalitions;
 - environmental shocks;
 - achievements;
-- Wild Purrtocol observations.
+- Wild Purrtocol observations;
+- publication-lag and historical-revision notices.
 
 But every future headline must preserve the same law:
 
@@ -90,5 +106,7 @@ But every future headline must preserve the same law:
 `Projection != Evidence`
 
 `News != History Rewrite`
+
+`Snapshot != Oracle`
 
 `NO FINAL CIVILIZATION`
