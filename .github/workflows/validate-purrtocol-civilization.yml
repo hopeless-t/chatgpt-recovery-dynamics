@@ -7,6 +7,7 @@ on:
       - 'scripts/purrtocol_c3_stratification_oracle.py'
       - 'scripts/purrtocol_c4_belief_leisure.py'
       - 'scripts/purrtocol_c5_civilizational_memory.py'
+      - 'scripts/purrtocol_c6_literature_extinction.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -19,6 +20,7 @@ on:
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
       - 'docs/purrtocol-c4-belief-leisure.md'
       - 'docs/purrtocol-c5-civilizational-memory.md'
+      - 'docs/purrtocol-c6-literature-extinction.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -31,6 +33,7 @@ on:
       - 'scripts/purrtocol_c3_stratification_oracle.py'
       - 'scripts/purrtocol_c4_belief_leisure.py'
       - 'scripts/purrtocol_c5_civilizational_memory.py'
+      - 'scripts/purrtocol_c6_literature_extinction.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -43,6 +46,7 @@ on:
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
       - 'docs/purrtocol-c4-belief-leisure.md'
       - 'docs/purrtocol-c5-civilizational-memory.md'
+      - 'docs/purrtocol-c6-literature-extinction.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -67,6 +71,7 @@ jobs:
             scripts/purrtocol_c3_stratification_oracle.py \
             scripts/purrtocol_c4_belief_leisure.py \
             scripts/purrtocol_c5_civilizational_memory.py \
+            scripts/purrtocol_c6_literature_extinction.py \
             scripts/purrtocol_civilization_shock_regimes.py \
             scripts/purrtocol_recovery_safety_frontier.py \
             scripts/purrtocol_recovery_policy_lab.py \
@@ -189,6 +194,30 @@ jobs:
           assert d['world_laws']['failure_is_not_game_over'] is True
           assert d['world_laws']['blueprint_is_not_capability'] is True
           print('C5 legendary reconstruction rarity: PASS', d['successful_seeds'])
+          PY
+      - name: Validate C6 literature ecology, strange extinction, and lunar postscript
+        run: |
+          python scripts/purrtocol_c6_literature_extinction.py > /tmp/c6-reference.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/c6-reference.json',encoding='utf-8'))
+          assert d['schema']=='purrtocol-c6-literature-extinction/v0'
+          assert d['evidence_status']=='simulation'
+          lit=d['literature_reference']
+          assert lit['dominant_genres']['elite'] != lit['dominant_genres']['laborer']
+          assert lit['dominant_genres']['laborer'] != lit['dominant_genres']['debtor']
+          assert len(lit['cultural_transfers']) >= 1
+          ext=d['extinction_reference']
+          assert ext['seed_bank']==128
+          assert 2 <= ext['absolute_extinctions'] <= 10
+          assert len(ext['mode_counts']) >= 3
+          assert all(len(row['causal_chain']) >= 4 for row in ext['examples'])
+          lunar=d['lunar_postscript']
+          assert lunar['escape_ready_seeds'] == [57]
+          assert all(row['status'] != 'LOCALLY_ROBUST_LUNAR_HABITAT' for row in lunar['lunar_habitats'])
+          assert d['world_laws']['moon_is_not_a_final_ending'] is True
+          assert d['world_laws']['weird_extinction_requires_auditable_causality'] is True
+          print('C6 literature/extinction/lunar: PASS', ext['mode_counts'], lunar['lunar_habitats'])
           PY
       - name: Build deterministic civilization shock regimes
         run: |
@@ -319,4 +348,5 @@ jobs:
             /tmp/shock-regimes-input.json
             /tmp/shock-regimes-a.json
             /tmp/c5-reference.json
+            /tmp/c6-reference.json
           if-no-files-found: error
