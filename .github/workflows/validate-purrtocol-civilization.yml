@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/purrtocol_civilization.py'
       - 'scripts/purrtocol_c3_stratification_oracle.py'
+      - 'scripts/purrtocol_c4_belief_leisure.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -15,6 +16,7 @@ on:
       - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
+      - 'docs/purrtocol-c4-belief-leisure.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -25,6 +27,7 @@ on:
     paths:
       - 'scripts/purrtocol_civilization.py'
       - 'scripts/purrtocol_c3_stratification_oracle.py'
+      - 'scripts/purrtocol_c4_belief_leisure.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -35,6 +38,7 @@ on:
       - 'data/purrtocol_civilization_chronicle.json'
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
+      - 'docs/purrtocol-c4-belief-leisure.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -57,6 +61,7 @@ jobs:
           python -m py_compile \
             scripts/purrtocol_civilization.py \
             scripts/purrtocol_c3_stratification_oracle.py \
+            scripts/purrtocol_c4_belief_leisure.py \
             scripts/purrtocol_civilization_shock_regimes.py \
             scripts/purrtocol_recovery_safety_frontier.py \
             scripts/purrtocol_recovery_policy_lab.py \
