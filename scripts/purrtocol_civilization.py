@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import purrtocol_c2_knowledge_institutions as c2_knowledge
+import purrtocol_genesis_microcosm as genesis_microcosm
 
 ROLES = ("Observer", "Executor", "CacheKeeper", "Broker", "Archivist", "Teacher", "Projector", "Auditor")
 
@@ -40,6 +41,25 @@ def make_cat(rng: random.Random, n: int) -> Cat:
         novelty=rng.random(),
         energy=rng.randint(6, 14),
     )
+
+
+def genesis_reference_summary() -> dict:
+    reference = genesis_microcosm.reference_suite()
+    micro = reference["micro_twin"]
+    if reference["same_macro_condition_distinct_signatures"] < 6:
+        raise RuntimeError("Genesis macro-equivalent worlds became too uniform")
+    if micro["allocation_history_mismatches"] < 12:
+        raise RuntimeError("Genesis micro perturbation stopped propagating")
+    if micro["baseline_final"]["dominant_niche"] == micro["perturbed_final"]["dominant_niche"]:
+        raise RuntimeError("Genesis reference twins no longer diverge in dominant niche")
+    if reference["environment_conditioned_founder_expression"] != {
+        "hazard-world": "caution",
+        "connected-world": "sharing",
+        "sparse-volatile-world": "compression",
+        "heterogeneous-world": "novelty",
+    }:
+        raise RuntimeError("Genesis environment-conditioned founder expression drifted")
+    return reference
 
 
 def c2_reference_summary() -> dict:
@@ -91,7 +111,6 @@ def run(seed: int, population: int, shock: float) -> dict:
     total_value = 0.0
 
     for cat in cats:
-        # Shock raises ambiguity/failure pressure. Caution converts some retries into observation.
         ambiguity = clamp(shock * (0.55 + 0.9 * rng.random()))
         observe = round(cat.energy * ambiguity * cat.caution * 0.45)
         blind_retry_pressure = cat.energy * ambiguity * (1.0 - cat.caution)
@@ -102,7 +121,6 @@ def run(seed: int, population: int, shock: float) -> dict:
         amplification = retries / max(1, compute + observe)
         recovery_ok = amplification <= 0.60
 
-        # Projection cannot rescue a recovery-invalid organism.
         explanation = clamp(0.30 * cat.compression + 0.25 * cat.novelty + 0.25 * cat.sharing + 0.20 * rng.random())
         projection_ok = explanation >= 0.42
         value = useful - 0.9 * retries - 0.25 * memory
@@ -148,6 +166,7 @@ def run(seed: int, population: int, shock: float) -> dict:
         "news_facts": news_facts,
         "survivor_ids": survivors,
         "ledger": ledger,
+        "genesis_microcosm_reference": genesis_reference_summary(),
         "c2_knowledge_institutions_reference": c2_reference_summary(),
     }
 
