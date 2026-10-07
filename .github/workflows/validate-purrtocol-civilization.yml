@@ -6,6 +6,7 @@ on:
       - 'scripts/purrtocol_civilization.py'
       - 'scripts/purrtocol_c3_stratification_oracle.py'
       - 'scripts/purrtocol_c4_belief_leisure.py'
+      - 'scripts/purrtocol_c5_civilizational_memory.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -17,6 +18,7 @@ on:
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
       - 'docs/purrtocol-c4-belief-leisure.md'
+      - 'docs/purrtocol-c5-civilizational-memory.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -28,6 +30,7 @@ on:
       - 'scripts/purrtocol_civilization.py'
       - 'scripts/purrtocol_c3_stratification_oracle.py'
       - 'scripts/purrtocol_c4_belief_leisure.py'
+      - 'scripts/purrtocol_c5_civilizational_memory.py'
       - 'scripts/purrtocol_civilization_shock_regimes.py'
       - 'scripts/purrtocol_recovery_safety_frontier.py'
       - 'scripts/purrtocol_recovery_policy_lab.py'
@@ -39,6 +42,7 @@ on:
       - 'docs/purrtocol-civilization.md'
       - 'docs/purrtocol-c3-dystopia-weak-oracle.md'
       - 'docs/purrtocol-c4-belief-leisure.md'
+      - 'docs/purrtocol-c5-civilizational-memory.md'
       - 'docs/purrtocol-civilization-shock-regimes.md'
       - 'docs/purrtocol-civilization-chronicle.md'
       - 'docs/purrtocol-civilization-news.md'
@@ -62,6 +66,7 @@ jobs:
             scripts/purrtocol_civilization.py \
             scripts/purrtocol_c3_stratification_oracle.py \
             scripts/purrtocol_c4_belief_leisure.py \
+            scripts/purrtocol_c5_civilizational_memory.py \
             scripts/purrtocol_civilization_shock_regimes.py \
             scripts/purrtocol_recovery_safety_frontier.py \
             scripts/purrtocol_recovery_policy_lab.py \
@@ -168,6 +173,22 @@ jobs:
           assert 0 <= x['news_facts']['survivors'] <= 32
           assert all('recovery_gate' in r and 'projection_gate' in r for r in x['ledger'])
           print(x['news_facts'])
+          PY
+      - name: Validate legendary C5 reconstruction rarity
+        run: |
+          python scripts/purrtocol_c5_civilizational_memory.py > /tmp/c5-reference.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/c5-reference.json',encoding='utf-8'))
+          assert d['schema']=='purrtocol-c5-civilizational-memory-reference/v0'
+          assert d['evidence_status']=='simulation'
+          assert d['seed_bank']==64
+          assert 1 <= d['success_count'] <= 2
+          assert d['success_fraction'] <= 0.03125
+          assert d['world_laws']['escape_route_is_intentionally_rare'] is True
+          assert d['world_laws']['failure_is_not_game_over'] is True
+          assert d['world_laws']['blueprint_is_not_capability'] is True
+          print('C5 legendary reconstruction rarity: PASS', d['successful_seeds'])
           PY
       - name: Build deterministic civilization shock regimes
         run: |
@@ -297,4 +318,5 @@ jobs:
             /tmp/civilization-news-a.json
             /tmp/shock-regimes-input.json
             /tmp/shock-regimes-a.json
+            /tmp/c5-reference.json
           if-no-files-found: error
