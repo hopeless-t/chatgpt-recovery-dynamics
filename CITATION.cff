@@ -10,14 +10,21 @@ repository-code: "https://github.com/hopeless-t/chatgpt-recovery-dynamics"
 url: "https://hopeless-t.github.io/chatgpt-recovery-dynamics/"
 license: "MIT"
 keywords:
+  - ChatGPT
   - conversation recovery
+  - HTTP 429
+  - 429 Too Many Requests
+  - rate limiting
   - retry amplification
   - congestion control
   - client-side reliability
+  - reproducible research
   - change point
   - AR(1)
 abstract: >-
-  A sanitized client-side case study of ChatGPT conversation recovery dynamics,
-  with reproducible timing analysis, history-aware state modeling, local
-  congestion simulations, provider-friendly recovery design, and a bilingual
-  local-only Recovery Helper.
+  A sanitized client-side case study of ChatGPT conversation-loading and
+  recovery failures, including HTTP 429 / Too Many Requests observations,
+  reproducible timing analysis, retry-amplification dynamics, history-aware
+  state modeling, local congestion simulations, provider-friendly recovery
+  design, and a bilingual local-only Recovery Helper. The repository does not
+  claim to identify OpenAI's internal root cause.
