@@ -18,6 +18,9 @@ The format loosely follows Keep a Changelog, but this is a research repository r
 - Wiki source synchronization.
 - Animated README and Pages network visualizations.
 
+### Changed
+- Expanded `CITATION.cff` with machine-discovery keywords and a research-scope abstract covering conversation recovery, HTTP 429 observations, reproducible timing analysis, congestion simulations, and the explicit no-internal-root-cause boundary.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added
