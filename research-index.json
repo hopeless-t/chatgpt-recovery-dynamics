@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "project": "ChatGPT Conversation Recovery Dynamics",
+  "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
+  "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
+  "claim_boundary": "Does not identify or claim to identify OpenAI's internal root cause.",
+  "canonical_entrypoints": {
+    "overview": "README.md",
+    "quickstart": "QUICKSTART.md",
+    "methodology": "docs/methodology.md",
+    "mathematical_model": "docs/model.md",
+    "validation": "docs/validation.md",
+    "deep_validation": "docs/deep-validation.md",
+    "evidence_ledger": "docs/evidence-ledger.md",
+    "responsible_testing": "RESPONSIBLE_TESTING.md",
+    "changelog": "CHANGELOG.md",
+    "citation": "CITATION.cff"
+  },
+  "machine_readable_evidence": {
+    "quantitative_summary": "data/summary.json"
+  },
+  "research_status": {
+    "release": "0.1.0",
+    "primary_dataset_policy": "Sanitized derivative telemetry only; raw authenticated HAR files are excluded.",
+    "external_reports_policy": "Historical weak evidence and model constraints, not IID samples and not proof of a shared root cause.",
+    "production_load_testing": "excluded"
+  },
+  "keywords": [
+    "ChatGPT",
+    "conversation recovery",
+    "HTTP 429",
+    "429 Too Many Requests",
+    "rate limiting",
+    "retry amplification",
+    "congestion control",
+    "client-side reliability",
+    "reproducible research"
+  ]
+}
