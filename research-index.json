@@ -1,12 +1,14 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "project": "ChatGPT Conversation Recovery Dynamics",
   "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
   "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
   "claim_boundary": "Does not identify or claim to identify OpenAI's internal root cause.",
   "canonical_entrypoints": {
     "overview": "README.md",
+    "start_here": "START-HERE.md",
     "quickstart": "QUICKSTART.md",
+    "adoption": "ADOPT.md",
     "methodology": "docs/methodology.md",
     "mathematical_model": "docs/model.md",
     "validation": "docs/validation.md",
@@ -20,6 +22,11 @@
     "server_friendly_congestion_control": "docs/server-friendly-congestion-control.md",
     "provider_friendly_checklist": "docs/provider-friendly-checklist.md",
     "external_evidence": "docs/external-evidence.md",
+    "glossary": "GLOSSARY.md",
+    "contributing": "CONTRIBUTING.md",
+    "agent_continuity": "AGENTS.md",
+    "improvement_loop": "IMPROVEMENT_LOOP.md",
+    "meta_improvement_loop": "META_IMPROVEMENT_LOOP.md",
     "responsible_testing": "RESPONSIBLE_TESTING.md",
     "changelog": "CHANGELOG.md",
     "citation": "CITATION.cff"
