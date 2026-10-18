@@ -17,6 +17,7 @@ The format loosely follows Keep a Changelog, but this is a research repository r
 - Research mascot and visual identity.
 - Wiki source synchronization.
 - Animated README and Pages network visualizations.
+- Machine-readable `research-index.json` linking canonical research, onboarding and continuity documents, public research surfaces, quantitative evidence, scope boundaries, and discovery keywords.
 
 ### Changed
 - Expanded `CITATION.cff` with machine-discovery keywords and a research-scope abstract covering conversation recovery, HTTP 429 observations, reproducible timing analysis, congestion simulations, and the explicit no-internal-root-cause boundary.
