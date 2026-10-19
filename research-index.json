@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.5",
+  "schema_version": "1.6",
   "project": "ChatGPT Conversation Recovery Dynamics",
   "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
   "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
@@ -27,6 +27,7 @@
     "glossary": "GLOSSARY.md",
     "contributing": "CONTRIBUTING.md",
     "agent_continuity": "AGENTS.md",
+    "agent_discovery": "docs/llms.txt",
     "improvement_loop": "IMPROVEMENT_LOOP.md",
     "meta_improvement_loop": "META_IMPROVEMENT_LOOP.md",
     "responsible_testing": "RESPONSIBLE_TESTING.md",
