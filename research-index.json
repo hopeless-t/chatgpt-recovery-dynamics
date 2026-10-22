@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.8",
+  "schema_version": "1.9",
   "project": "ChatGPT Conversation Recovery Dynamics",
   "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
   "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
@@ -14,6 +14,7 @@
     "mathematical_model": "docs/model.md",
     "validation": "docs/validation.md",
     "deep_validation": "docs/deep-validation.md",
+    "latent_timing_model_competition": "docs/latent-timing-model-competition.md",
     "evidence_ledger": "docs/evidence-ledger.md",
     "recovery_design": "docs/recovery-design.md",
     "monte_carlo": "docs/monte-carlo.md",
