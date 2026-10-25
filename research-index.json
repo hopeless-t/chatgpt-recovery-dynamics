@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.11",
+  "schema_version": "1.12",
   "project": "ChatGPT Conversation Recovery Dynamics",
   "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
   "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
@@ -11,6 +11,7 @@
     "adoption": "ADOPT.md",
     "normative_contract": "RECOVERY_SURVIVAL_CONTRACT_V0_1.md",
     "http_429_survival_contract": "docs/429-survival-kit/contract.json",
+    "http_429_survival_plane_rfc": "rfcs/RFC-0003-http-429-survival-plane.md",
     "methodology": "docs/methodology.md",
     "mathematical_model": "docs/model.md",
     "validation": "docs/validation.md",
