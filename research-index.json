@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.14",
+  "schema_version": "1.15",
   "project": "ChatGPT Conversation Recovery Dynamics",
   "repository": "https://github.com/hopeless-t/chatgpt-recovery-dynamics",
   "scope": "Sanitized client-side study of ChatGPT conversation-loading and recovery failures, including HTTP 429 observations, timing analysis, retry amplification, and provider-friendly recovery design.",
@@ -59,6 +59,7 @@
     "recovery_convergence_reference": "data/recovery_convergence_reference.json",
     "improvement_event_ledger": "data/improvement_events.jsonl",
     "improvement_event_schema": "docs/repository-observatory/improvement-event.schema.json",
+    "meta_improvement_loop_policy": "data/meta_improvement_loop_policy.json",
     "meta_improvement_loop_reference": "data/meta_improvement_loop_reference.json"
   },
   "research_status": {
